@@ -1,0 +1,18 @@
+# Python 3.11 이미지를 사용하여 컨테이너 생성
+FROM python:3.11
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 필요한 패키지 설치
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 소스 코드 복사
+COPY . .
+
+# Flask 서버가 실행될 포트 지정
+EXPOSE 5000
+
+# Flask 서버 실행 명령
+CMD ["python", "app.py"]
