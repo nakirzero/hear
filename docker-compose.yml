@@ -4,6 +4,11 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    volumes:
+      - ./frontend:/app  # 로컬 프론트엔드 코드와 컨테이너의 /app 디렉토리 공유
+      - /app/node_modules  # 로컬과 충돌하지 않도록 설정
+    environment:
+      - NODE_ENV=development
 
   backend:
     build: ./backend
@@ -11,6 +16,8 @@ services:
       - "5000:5000"
     env_file:
       - .env  # .env 파일을 명시적으로 설정하여 로드
+    volumes:
+      - ./backend:/app  # 로컬 백엔드 코드와 컨테이너의 /app 디렉토리 공유
     depends_on:
       - mysql
 
