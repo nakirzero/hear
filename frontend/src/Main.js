@@ -1,7 +1,10 @@
 import React from 'react';
 import { Container, Typography, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 function Main() {
+  const navigate = useNavigate();
+
   return (
     <Container
       maxWidth="md"
@@ -38,6 +41,7 @@ function Main() {
         </Box>
         <Box
           component="button"
+          onClick={() => navigate('/join')}
           sx={{
             width: 400,
             height: 160,
