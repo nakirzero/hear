@@ -1,5 +1,5 @@
 import pymysql  # PyMySQL 사용
-from config import Config
+from backend.app import Config
 
 def get_db_connection():
     try:
