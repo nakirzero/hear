@@ -19,19 +19,4 @@ services:
     volumes:
       - ./backend:/app  # 로컬 백엔드 코드와 컨테이너의 /app 디렉토리 공유
     depends_on:
-      - mysql
-
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root_password
-      MYSQL_DATABASE: hear
-      MYSQL_USER: hear
-      MYSQL_PASSWORD: hear123!
-    ports:
-      - "3307:3306"
-    volumes:
-      - db_data:/var/lib/mysql
-
-volumes:
-  db_data:
+      - frontend
