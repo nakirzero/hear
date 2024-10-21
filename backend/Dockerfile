@@ -15,4 +15,5 @@ COPY . .
 EXPOSE 5000
 
 # Flask 서버 실행 명령
-CMD ["python", "app.py"]
+ENV FLASK_APP=app.py
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", "--reload"]

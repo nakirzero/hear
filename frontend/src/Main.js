@@ -23,7 +23,7 @@ function Main() {
           sx={{
             width: 400,
             height: 160,
-            borderRadius: 20,
+            borderRadius: 10,
             fontSize: '1.5rem',
             backgroundColor: '#1976d2', // 기본 버튼 색상
             color: '#fff',
@@ -41,7 +41,7 @@ function Main() {
           sx={{
             width: 400,
             height: 160,
-            borderRadius: 20,
+            borderRadius: 10,
             fontSize: '1.5rem',
             backgroundColor: '#1976d2',
             color: '#fff',
