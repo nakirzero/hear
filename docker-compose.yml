@@ -6,9 +6,11 @@ services:
       - "3000:3000"
     volumes:
       - ./frontend:/app  # 로컬 프론트엔드 코드와 컨테이너의 /app 디렉토리 공유
-      - /app/node_modules  # 로컬과 충돌하지 않도록 설정
+      - /app/node_modules  # node_modules를 컨테이너 내부에 유지
     environment:
       - NODE_ENV=development
+      - WATCHPACK_POLLING=true  # create-react-app >= 5.x 에서 파일 감지
+    command: sh -c "npm install && npm start"  # 패키지 설치 후 애플리케이션 실행
 
   backend:
     build: ./backend
