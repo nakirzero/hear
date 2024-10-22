@@ -11,9 +11,12 @@ RUN pip install --no-cache-dir -r requirements.txt
 # 소스 코드 복사
 COPY . .
 
+# PYTHONPATH 설정
+ENV PYTHONPATH=/app
+
 # Flask 서버가 실행될 포트 지정
 EXPOSE 5000
 
 # Flask 서버 실행 명령
-ENV FLASK_APP=app.py
+ENV FLASK_APP=app.app
 CMD ["flask", "run", "--host=0.0.0.0", "--port=5000", "--reload"]

@@ -23,6 +23,7 @@ function Main() {
       <Box sx={{ display: 'flex', gap: 4 }}>
         <Box
           component="button"
+          onClick={() => navigate('/login')}
           sx={{
             width: 400,
             height: 160,

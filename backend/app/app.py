@@ -1,14 +1,14 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from app.routes.check_userid import check_userid_bp
 
 app = Flask(__name__)
 
 # 전역 CORS 설정 적용
 CORS(app)
 
-@app.route('/api/hello', methods=['GET'])
-def hello():
-    return jsonify(message="Hello from Flask!")
+# Blueprint 등록
+app.register_blueprint(check_userid_bp, url_prefix='/api')
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

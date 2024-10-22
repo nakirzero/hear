@@ -1,10 +1,31 @@
-import * as React from "react";
+import { useState } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
+import { checkUserId } from "../api/user"; // API 호출 함수 import
 
 function Join() {
   const navigate = useNavigate();
-  
+
+  const [userid, setUserId] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleUserIdChange = (e) => {
+    setUserId(e.target.value);
+  };
+
+  const handleCheckUserId = async () => {
+    try {
+      const exists = await checkUserId(userid);
+      if (exists) {
+        setMessage("아이디가 이미 사용 중입니다.");
+      } else {
+        setMessage("사용 가능한 아이디입니다.");
+      }
+    } catch {
+      setMessage("아이디 확인 중 오류가 발생했습니다.");
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -37,11 +58,16 @@ function Join() {
         <Grid container spacing={2} alignItems="center">
           {/* 아이디 필드 */}
           <Grid item xs={3}>
-            <Typography sx={{ textAlign: "right" }}>아이디</Typography>
+            <Typography
+              sx={{ textAlign: "right" }}
+            >
+              아이디
+            </Typography>
           </Grid>
           <Grid item xs={7}>
             <TextField
               fullWidth
+              onChange={handleUserIdChange}
               sx={{
                 backgroundColor: "#fff" /* 배경을 흰색으로 설정 */,
                 borderRadius: 1,
@@ -51,9 +77,28 @@ function Join() {
 
           {/* 중복확인 버튼 */}
           <Grid item xs={2} sx={{ textAlign: "right" }}>
-            <Button variant="contained" size="small">
+            <Button
+              onClick={handleCheckUserId}
+              variant="contained"
+              size="small"
+            >
               중복확인
             </Button>
+          </Grid>
+
+          {/* 중복 확인 결과 메시지 */}
+          <Grid item xs={12}>
+            {message && (
+              <Typography
+                sx={{
+                  color: message.includes("가능") ? "green" : "red",
+                  mt: 1,
+                  textAlign: "center",
+                }}
+              >
+                {message}
+              </Typography>
+            )}
           </Grid>
 
           {/* 비밀번호 필드 */}
@@ -116,7 +161,7 @@ function Join() {
             <Button
               variant="contained"
               color="primary"
-              onClick={() => navigate('/')}
+              onClick={() => navigate("/")}
               sx={{ mt: 3, width: "100%" }}
             >
               취소
