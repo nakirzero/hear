@@ -1,72 +1,50 @@
-import React from 'react';
-import { Container, Typography, Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import React from "react";
+import { Container, Typography, Box, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 function Main() {
   const navigate = useNavigate();
+
+  const buttonStyle = {
+    width: 400,
+    height: 160,
+    borderRadius: 10,
+    fontSize: "1.5rem",
+  };
 
   return (
     <Container
       maxWidth="md"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100vh',
-        textAlign: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        textAlign: "center",
       }}
     >
       <Typography variant="h3" sx={{ mb: 4 }}>
         H - ear
       </Typography>
-      <Box sx={{ display: 'flex', gap: 4 }}>
-        <Box
-          component="button"
-          onClick={() => navigate('/login')}
-          sx={{
-            width: 400,
-            height: 160,
-            borderRadius: 10,
-            fontSize: '1.5rem',
-            backgroundColor: '#1976d2', // 기본 버튼 색상
-            color: '#fff',
-            border: 'none',
-            cursor: 'pointer',
-            '&:hover': {
-              backgroundColor: '#1565c0', // 호버 효과
-            },
-          }}
+      <Box sx={{ display: "flex", gap: 4 }}>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/login")}
+          sx={buttonStyle}
+          aria-label="로그인 페이지로 이동"
         >
           로그인
-        </Box>
-        <Box
-          component="button"
-          onClick={() => navigate('/join')}
-          sx={{
-            width: 400,
-            height: 160,
-            borderRadius: 10,
-            fontSize: '1.5rem',
-            backgroundColor: '#1976d2',
-            color: '#fff',
-            border: 'none',
-            cursor: 'pointer',
-            '&:hover': {
-              backgroundColor: '#1565c0',
-            },
-          }}
+        </Button>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/join")}
+          sx={buttonStyle}
+          aria-label="회원가입 페이지로 이동"
         >
           회원가입
-        </Box>
+        </Button>
       </Box>
-      <Typography variant="body2" sx={{ mt: 8 }}>
-        주소: 61740 광주광역시 남구 송암로 60 광주 CGI센터 2층 6강의실
-        <br />
-        TEL. 062.123.4567 FAX. 062.987.6543
-        <br />
-        © 2024 H-ear. all rights reserved.
-      </Typography>
     </Container>
   );
 }

@@ -9,6 +9,7 @@ engine = create_engine(
     pool_size=5,  # 최대 연결 개수
     max_overflow=10,  # 풀을 초과할 때 더 만들 수 있는 연결 수
     pool_timeout=30,  # 연결을 기다리는 시간
+    pool_recycle=540,  # 540초마다 연결을 재활용 (세션 유지)
     echo=True  # SQLAlchemy의 로그 출력을 활성화
 )
 
@@ -20,3 +21,10 @@ def get_db_connection():
     except Exception as err:
         print(f"Database connection error: {err}")
         return None
+
+def close_db_connection(connection):
+    if connection:
+        try:
+            connection.close()  # 풀에 연결 반환
+        except Exception as err:
+            print(f"Error closing the connection: {err}")

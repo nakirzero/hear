@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from app.model import get_db_connection
+from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
 
 # Blueprint를 사용하여 라우트 분리
@@ -31,5 +31,5 @@ def check_userid():
             print(f"Database operation failed: {db_error}")
             return jsonify({"error": "Database operation failed"}), 500
         finally:
-            connection.close()
+            close_db_connection(connection)  # 연결 닫기 함수 사용
     return jsonify({"error": "Database connection failed"}), 500
