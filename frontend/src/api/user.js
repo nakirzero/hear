@@ -27,3 +27,16 @@ export const joinSubmit = async (event, formData) => {
     throw error;
   }
 };
+
+export const UserLogin = async (userid, userpw) => {
+  try {
+      console.log('userid', userid);
+      console.log('userpw', userpw);
+      
+      const response = await axios.post('/api/login', { userid, userpw });
+      return response.data.exists;
+  } catch (error) {
+      console.error('Error checking User ID:', error);
+      throw error;
+  }
+};
