@@ -2,7 +2,6 @@ import React from 'react';
 import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
@@ -17,7 +16,6 @@ const data = [
 ];
 
 const Notice = () => {
-  const navigate = useNavigate();
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
