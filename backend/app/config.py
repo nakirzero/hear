@@ -20,3 +20,6 @@ class Config:
     DB_HOST = os.getenv('DB_HOST')
     DB_PORT = int(os.getenv('DB_PORT'))
     DB_NAME = os.getenv('DB_NAME')
+
+    # elevenLabs api key
+    ELEVENLABS_API_KEY = os.getenv("ELEVENLABS_API_KEY")
