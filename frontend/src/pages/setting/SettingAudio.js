@@ -1,43 +1,20 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Container, Box, Button, Radio, Avatar, RadioGroup, FormControlLabel, Select, MenuItem} from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
+import { Typography, Container, Box, Button, Radio, RadioGroup, FormControlLabel, Select, MenuItem} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
+import Header from '../../components/Header';
+import Breadcrumb from '../../components/BreadCrumb';
+import ProfileSection from '../../components/ProfileSection';
+import Footer from '../../components/Footer';
 
 const SettingAudio = () => {
   const navigate = useNavigate();
 
   return (
     <div>
-      {/* Header */}
-      <AppBar position="static" color="transparent" elevation={0} style={{ borderBottom: '1px solid #e0e0e0' }}>
-        <Toolbar style={{ justifyContent: 'space-between' }}>
-          <Typography variant="h2" noWrap>
-            H - ear
-          </Typography>
-          <Typography variant="body1">Hear-o 님 환영합니다.</Typography>
-          <Button variant="contained" color="primary">로그아웃</Button>
-        </Toolbar>
-      </AppBar>
-
-      {/* Breadcrumb */}
-      <Box bgcolor="#000000" color="#fff" py={1} px={2} display="flex" alignItems="center">
-        <HomeIcon />
-        <Typography variant="body2" ml={1}>
-          HOME &gt; 설정 &gt; 오디오북 설정
-        </Typography>
-      </Box>
-
-       {/* User Profile Section */}
-       <Box bgcolor="#FFD700" py={4} display="flex" flexDirection="column" alignItems="center">
-        <Avatar
-          sx={{ width: 100, height: 100, bgcolor: 'gray', mb: 2 }}
-          alt="Profile"
-        />
-        <Typography variant="h6">누구누구</Typography>
-        <Typography variant="body2">인증 완료</Typography>
-        <Typography variant="body2">24. 11.14 부터 1일간 함께 듣는 중</Typography>
-      </Box>
-
+      <Header />
+      <Breadcrumb />
+      <ProfileSection />
 
       {/* Main Content */}
       <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -99,20 +76,7 @@ const SettingAudio = () => {
         <Typography>홈으로</Typography>
         </Box>
 
-      {/* Footer */}
-      <Box
-        sx={{
-          backgroundColor: '#e0e0e0',
-          py: 3,
-          mt: 4,
-          textAlign: 'center',
-        }}
-      >
-       
-        <Typography>주소: 61740 광주광역시 남구 양림로 60 63-7 GS센터 2층 GS홈쇼핑</Typography>
-        <Typography>TEL: 062.123.4567 FAX: 062.987.6543</Typography>
-        <Typography>© Copyright 2024 Hear. all rights reserved.</Typography>
-      </Box>
+     <Footer />
     </div>
   );
 };

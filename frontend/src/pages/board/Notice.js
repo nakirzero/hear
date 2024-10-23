@@ -1,9 +1,12 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
+import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
-import HomeIcon from '@mui/icons-material/Home';
 import { useNavigate } from 'react-router-dom';
+
+import Header from '../../components/Header';
+import Breadcrumb from '../../components/BreadCrumb';
+import Footer from '../../components/Footer';
 
 const data = [
   { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
@@ -18,25 +21,8 @@ const Notice = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      
-      {/* Header */}
-      <AppBar position="static" color="transparent" elevation={0} style={{ borderBottom: '1px solid #e0e0e0' }}>
-        <Toolbar style={{ justifyContent: 'space-between' }}>
-          <Typography variant="h2" noWrap>
-            H - ear
-          </Typography>
-          <Typography variant="body1">Hear-o 님 환영합니다.</Typography>
-          <Button variant="contained" color="primary">로그아웃</Button>
-        </Toolbar>
-      </AppBar>
-
-      {/* Breadcrumb */}
-      <Box bgcolor="#000000" color="#fff" py={1} px={2} display="flex" alignItems="center">
-        <HomeIcon />
-        <Typography variant="body2" ml={1} onClick={() => navigate('/path3')}>
-          HOME &gt; 고객게시판 &gt; 공지사항
-        </Typography>
-      </Box>
+      <Header />
+      <Breadcrumb />
 
       {/* Main Content */}
       <Box flexGrow={1} bgcolor="#FFD700" p={2}>
@@ -91,18 +77,7 @@ const Notice = () => {
         </Box>
       </Box>
 
-      {/* Footer */}
-      <Box bgcolor="#666" color="#fff" py={2} textAlign="right">
-        <Typography variant="body2">
-          주소: 61740 광주광역시 남구 양림로 60 광주여고 25 6층실
-          </Typography>
-          <Typography variant="body2">
-          TEL: 062-123-4567 / FAX: 062-987-6543
-        </Typography>
-        <Typography variant="body2">
-          © Copyright 2024 Hear. All rights reserved.
-        </Typography>
-      </Box>
+      <Footer />
     </div>
   );
 };
