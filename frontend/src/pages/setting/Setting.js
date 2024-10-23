@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Box, Grid2, Paper } from '@mui/material';
+import { Typography, Box, Grid, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
@@ -18,18 +18,26 @@ const Setting = () => {
 
       {/* Options Section */}
       <Box flexGrow={1} display="flex" justifyContent="center" py={6} bgcolor="#fff">
-        <Grid2 container spacing={10} maxWidth="1000px">
-          <Grid2 item xs={6}>
-            <Paper elevation={3} sx={{ padding: 10, height:10, textAlign: 'center' }} onClick={() => navigate('/setting_audio')}>
+        <Grid container spacing={10} maxWidth="1000px">
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/setting/audio')}
+            >
               <Typography variant="h6">오디오북 설정</Typography>
-            </Paper>
-          </Grid2>
-          <Grid2 item xs={6}>
-            <Paper elevation={3} sx={{ padding: 10, height:10, textAlign: 'center' }} onClick={() => navigate('/setting_user')}>
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/setting/user')}
+            >
               <Typography variant="h6">회원정보 수정</Typography>
-            </Paper>
-          </Grid2>
-        </Grid2>
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
 
       <Footer />

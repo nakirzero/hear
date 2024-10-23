@@ -1,35 +1,35 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Main from './pages/Main';
-import Join from './pages/Join';
-import Login from './pages/Login';
-import Menu from './pages/Menu';
+import Main from "./pages/Main";
+import Join from "./pages/Join";
+import Login from "./pages/Login";
+import Menu from "./pages/Menu";
 
-import Setting from './pages/setting/Setting';
-import SettingAudio from './pages/setting/SettingAudio';
-import SettingUser from './pages/setting/SettingUser';
+import Setting from "./pages/setting/Setting";
+import SettingAudio from "./pages/setting/SettingAudio";
+import SettingUser from "./pages/setting/SettingUser";
 
-import Board from './pages/board/Board';
-import Notice from './pages/board/Notice';
+import Board from "./pages/board/Board";
+import Notice from "./pages/board/Notice";
 
 function App() {
-  return(
+  return (
     <Router>
-    <Routes>
-      <Route path="/" element={<Main />} />
-      <Route path="/join" element={<Join />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/menu" element={<Menu />} />
+      <Routes>
+        <Route path="/" element={<Main />} />
+        <Route path="/join" element={<Join />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/menu" element={<Menu />} />
 
-      <Route path="/setting" element={<Setting />} />
-      <Route path="/setting_audio" element={<SettingAudio />} />
-      <Route path="/setting_user" element={<SettingUser />} />
+        <Route path="/setting" element={<Setting />} />
+        <Route path="/setting/audio" element={<SettingAudio />} />
+        <Route path="/setting/user" element={<SettingUser />} />
 
-      <Route path="/board" element={<Board />} />
-      <Route path="/notice" element={<Notice />} />
-    </Routes>
-  </Router>
+        <Route path="/board" element={<Board />} />
+        <Route path="/board/notice" element={<Notice />} />
+      </Routes>
+    </Router>
   );
 }
 
