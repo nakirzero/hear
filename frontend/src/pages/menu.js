@@ -29,8 +29,8 @@ const Menu = () => {
           {[
             { icon: <BookIcon fontSize="inherit" />, label: "1 도서마당", path: "/book" },
             { icon: <LibraryBooksIcon fontSize="inherit" />, label: "2 내 서재", path: "/path1" },
-            { icon: <SettingsIcon fontSize="inherit" />, label: "3 설정", path: "/path2" },
-            { icon: <SupportAgentIcon fontSize="inherit" />, label: "4 고객게시판", path: "/path3" }
+            { icon: <SettingsIcon fontSize="inherit" />, label: "3 설정", path: "/setting" },
+            { icon: <SupportAgentIcon fontSize="inherit" />, label: "4 고객게시판", path: "/board" }
           ].map(({ icon, label, path }, index) => (
             <Grid item={true} xs={12} sm={6} md={3} key={index}>
               <Box textAlign="center" onClick={() => navigate(path)} sx={{ cursor: 'pointer' }}>
