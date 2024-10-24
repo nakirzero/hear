@@ -11,6 +11,7 @@ import Menu from "./pages/Menu";
 import Setting from "./pages/setting/Setting";
 import SettingAudio from "./pages/setting/SettingAudio";
 import SettingUser from "./pages/setting/SettingUser";
+import SettingVoice from "./pages/setting/SettingVoice";
 
 import Board from "./pages/board/Board";
 import Notice from "./pages/board/Notice";
@@ -28,6 +29,7 @@ function App() {
           <Route path="/setting" element={<Setting />} />
           <Route path="/setting/audio" element={<SettingAudio />} />
           <Route path="/setting/user" element={<SettingUser />} />
+          <Route path="/setting/voice" element={<SettingVoice />} />
 
           <Route path="/board" element={<Board />} />
           <Route path="/board/notice" element={<Notice />} />
