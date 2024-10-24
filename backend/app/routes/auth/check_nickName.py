@@ -19,7 +19,7 @@ def check_nickname():
     if connection:
         try:
             # SQLAlchemy Connection 객체에서 직접 execute 사용
-            query = text("SELECT COUNT(*) FROM user WHERE USER_ID = :nickname")
+            query = text("SELECT COUNT(*) FROM user WHERE NICKNAME = :nickname")
             result = connection.execute(query, {"nickname": nickname})
             count = result.fetchone()[0] if result else 0
 

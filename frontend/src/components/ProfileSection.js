@@ -1,10 +1,16 @@
 import React from "react";
 import { Typography, Box, Avatar } from "@mui/material";
+import { useAuth } from "../context/AuthContext"; // AuthContext 사용
 
 const ProfileSection = () => {
-  const data = sessionStorage.getItem('userInfo');
-  const userInfo = JSON.parse(data);
-  const { NICKNAME: nickName, USER_CrtDt: userCrtDt } = userInfo.userInfo;
+  const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
+
+  // userObject가 없을 경우를 대비한 조건 처리
+  if (!userObject) {
+    return null; // 사용자 정보가 없으면 아무것도 렌더링하지 않음
+  }
+
+  const { NICKNAME: nickName, USER_CrtDt: userCrtDt } = userObject;
   const userDate = new Date(userCrtDt);
 
   // 타임존 영향을 피한 사용자 생성일 (UTC)
