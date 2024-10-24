@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { UserLogin } from "../api/user";
+import { UserLogin } from "../api/userAPI";
 
 function Login() {
   const navigate = useNavigate();
