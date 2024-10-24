@@ -13,6 +13,7 @@ function Login() {
 
   const [userid, setUserId] = useState("");
   const [userpw, setUserpw] = useState("");
+  const [userInfo, setUserInfo] = useState("");
   const [message, setMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState(null);
@@ -31,10 +32,11 @@ function Login() {
         setMessage("아이디 또는 비밀번호를 입력해주세요.");
         return;
       }
-      const exists = await UserLogin(userid, userpw);
-  
-      if (exists) {
-     
+      const response = await UserLogin(userid, userpw);
+      console.log('response', response);
+      
+      if (response) {
+        setUserInfo(response.userInfo);
         setDialogOpen(true);
       } else {
         setMessage("아이디 혹은 비밀번호 오류");
@@ -46,32 +48,26 @@ function Login() {
 
   const handleCloseDialog = () => {
     setDialogOpen(false);
-    setAlertMessage('로그인에 성공하였습니다.'); // 알림 설정
-  
+    sessionStorage.setItem("userInfo", JSON.stringify({ userInfo })); // 세션 저장 예시
+    setAlertMessage("로그인에 성공하였습니다."); // 알림 설정
+
     setTimeout(() => {
       setAlertMessage(null); // 3초 후에 알림을 숨기기 위한 타이머 설정
       navigate("/menu"); // 메뉴 페이지로 이동
     }, 3000);
   };
-  
 
-  const handleLocalStorage = async () => {
-    try {
-      const exists = await UserLogin(userid, userpw);
-  
-      if (exists) {
-        localStorage.setItem("userid", userid); // localStorage에 사용자 ID 저장
-        sessionStorage.setItem("userid", userid);
-        setDialogOpen(false);
-        setAlertMessage('자동 로그인이 설정되었습니다.'); // 알림 설정
-  
-        setTimeout(() => {
-          setAlertMessage(null); // 3초 후에 알림을 숨기기 위한 타이머 설정
-          navigate("/menu"); // 메뉴 페이지로 이동
-        }, 3000);
-      }
-    } catch {
-      setMessage("아이디 혹은 비밀번호 오류2.");
+  const handleLocalStorage = () => {
+    if (userid && userpw) {
+      localStorage.setItem("userInfo", JSON.stringify({ userInfo })); // userInfo 저장
+      sessionStorage.setItem("userInfo", JSON.stringify({ userInfo }));
+      setDialogOpen(false);
+      setAlertMessage("자동 로그인이 설정되었습니다.");
+
+      setTimeout(() => {
+        setAlertMessage(null);
+        navigate("/menu");
+      }, 3000);
     }
   };
   

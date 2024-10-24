@@ -34,7 +34,9 @@ export const UserLogin = async (userid, userpw) => {
       console.log('userpw', userpw);
       
       const response = await axios.post('/api/login', { userid, userpw });
-      return response.data.exists;
+      console.log('userLogin response', response);
+      
+      return response.data;
   } catch (error) {
       console.error('Error checking User ID:', error);
       throw error;

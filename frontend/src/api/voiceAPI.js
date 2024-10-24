@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// elevenLabs 목소리 리스트 가져오기
 export const fetchVoiceList = async () => {
   try {
     const response = await axios.get("/api/voices");
@@ -21,6 +22,16 @@ export const fetchVoiceList = async () => {
     }
   } catch (error) {
     console.error("Failed to fetch voice list:", error);
+    throw error;
+  }
+};
+
+export const saveUserSettings = async (settings) => {
+  try {
+    const response = await axios.post("/api/user/settings", settings);
+    return response.data;
+  } catch (error) {
+    console.error("Error saving user settings:", error);
     throw error;
   }
 };

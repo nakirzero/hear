@@ -14,7 +14,7 @@ import {
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
 import ProfileSection from "../../components/ProfileSection";
-import { fetchVoiceList } from "../../api/voiceAPI";
+import { fetchVoiceList, saveUserSettings } from "../../api/voiceAPI";
 
 const SettingAudio = () => {
   const [voiceList, setVoiceList] = useState([]);
@@ -66,6 +66,19 @@ const SettingAudio = () => {
     }
   };
 
+  const handleSaveSettings = async () => {
+    try {
+      await saveUserSettings({
+        selectedVoice,
+        speed,
+      });
+      alert("설정이 저장되었습니다.");
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      alert("설정 저장에 실패했습니다.");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -112,7 +125,7 @@ const SettingAudio = () => {
 
         {/* Buttons */}
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 4 }}>
-          <Button variant="contained">저장하기</Button>
+          <Button variant="contained" onClick={handleSaveSettings}>저장하기</Button>
           <Button variant="outlined" onClick={handlePreview}>
             미리듣기
           </Button>
