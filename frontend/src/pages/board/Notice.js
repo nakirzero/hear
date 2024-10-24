@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import FilterListIcon from '@mui/icons-material/FilterList';
@@ -6,16 +6,30 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import Footer from '../../components/Footer';
+import { fetchNotices } from '../../api/boardAPI';
 
-const data = [
-  { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
-  { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
-  { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
-  { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
-  { title: "Full name", publisher: "Company name", author: "14", requester: "Team name", date: "Jan 11, 2050" },
-];
+// 날짜 포맷팅 함수
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
+};
 
 const Notice = () => {
+  const [data, setData] = useState([]);
+  
+  useEffect(() => {
+    const getNotices = async () => {
+      try {
+        const notices = await fetchNotices();
+        console.log('notices', notices);
+        
+        setData(notices);
+      } catch (error) {
+        console.error("Failed to fetch notices:", error);
+      }
+    };
+    getNotices();
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -48,21 +62,21 @@ const Notice = () => {
           <Table>
             <TableHead>
               <TableRow>
+                <TableCell>번호</TableCell>
+                <TableCell>분류</TableCell>
                 <TableCell>제목</TableCell>
-                <TableCell>출판사</TableCell>
-                <TableCell>작가</TableCell>
-                <TableCell>신청자</TableCell>
                 <TableCell>작성일</TableCell>
+                <TableCell>작성자</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {data.map((row, index) => (
                 <TableRow key={index}>
-                  <TableCell>{row.title}</TableCell>
-                  <TableCell>{row.publisher}</TableCell>
-                  <TableCell>{row.author}</TableCell>
-                  <TableCell>{row.requester}</TableCell>
-                  <TableCell>{row.date}</TableCell>
+                  <TableCell>{row.NOTICE_SEQ}</TableCell>
+                  <TableCell>{row.NOTICE_DIV}</TableCell>
+                  <TableCell>{row.NOTICE_TITLE}</TableCell>
+                  <TableCell>{formatDate(row.NOTICE_CrtDt)}</TableCell>
+                  <TableCell>{row.NICKNAME}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
