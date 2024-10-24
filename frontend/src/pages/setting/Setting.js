@@ -19,7 +19,7 @@ const Setting = () => {
       {/* Options Section */}
       <Box flexGrow={1} display="flex" justifyContent="center" py={6} bgcolor="#fff">
         <Grid container spacing={10} maxWidth="1000px">
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
@@ -28,13 +28,22 @@ const Setting = () => {
               <Typography variant="h6">오디오북 설정</Typography>
             </Button>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
               onClick={() => navigate('/setting/user')}
             >
               <Typography variant="h6">회원정보 수정</Typography>
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
+            <Button
+              variant="contained"
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/setting/voice')}
+            >
+              <Typography variant="h6">목소리 녹음</Typography>
             </Button>
           </Grid>
         </Grid>
