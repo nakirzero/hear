@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
 import {
   Typography,
   Container,
@@ -9,24 +10,30 @@ import {
   FormControlLabel,
   Select,
   MenuItem,
+  Alert, // Alert 추가
 } from "@mui/material";
 
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
 import ProfileSection from "../../components/ProfileSection";
-import { fetchVoiceList } from "../../api/voiceAPI";
+import { fetchVoiceList, saveUserSettings } from "../../api/voiceAPI";
 
 const SettingAudio = () => {
+  const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
   const [voiceList, setVoiceList] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState("");
   const [speed, setSpeed] = useState(1.0); // 배속 조절 값
 
   const [audioElement, setAudioElement] = useState(null);
+  const [alertMessage, setAlertMessage] = useState(""); // 알림 메시지
+  const [alertSeverity, setAlertSeverity] = useState("success"); // 알림 유형
 
   useEffect(() => {
     const getVoices = async () => {
       try {
         const voices = await fetchVoiceList();
+        console.log(voices);
+        
         setVoiceList(voices);
 
         if (voices.length > 0) {
@@ -63,6 +70,29 @@ const SettingAudio = () => {
     if (audioElement) {
       audioElement.pause();
       audioElement.currentTime = 0; // 재생 위치를 처음으로
+    }
+  };
+
+  const handleSaveSettings = async () => {
+    try {
+      if (!userObject || !userObject.USER_SEQ) {
+        setAlertMessage("사용자 정보가 없습니다.");
+        setAlertSeverity("error");
+        return;
+      }
+
+      await saveUserSettings({
+        user_seq: userObject.USER_SEQ, // 전역 userObject에서 USER_SEQ 사용
+        selectedVoice,
+        speed,
+      });
+
+      setAlertMessage("설정이 저장되었습니다.");
+      setAlertSeverity("success");
+    } catch (error) {
+      console.error("Error saving settings:", error);
+      setAlertMessage("설정 저장에 실패했습니다.");
+      setAlertSeverity("error");
     }
   };
 
@@ -110,9 +140,14 @@ const SettingAudio = () => {
           <FormControlLabel value={2.0} control={<Radio />} label="x 2.0" />
         </RadioGroup>
 
-        {/* Buttons */}
+        {alertMessage && (
+          <Alert variant="filled" severity={alertSeverity} sx={{ mb: 4 }}>
+            {alertMessage}
+          </Alert>
+        )}
+
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 4 }}>
-          <Button variant="contained">저장하기</Button>
+          <Button variant="contained" onClick={handleSaveSettings}>저장하기</Button>
           <Button variant="outlined" onClick={handlePreview}>
             미리듣기
           </Button>

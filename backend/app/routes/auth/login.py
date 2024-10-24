@@ -22,12 +22,16 @@ def login():
     if connection:
         try:
         # Query to find the user
-             query = text("SELECT COUNT(*) FROM user WHERE USER_ID = :userid AND USER_PW =:userpw")
+             query = text("SELECT * FROM user WHERE USER_ID = :userid AND USER_PW =:userpw")
              result = connection.execute(query, {"userid": userid, "userpw": userpw})
-             count = result.fetchone()[0] if result else 0
-
-             if count > 0:
-                return jsonify({"exists": True})
+             print('result', result)
+             userInfo = result.fetchone()
+             print( "오잉크" , userInfo)
+             
+             if userInfo:
+                userInfo = dict(zip(result.keys(), userInfo))
+                print("userInfo", userInfo)
+                return jsonify({"exists": True, "userInfo": userInfo})
              else:
                 return jsonify({"exists": False})
         except Exception as db_error:
