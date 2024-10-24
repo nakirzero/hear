@@ -28,7 +28,7 @@ export const fetchVoiceList = async () => {
 
 export const saveUserSettings = async (settings) => {
   try {
-    const response = await axios.post("/api/user/settings", settings);
+    const response = await axios.post("/api/voice/settings", settings);
     return response.data;
   } catch (error) {
     console.error("Error saving user settings:", error);

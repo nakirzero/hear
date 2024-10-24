@@ -1,6 +1,8 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
+import { AuthProvider } from "./context/AuthContext"; // AuthProvider 임포트
+
 import Main from "./pages/Main";
 import Join from "./pages/Join";
 import Login from "./pages/Login";
@@ -15,21 +17,23 @@ import Notice from "./pages/board/Notice";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Main />} />
-        <Route path="/join" element={<Join />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/menu" element={<Menu />} />
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Main />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/menu" element={<Menu />} />
 
-        <Route path="/setting" element={<Setting />} />
-        <Route path="/setting/audio" element={<SettingAudio />} />
-        <Route path="/setting/user" element={<SettingUser />} />
+          <Route path="/setting" element={<Setting />} />
+          <Route path="/setting/audio" element={<SettingAudio />} />
+          <Route path="/setting/user" element={<SettingUser />} />
 
-        <Route path="/board" element={<Board />} />
-        <Route path="/board/notice" element={<Notice />} />
-      </Routes>
-    </Router>
+          <Route path="/board" element={<Board />} />
+          <Route path="/board/notice" element={<Notice />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
 }
 
