@@ -1,14 +1,17 @@
 import React, { useState, useRef } from 'react';
-import { Typography, Box, Button, Container } from '@mui/material';
+import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
+import { Typography, Box, Button, Container, TextField } from '@mui/material';
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import Footer from '../../components/Footer';
 import { uploadAndAddVoice } from '../../api/voiceAPI';
 
 const SettingVoice = () => {
+  const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState('');
   const [audioBlob, setAudioBlob] = useState(null);
+  const [voiceName, setVoiceName] = useState('');
   const mediaRecorderRef = useRef(null);
 
   const handleRecording = async () => {
@@ -49,10 +52,19 @@ const SettingVoice = () => {
   };
 
   const handleSave = async () => {
-    if (audioBlob) {
+    if (!userObject || !userObject.USER_SEQ) {
+      alert("사용자 정보가 없습니다.");
+      return;
+    }
+
+    if (audioBlob && voiceName.trim() !== '') {
       try {
         // 서버에 파일 업로드하고 ElevenLabs에 추가
-        const response = await uploadAndAddVoice(audioBlob);
+        const formData = new FormData();
+        formData.append('file', audioBlob);
+        formData.append('voiceName', voiceName);
+        formData.append('userSeq', userObject.USER_SEQ);
+        const response = await uploadAndAddVoice(formData);
         if (response.message === "Voice added successfully") {
           alert("목소리가 성공적으로 추가되었습니다.");
         }
@@ -60,6 +72,8 @@ const SettingVoice = () => {
         console.error("Failed to save voice:", error);
         alert("목소리를 저장하는 중에 오류가 발생했습니다.");
       }
+    } else {
+      alert("목소리 이름을 입력해주세요.");
     }
   };
 
@@ -69,14 +83,21 @@ const SettingVoice = () => {
       <Breadcrumb />
 
       <Box flexGrow={1} display="flex" justifyContent="center" py={6} bgcolor="#fff">
-        <Container maxWidth="sm" textAlign="center">
+        <Container maxWidth="sm" >
           <Typography variant="h4" gutterBottom>
             목소리 녹음하기
           </Typography>
           <Typography variant="body1" gutterBottom>
             본인의 목소리를 녹음해서 TTS로 사용할 수 있습니다. 녹음 버튼을 누르고 최소 10초에서 1분 정도 녹음해주세요.
           </Typography>
-          
+          <TextField
+            fullWidth
+            label="목소리 이름"
+            value={voiceName}
+            onChange={(e) => setVoiceName(e.target.value)}
+            variant="outlined"
+            margin="normal"
+          />
           <Box display="flex" justifyContent="space-around" mt={4}>
             <Button
               variant={isRecording ? "outlined" : "contained"}

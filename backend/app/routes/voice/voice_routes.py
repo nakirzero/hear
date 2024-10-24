@@ -2,6 +2,9 @@ from flask import Blueprint, jsonify, request
 import requests
 import os
 from app.config import Config
+from app.model import get_db_connection
+from sqlalchemy import text
+from datetime import datetime
 
 voice_routes = Blueprint('voice_routes', __name__)
 
@@ -50,8 +53,9 @@ def upload_and_add_voice():
             files = [
                 ('files', (filename, audio_file, 'audio/wav'))
             ]
+            voice_name = request.form.get('voiceName', 'Custom Voice')  # 프론트에서 전달된 voiceName을 가져옴
             data = {
-                'name': 'Custom Voice',
+                'name': voice_name,
                 'remove_background_noise': True,  # Boolean 값으로 설정
                 'description': 'Voice added via API',
                 'labels': '{}'
@@ -63,7 +67,40 @@ def upload_and_add_voice():
             response = requests.post(ELEVENLABS_VOICE_ADD_API_URL, headers=headers, data=data, files=files)
             response.raise_for_status()
 
-            return jsonify({"message": "Voice added successfully", "data": response.json()}), 200
+            # ElevenLabs에서 받은 voice_id 추출
+            voice_data = response.json()
+            elevenlabs_voice_id = voice_data.get('voice_id')
+
+            # Voice 정보 DB에 저장
+            connection = get_db_connection()
+            if connection:
+                try:
+                    query = text("""
+                        INSERT INTO voice_list (USER_SEQ, EL_ID, VL_NAME, VL_SPEED, VL_PITCH, VL_CrtDt) 
+                        VALUES (:user_seq, :el_id, :vl_name, :vl_speed, :vl_pitch, now())
+                    """)
+                    # USER_SEQ는 프론트에서 받아온다고 가정
+                    user_seq = request.form.get('userSeq', None)
+                    if not user_seq:
+                        return jsonify({"error": "User sequence is required"}), 400
+
+                    connection.execute(query, {
+                        "user_seq": user_seq,
+                        "el_id": elevenlabs_voice_id,
+                        "vl_name": voice_name,
+                        "vl_speed": 1,  # 기본 속도, 필요시 프론트에서 받도록 수정 가능
+                        "vl_pitch": 1   # 기본 피치, 필요시 프론트에서 받도록 수정 가능
+                    })
+                    connection.commit()
+
+                    return jsonify({"message": "Voice added successfully", "data": voice_data}), 200
+                except Exception as db_error:
+                    print(f"Database operation failed: {db_error}")
+                    return jsonify({"error": "Database operation failed"}), 500
+                finally:
+                    connection.close()
+            else:
+                return jsonify({"error": "Database connection failed"}), 500
     except requests.RequestException as e:
         if e.response is not None:
             print(f"Error adding voice to ElevenLabs: {e.response.text}")
@@ -73,3 +110,4 @@ def upload_and_add_voice():
             print(f"Error adding voice to ElevenLabs: {e}")
 
         return jsonify({"error": "Failed to add voice to ElevenLabs."}), 500
+

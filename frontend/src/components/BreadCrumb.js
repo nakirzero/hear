@@ -3,10 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, Breadcrumbs, Link } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
-import AudiotrackIcon from "@mui/icons-material/Audiotrack";
+import HeadsetIcon from '@mui/icons-material/Headset';
 import PersonIcon from "@mui/icons-material/Person";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import MicIcon from '@mui/icons-material/Mic';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -19,16 +20,18 @@ const Breadcrumb = () => {
     "user": "회원정보 수정",
     "board": "고객 게시판",
     "notice": "공지사항",
+    "voice": "목소리 녹음"
   };
 
   // 각 경로에 맞는 아이콘 매핑
   const iconMap = {
     "setting": <SettingsIcon sx={{ verticalAlign: "middle" }} />,
-    "audio": <AudiotrackIcon sx={{ verticalAlign: "middle" }} />,
+    "audio": <HeadsetIcon sx={{ verticalAlign: "middle" }} />,
     "user": <PersonIcon sx={{ verticalAlign: "middle" }} />,
     "menu": <MenuBookIcon sx={{ verticalAlign: "middle" }} />,
     "board": <MenuBookIcon sx={{ verticalAlign: "middle" }} />,
     "notice": <NotificationsIcon sx={{ verticalAlign: "middle" }} />,
+    "voice": <MicIcon sx={{ verticalAlign: "middle" }} />
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);

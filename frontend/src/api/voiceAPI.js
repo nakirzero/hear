@@ -37,11 +37,8 @@ export const saveUserSettings = async (settings) => {
 };
 
 // 녹음 파일 서버에 업로드하고, ElevenLabs에 추가
-export const uploadAndAddVoice = async (file) => {
+export const uploadAndAddVoice = async (formData) => {
   try {
-    const formData = new FormData();
-    formData.append("file", file);
-
     const response = await axios.post("/api/voice/upload-and-add", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
