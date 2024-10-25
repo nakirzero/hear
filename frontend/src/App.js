@@ -17,6 +17,8 @@ import Board from "./pages/board/Board";
 import Notice from "./pages/board/Notice";
 import PredictPage from "./pages/PredictPage";
 
+import MyStudy from "./pages/study/MyStudy";
+
 function App() {
   return (
     <AuthProvider>
@@ -26,6 +28,8 @@ function App() {
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
           <Route path="/menu" element={<Menu />} />
+
+          <Route path="/mystudy" element={<MyStudy />} />
 
           <Route path="/setting" element={<Setting />} />
           <Route path="/setting/audio" element={<SettingAudio />} />

@@ -7,7 +7,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import ProfileSection from '../../components/ProfileSection';
 import Footer from '../../components/Footer';
 
-const Setting = () => {
+const MyStudy = () => {
   const navigate = useNavigate();
   
   return (
@@ -16,34 +16,42 @@ const Setting = () => {
       <Breadcrumb />
       <ProfileSection />
 
-      {/* Options Section */}
       <Box flexGrow={1} display="flex" justifyContent="center" py={6} bgcolor="#fff">
         <Grid container spacing={10} maxWidth="1000px">
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
-              onClick={() => navigate('/setting/audio')}
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/')}
             >
-              <Typography variant="h6">오디오북 설정</Typography>
+              <Typography variant="h6">최근 읽은 기록</Typography>
             </Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
-              onClick={() => navigate('/setting/user')}
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/')}
             >
-              <Typography variant="h6">회원정보 수정</Typography>
+              <Typography variant="h6">하이라이트</Typography>
             </Button>
           </Grid>
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
-              onClick={() => navigate('/setting/voice')}
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/')}
             >
-              <Typography variant="h6">목소리 녹음</Typography>
+              <Typography variant="h6">독서노트</Typography>
+            </Button>
+          </Grid>
+          <Grid item xs={6}>
+            <Button
+              variant="contained"
+              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              onClick={() => navigate('/')}
+            >
+              <Typography variant="h6">희망도서신청조회</Typography>
             </Button>
           </Grid>
         </Grid>
@@ -54,4 +62,4 @@ const Setting = () => {
   );
 };
 
-export default Setting;
+export default MyStudy;

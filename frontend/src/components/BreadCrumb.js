@@ -5,9 +5,10 @@ import HomeIcon from "@mui/icons-material/Home";
 import SettingsIcon from "@mui/icons-material/Settings";
 import HeadsetIcon from '@mui/icons-material/Headset';
 import PersonIcon from "@mui/icons-material/Person";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MicIcon from '@mui/icons-material/Mic';
+import { IoLibrary } from "react-icons/io5";
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -20,7 +21,8 @@ const Breadcrumb = () => {
     "user": "회원정보 수정",
     "board": "고객 게시판",
     "notice": "공지사항",
-    "voice": "목소리 녹음"
+    "voice": "목소리 녹음",
+    "mystudy" : "내 서재"
   };
 
   // 각 경로에 맞는 아이콘 매핑
@@ -28,10 +30,10 @@ const Breadcrumb = () => {
     "setting": <SettingsIcon sx={{ verticalAlign: "middle" }} />,
     "audio": <HeadsetIcon sx={{ verticalAlign: "middle" }} />,
     "user": <PersonIcon sx={{ verticalAlign: "middle" }} />,
-    "menu": <MenuBookIcon sx={{ verticalAlign: "middle" }} />,
-    "board": <MenuBookIcon sx={{ verticalAlign: "middle" }} />,
+    "board": <SupportAgentIcon sx={{ verticalAlign: "middle" }} />,
     "notice": <NotificationsIcon sx={{ verticalAlign: "middle" }} />,
-    "voice": <MicIcon sx={{ verticalAlign: "middle" }} />
+    "voice": <MicIcon sx={{ verticalAlign: "middle" }} />,
+    "mystudy": <IoLibrary style={{ verticalAlign: "middle", fontSize: "20px" }} />
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);
@@ -53,7 +55,7 @@ const Breadcrumb = () => {
         >
           <HomeIcon sx={{ verticalAlign: "middle" }} />
           <Typography variant="body2" ml={1}>
-            HOME
+            홈
           </Typography>
         </Link>
 
