@@ -15,6 +15,7 @@ import SettingVoice from "./pages/setting/SettingVoice";
 
 import Board from "./pages/board/Board";
 import Notice from "./pages/board/Notice";
+import PredictPage from "./pages/PredictPage";
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function App() {
 
           <Route path="/board" element={<Board />} />
           <Route path="/board/notice" element={<Notice />} />
+
+          <Route path="/predict" element={<PredictPage />} />
         </Routes>
       </Router>
     </AuthProvider>
