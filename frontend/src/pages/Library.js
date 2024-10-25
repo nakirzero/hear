@@ -3,27 +3,20 @@ import Breadcrumb from "../components/BreadCrumb";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-import {
-  Box,
-  Button,
-  Paper,
-  TableContainer,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
-  Stack,
-  Pagination,
-} from "@mui/material";
+import {Box, Button, Paper, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Stack, Pagination, } from "@mui/material";
 import { fetchLibrary } from "../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
+import usePagination from "../hooks/usePagination";
 
 const Library = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookList, setBookList] = useState([]);
-  const [originalBookList, setOriginalBookList] = useState([]);
+
+  const { currentData, totalPages, page, handlePageChange } = usePagination(
+    bookList,
+    10
+  );
 
   // 데이터를 가져오는 함수
   useEffect(() => {
@@ -31,8 +24,6 @@ const Library = () => {
       try {
         const response = await fetchLibrary();
         console.log(response);
-
-        setOriginalBookList(response);
 
         // URL 파라미터를 기반으로 필터링 적용
         const params = new URLSearchParams(location.search);
@@ -87,7 +78,7 @@ const Library = () => {
           <Button
             variant="contained"
             sx={buttonStyle}
-            onClick={() => handleCategoryFilter('200')}
+            onClick={() => handleCategoryFilter("200")}
             aria-label="카테고리 시로 이동"
           >
             1. 시
@@ -95,7 +86,7 @@ const Library = () => {
           <Button
             variant="contained"
             sx={buttonStyle}
-            onClick={() => handleCategoryFilter('100')}
+            onClick={() => handleCategoryFilter("100")}
             aria-label="카테고리 소설로 이동"
           >
             2. 소설
@@ -103,7 +94,7 @@ const Library = () => {
           <Button
             variant="contained"
             sx={buttonStyle}
-            onClick={() => handleCategoryFilter('300')}
+            onClick={() => handleCategoryFilter("300")}
             aria-label="카테고리 수필로 이동"
           >
             3. 수필
@@ -140,7 +131,7 @@ const Library = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {bookList.map((book) => (
+            {currentData.map((book) => (
               <TableRow
                 key={book.BOOK_NAME}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
@@ -168,7 +159,13 @@ const Library = () => {
           </TableBody>
         </Table>
         <Stack spacing={2} alignItems={"center"} sx={{ mb: 4 }}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+          />
         </Stack>
       </TableContainer>
 

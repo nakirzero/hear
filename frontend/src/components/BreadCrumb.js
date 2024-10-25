@@ -9,6 +9,8 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MicIcon from '@mui/icons-material/Mic';
 import { IoLibrary } from "react-icons/io5";
+import MailIcon from '@mui/icons-material/Mail';
+import CreateIcon from '@mui/icons-material/Create';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -22,7 +24,9 @@ const Breadcrumb = () => {
     "board": "고객 게시판",
     "notice": "공지사항",
     "voice": "목소리 녹음",
-    "mystudy" : "내 서재"
+    "mystudy" : "내 서재",
+    "suggest" : "건의사항",
+    "write" : "건의사항 작성"
   };
 
   // 각 경로에 맞는 아이콘 매핑
@@ -33,7 +37,9 @@ const Breadcrumb = () => {
     "board": <SupportAgentIcon sx={{ verticalAlign: "middle" }} />,
     "notice": <NotificationsIcon sx={{ verticalAlign: "middle" }} />,
     "voice": <MicIcon sx={{ verticalAlign: "middle" }} />,
-    "mystudy": <IoLibrary style={{ verticalAlign: "middle", fontSize: "20px" }} />
+    "mystudy": <IoLibrary style={{ verticalAlign: "middle", fontSize: "20px" }} />,
+    "suggest": <MailIcon sx={{ verticalAlign: "middle" }} />,
+    "write": <CreateIcon sx={{ verticalAlign: "middle" }} />
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);

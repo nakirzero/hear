@@ -7,6 +7,7 @@ import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import Footer from '../../components/Footer';
 import { fetchNotices } from '../../api/boardAPI';
+import usePagination from '../../hooks/usePagination';
 
 // 날짜 포맷팅 함수
 const formatDate = (dateString) => {
@@ -16,56 +17,43 @@ const formatDate = (dateString) => {
 
 // 분류를 "공지"로 변환하는 함수
 const formatNoticeDiv = (divValue) => {
-  // 특정 값일 경우 "공지"로 변환
   if (divValue === 1) {
     return '공지';
   }
-  // 다른 값일 경우 원래의 값을 반환
   return divValue;
 };
 
 const Notice = () => {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);  // 필터링된 데이터 상태
-  const [page, setPage] = useState(1);  // 현재 페이지 상태
-  const [rowsPerPage] = useState(10);  // 한 페이지당 표시할 행 수 (10개)
-  const [totalPages, setTotalPages] = useState(0);  // 전체 페이지 수
-  const [searchTerm, setSearchTerm] = useState('');  // 검색어 상태
+  const [filteredData, setFilteredData] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const { currentData, totalPages, page, handlePageChange } = usePagination(filteredData, 10);
 
   useEffect(() => {
     const getNotices = async () => {
       try {
         const notices = await fetchNotices();
-
-        // 데이터 NOTICE_CrtDt 기준으로 내림차순 정렬
         const sortedNotices = notices.sort((a, b) => new Date(b.NOTICE_CrtDt) - new Date(a.NOTICE_CrtDt));
         console.log('sorted notices', sortedNotices);
         
         setData(sortedNotices);
-        setFilteredData(sortedNotices); 
-        setTotalPages(Math.ceil(sortedNotices.length / rowsPerPage));
+        setFilteredData(sortedNotices);
       } catch (error) {
         console.error("Failed to fetch notices:", error);
       }
     };
     getNotices();
-  }, [rowsPerPage]);
+  }, []);
 
   const handleSearch = (event) => {
     event.preventDefault();
     
     const filtered = data.filter((notices) => 
-      notices.NOTICE_TITLE.includes(searchTerm) ||  // 제목에 검색어 포함
-    notices.NICKNAME.includes(searchTerm)         // 작성자에 검색어 포함
+      notices.NOTICE_TITLE.includes(searchTerm) ||  
+      notices.NICKNAME.includes(searchTerm)
     );
     
     setFilteredData(filtered);
-    setTotalPages(Math.ceil(filtered.length / rowsPerPage));
-    setPage(1);  // 페이지를 첫 페이지로 초기화
-  };
-
-  const handlePageChange = (event, value) => {
-    setPage(value);
   };
 
   return (
@@ -96,7 +84,6 @@ const Notice = () => {
           </Button>
         </Box>
 
-
          {/* Table */}
          <TableContainer component={Paper}>
           <Table>
@@ -110,9 +97,7 @@ const Notice = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-            {filteredData
-                .slice((page - 1) * rowsPerPage, page * rowsPerPage)  // 페이지 번호에 맞는 데이터 슬라이싱
-                .map((row, index) => (
+              {currentData.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_SEQ}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{formatNoticeDiv(row.NOTICE_DIV)}</TableCell>
