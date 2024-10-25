@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { Typography, Box, Grid, IconButton } from "@mui/material";
-import BookIcon from "@mui/icons-material/Book";
-import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import { IoLibrary } from "react-icons/io5";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { useNavigate } from "react-router-dom";
@@ -16,8 +16,8 @@ const Menu = () => {
 
   // useMemo를 사용해 menuItems 배열을 메모이제이션
   const menuItems = useMemo(() => [
-    { icon: <BookIcon fontSize="inherit" />, label: "1 도서마당", path: "/book" },
-    { icon: <LibraryBooksIcon fontSize="inherit" />, label: "2 내 서재", path: "/path1" },
+    { icon: <LibraryMusicIcon fontSize="inherit" />, label: "1 도서마당", path: "/library" },
+    { icon: <IoLibrary fontSize="inherit" />, label: "2 내 서재", path: "/mystudy" },
     { icon: <SettingsIcon fontSize="inherit" />, label: "3 설정", path: "/setting" },
     { icon: <SupportAgentIcon fontSize="inherit" />, label: "4 고객게시판", path: "/board" }
   ], []);

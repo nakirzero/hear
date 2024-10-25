@@ -22,7 +22,7 @@ const Setting = () => {
           <Grid item xs={4}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
               onClick={() => navigate('/setting/audio')}
             >
               <Typography variant="h6">오디오북 설정</Typography>
@@ -31,7 +31,7 @@ const Setting = () => {
           <Grid item xs={4}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
               onClick={() => navigate('/setting/user')}
             >
               <Typography variant="h6">회원정보 수정</Typography>
@@ -40,7 +40,7 @@ const Setting = () => {
           <Grid item xs={4}>
             <Button
               variant="contained"
-              sx={{ padding: 10, textAlign: 'center', width: '100%' }}
+              sx={{ padding: 10, textAlign: 'center', width: '100%', whiteSpace: 'nowrap' }}
               onClick={() => navigate('/setting/voice')}
             >
               <Typography variant="h6">목소리 녹음</Typography>

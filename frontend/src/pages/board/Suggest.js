@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import Footer from '../../components/Footer';
-import { fetchNotices } from '../../api/boardAPI';
+import { fetchSuggests } from '../../api/boardAPI';
 import usePagination from '../../hooks/usePagination';
 
 // 날짜 포맷팅 함수
@@ -15,42 +15,44 @@ const formatDate = (dateString) => {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 };
 
-// 분류를 "공지"로 변환하는 함수
-const formatNoticeDiv = (divValue) => {
-  if (divValue === 1) {
-    return '공지';
+// 분류를 "건의"로 변환하는 함수
+const formatSuggestDiv = (divValue) => {
+  if (divValue === 2) {
+    return '건의';
   }
   return divValue;
 };
 
-const Notice = () => {
+const Suggest = () => {
+  const navigate = useNavigate();
+
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const { currentData, totalPages, page, handlePageChange } = usePagination(filteredData, 10);
 
   useEffect(() => {
-    const getNotices = async () => {
+    const getSuggests = async () => {
       try {
-        const notices = await fetchNotices();
-        const sortedNotices = notices.sort((a, b) => new Date(b.NOTICE_CrtDt) - new Date(a.NOTICE_CrtDt));
-        console.log('sorted notices', sortedNotices);
+        const suggests = await fetchSuggests();
+        const sortedSuggests = suggests.sort((a, b) => new Date(b.NOTICE_CrtDt) - new Date(a.NOTICE_CrtDt));
+        console.log('sorted Suggests', sortedSuggests);
         
-        setData(sortedNotices);
-        setFilteredData(sortedNotices);
+        setData(sortedSuggests);
+        setFilteredData(sortedSuggests);
       } catch (error) {
-        console.error("Failed to fetch notices:", error);
+        console.error("Failed to fetch suggests:", error);
       }
     };
-    getNotices();
+    getSuggests();
   }, []);
 
   const handleSearch = (event) => {
     event.preventDefault();
     
-    const filtered = data.filter((notices) => 
-      notices.NOTICE_TITLE.includes(searchTerm) ||  
-      notices.NICKNAME.includes(searchTerm)
+    const filtered = data.filter((suggest) => 
+      suggest.NOTICE_TITLE.includes(searchTerm) ||  
+      suggest.NICKNAME.includes(searchTerm)
     );
     
     setFilteredData(filtered);
@@ -63,7 +65,7 @@ const Notice = () => {
 
       {/* Main Content */}
       <Box flexGrow={1} bgcolor="#FFD700" p={2}>
-        <Typography variant="h6">공지사항</Typography>
+        <Typography variant="h6">건의사항</Typography>
 
         {/* Search and Filters */}
         <Box display="flex" justifyContent="space-between" alignItems="center" my={2}>
@@ -79,13 +81,13 @@ const Notice = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Button variant="outlined" startIcon={<FilterListIcon />}>
-            Filters
+          <Button variant="contained" onClick={() => navigate("/board/write")} fullWidth>
+            게시글 작성
           </Button>
         </Box>
 
-         {/* Table */}
-         <TableContainer component={Paper}>
+        {/* Table */}
+        <TableContainer component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
@@ -100,7 +102,7 @@ const Notice = () => {
               {currentData.map((row, index) => (
                 <TableRow key={index}>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_SEQ}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{formatNoticeDiv(row.NOTICE_DIV)}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>{formatSuggestDiv(row.NOTICE_DIV)}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_TITLE}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{formatDate(row.NOTICE_CrtDt)}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{row.NICKNAME}</TableCell>
@@ -110,8 +112,8 @@ const Notice = () => {
           </Table>
         </TableContainer>
 
-         {/* Pagination */}
-      <Box display="flex" justifyContent="center" my={2}>
+        {/* Pagination */}
+        <Box display="flex" justifyContent="center" my={2}>
           <Pagination
             count={totalPages}
             page={page}
@@ -126,4 +128,4 @@ const Notice = () => {
   );
 };
 
-export default Notice;
+export default Suggest;
