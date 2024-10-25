@@ -25,7 +25,7 @@ const Board = () => {
             </Paper>
           </Grid>
           <Grid item xs={6}>
-            <Paper elevation={3} sx={{ padding: 10, height:10, textAlign: 'center' }} onClick={() => navigate('/suggest')}>
+            <Paper elevation={3} sx={{ padding: 10, height:10, textAlign: 'center' }} onClick={() => navigate('/board/suggest')}>
               <Typography variant="h6">건의사항</Typography>
             </Paper>
           </Grid>

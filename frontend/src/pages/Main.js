@@ -1,10 +1,21 @@
-import React from "react";
+import React , { useEffect }from "react";
 import { Container, Typography, Box, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 function Main() {
   const navigate = useNavigate();
 
+  useEffect(() => {
+    // localStorage 또는 sessionStorage에 저장된 정보를 확인
+    const userInfo = localStorage.getItem('userInfo') || sessionStorage.getItem('userInfo'); 
+
+    // 정보가 있으면 menu 페이지로 리다이렉트
+    if (userInfo) {
+      navigate('/menu');
+    }
+  }, [navigate]);
+
+  
   const buttonStyle = {
     width: 400,
     height: 160,
@@ -24,6 +35,7 @@ function Main() {
         textAlign: "center",
       }}
     >
+      
       <Typography variant="h3" sx={{ mb: 4 }}>
         H - ear
       </Typography>

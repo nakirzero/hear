@@ -16,7 +16,7 @@ const Menu = () => {
 
   // useMemo를 사용해 menuItems 배열을 메모이제이션
   const menuItems = useMemo(() => [
-    { icon: <LibraryMusicIcon fontSize="inherit" />, label: "1 도서마당", path: "/book" },
+    { icon: <LibraryMusicIcon fontSize="inherit" />, label: "1 도서마당", path: "/library" },
     { icon: <IoLibrary fontSize="inherit" />, label: "2 내 서재", path: "/mystudy" },
     { icon: <SettingsIcon fontSize="inherit" />, label: "3 설정", path: "/setting" },
     { icon: <SupportAgentIcon fontSize="inherit" />, label: "4 고객게시판", path: "/board" }
