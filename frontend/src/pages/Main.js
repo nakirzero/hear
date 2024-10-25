@@ -13,15 +13,6 @@ import logoImage7 from '../assets/logoImage7.png';
 import logoImage8 from '../assets/logoImage8.png';
 import logoImage9 from '../assets/logoImage9.png';
 import logoImage10 from '../assets/logoImage10.jpg';
-import logoImage11 from '../assets/logoImage11.jpg';
-import logoImage12 from '../assets/logoImage12.jpg';
-import logoImage13 from '../assets/logoImage13.jpg';
-import logoImage14 from '../assets/logoImage14.jpg';
-import logoImage15 from '../assets/logoImage15.jpg';
-import logoImage16 from '../assets/logoImage16.jpg';
-import logoImage17 from '../assets/logoImage17.jpg';
-import logoImage18 from '../assets/logoImage18.jpg';
-import logoImage19 from '../assets/logoImage19.jpg';
 
 function Main() {
   const navigate = useNavigate();
@@ -73,15 +64,6 @@ function Main() {
         <img src={logoImage8} alt="Logo 8" style={{ maxHeight: 80, margin: 4 }} />
         <img src={logoImage9} alt="Logo 9" style={{ maxHeight: 80, margin: 4 }} />
         <img src={logoImage10} alt="Logo 10" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage11} alt="Logo 11" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage12} alt="Logo 12" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage13} alt="Logo 13" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage14} alt="Logo 14" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage15} alt="Logo 15" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage16} alt="Logo 16" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage17} alt="Logo 17" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage18} alt="Logo 18" style={{ maxHeight: 80, margin: 4 }} />
-        <img src={logoImage19} alt="Logo 19" style={{ maxHeight: 80, margin: 4 }} />
       </Box>
       
       <Box sx={{ display: "flex", gap: 4 }}>
