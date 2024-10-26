@@ -1,18 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
 import useUserValidation from "../../hooks/useUserValidation";
-import {
-  Typography,
-  Container,
-  Box,
-  Button,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
-  Select,
-  MenuItem,
-  Alert, // Alert 추가
-} from "@mui/material";
+import useSnackbar from "../../hooks/useSnackbar";
+import useLoading from "../../hooks/useLoading";
+import {Typography, Container, Box, Button, Radio, RadioGroup, FormControlLabel, Select, MenuItem } from "@mui/material";
 
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
@@ -22,13 +13,14 @@ import { fetchVoiceList, saveUserSettings, deleteVoice } from "../../api/voiceAP
 const SettingAudio = () => {
   const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
   const { validateUser } = useUserValidation();
+  const { openSnackbar, SnackbarComponent } = useSnackbar();
+  const { isLoading, setIsLoading, LoadingIndicator } = useLoading("삭제 중...");
+
   const [voiceList, setVoiceList] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState("");
   const [speed, setSpeed] = useState(1.0); // 배속 조절 값
-
   const [audioElement, setAudioElement] = useState(null);
-  const [alertMessage, setAlertMessage] = useState(""); // 알림 메시지
-  const [alertSeverity, setAlertSeverity] = useState("success"); // 알림 유형
+
   const defaultVoice = ["XOjX7HuCs6jtaR1NqWIW", "CmvK4l3jURa7bBhVQAgX"]; // 남성(기본), 여성(기본)
 
   useEffect(() => {
@@ -88,22 +80,20 @@ const SettingAudio = () => {
         speed,
       });
 
-      setAlertMessage("설정이 저장되었습니다.");
-      setAlertSeverity("success");
+      openSnackbar("설정이 저장되었습니다.", "success");
     } catch (error) {
       console.error("Error saving settings:", error);
-      setAlertMessage("설정 저장에 실패했습니다.");
-      setAlertSeverity("error");
+      openSnackbar("설정 저장에 실패했습니다.", "error");
     }
   };
 
   const handleDeleteVoice = async () => {
     if (defaultVoice.includes(selectedVoice)) {
-      setAlertMessage("기본 목소리는 삭제할 수 없습니다.");
-      setAlertSeverity("warning");
+      openSnackbar("기본 목소리는 삭제할 수 없습니다.", "warning");
       return;
     }
 
+    setIsLoading(true);
     try {
       await deleteVoice(selectedVoice);
 
@@ -119,12 +109,12 @@ const SettingAudio = () => {
         setSelectedVoice("");
       }
 
-      setAlertMessage("목소리가 성공적으로 삭제되었습니다.");
-      setAlertSeverity("success");
+      openSnackbar("목소리가 성공적으로 삭제되었습니다.", "success");
     } catch (error) {
       console.error("Error deleting voice:", error);
-      setAlertMessage("목소리 삭제에 실패했습니다.");
-      setAlertSeverity("error");
+      openSnackbar("목소리 삭제에 실패했습니다.", "error");
+    } finally {
+      setIsLoading(false); // 삭제 완료 후 로딩 상태 비활성화
     }
   };
 
@@ -172,24 +162,25 @@ const SettingAudio = () => {
           <FormControlLabel value={2.0} control={<Radio />} label="x 2.0" />
         </RadioGroup>
 
-        {alertMessage && (
-          <Alert variant="filled" severity={alertSeverity} sx={{ mb: 4 }}>
-            {alertMessage}
-          </Alert>
-        )}
-
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 4 }}>
-          <Button variant="contained" onClick={handleSaveSettings}>저장하기</Button>
-          <Button variant="outlined" onClick={handleDeleteVoice} color="error">
-            삭제
-          </Button>
-          <Button variant="outlined" onClick={handlePreview}>
-            미리듣기
-          </Button>
-          <Button variant="outlined" color="error" onClick={handleStopPreview}>
-            미리듣기 중지
-          </Button>
+          {isLoading ? (
+            <LoadingIndicator />
+          ) : (
+            <>
+            <Button variant="contained" onClick={handleSaveSettings}>저장하기</Button>
+            <Button variant="outlined" onClick={handleDeleteVoice} color="error">
+              삭제
+            </Button>
+            <Button variant="outlined" onClick={handlePreview}>
+              미리듣기
+            </Button>
+            <Button variant="outlined" color="error" onClick={handleStopPreview}>
+              미리듣기 중지
+            </Button>
+            </>
+          )}
         </Box>
+        <SnackbarComponent anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} />
       </Container>
     </div>
   );

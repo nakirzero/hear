@@ -19,5 +19,3 @@ services:
       - .env  # .env 파일을 명시적으로 설정하여 로드
     volumes:
       - ./backend:/app  # 로컬 백엔드 코드와 컨테이너의 /app 디렉토리 공유
-    depends_on:
-      - frontend

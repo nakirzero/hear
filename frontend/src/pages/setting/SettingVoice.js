@@ -5,6 +5,8 @@ import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import Footer from '../../components/Footer';
 import { uploadAndAddVoice } from '../../api/voiceAPI';
+import useLoading from '../../hooks/useLoading';
+import useSnackbar from '../../hooks/useSnackbar'; // useSnackbar 훅 가져오기
 
 const SettingVoice = () => {
   const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
@@ -12,6 +14,8 @@ const SettingVoice = () => {
   const [audioURL, setAudioURL] = useState('');
   const [audioBlob, setAudioBlob] = useState(null);
   const [voiceName, setVoiceName] = useState('');
+  const { isLoading, setIsLoading, LoadingIndicator } = useLoading("목소리를 저장 중입니다..."); // 로딩 훅 사용
+  const { openSnackbar, SnackbarComponent } = useSnackbar(); // useSnackbar 훅 사용
   const mediaRecorderRef = useRef(null);
 
   const handleRecording = async () => {
@@ -53,12 +57,13 @@ const SettingVoice = () => {
 
   const handleSave = async () => {
     if (!userObject || !userObject.USER_SEQ) {
-      alert("사용자 정보가 없습니다.");
+      openSnackbar("사용자 정보가 없습니다.", "error");
       return;
     }
 
     if (audioBlob && voiceName.trim() !== '') {
       try {
+        setIsLoading(true); // 로딩 상태 시작
         // 서버에 파일 업로드하고 ElevenLabs에 추가
         const formData = new FormData();
         formData.append('file', audioBlob);
@@ -66,14 +71,16 @@ const SettingVoice = () => {
         formData.append('userSeq', userObject.USER_SEQ);
         const response = await uploadAndAddVoice(formData);
         if (response.message === "Voice added successfully") {
-          alert("목소리가 성공적으로 추가되었습니다.");
+          openSnackbar("목소리가 성공적으로 추가되었습니다.", "success");
         }
       } catch (error) {
         console.error("Failed to save voice:", error);
-        alert("목소리를 저장하는 중에 오류가 발생했습니다.");
+        openSnackbar("목소리를 저장하는 중에 오류가 발생했습니다.", "error");
+      } finally {
+        setIsLoading(false); // 로딩 상태 종료
       }
     } else {
-      alert("목소리 이름을 입력해주세요.");
+      openSnackbar("목소리 이름을 입력해주세요.", "warning");
     }
   };
 
@@ -98,40 +105,45 @@ const SettingVoice = () => {
             variant="outlined"
             margin="normal"
           />
-          <Box display="flex" justifyContent="space-around" mt={4}>
-            <Button
-              variant={isRecording ? "outlined" : "contained"}
-              color={isRecording ? "error" : "primary"}
-              onClick={handleRecording}
-              sx={{ padding: 2 }}
-            >
-              {isRecording ? "녹음 중지" : "녹음 시작"}
-            </Button>
-            
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handlePlayback}
-              disabled={!audioURL}
-              sx={{ padding: 2 }}
-            >
-              들어보기
-            </Button>
-            
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleSave}
-              disabled={!audioBlob}
-              sx={{ padding: 2 }}
-            >
-              목소리 저장
-            </Button>
-          </Box>
+          {isLoading ? (
+            <LoadingIndicator /> // 로딩 중에는 LoadingIndicator 표시
+          ) : (
+            <Box display="flex" justifyContent="space-around" mt={4}>
+              <Button
+                variant={isRecording ? "outlined" : "contained"}
+                color={isRecording ? "error" : "primary"}
+                onClick={handleRecording}
+                sx={{ padding: 2 }}
+              >
+                {isRecording ? "녹음 중지" : "녹음 시작"}
+              </Button>
+              
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handlePlayback}
+                disabled={!audioURL}
+                sx={{ padding: 2 }}
+              >
+                들어보기
+              </Button>
+              
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleSave}
+                disabled={!audioBlob}
+                sx={{ padding: 2 }}
+              >
+                목소리 저장
+              </Button>
+            </Box>
+          )}
         </Container>
       </Box>
 
       <Footer />
+      <SnackbarComponent />
     </div>
   );
 };
