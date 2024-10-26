@@ -10,6 +10,7 @@ engine = create_engine(
     max_overflow=10,  # 풀을 초과할 때 더 만들 수 있는 연결 수
     pool_timeout=30,  # 연결을 기다리는 시간
     pool_recycle=540,  # 540초마다 연결을 재활용 (세션 유지)
+    pool_pre_ping=True,   # 연결 상태 확인 (연결 끊김 방지)
     echo=True  # SQLAlchemy의 로그 출력을 활성화
 )
 
