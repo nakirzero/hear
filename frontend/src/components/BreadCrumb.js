@@ -11,6 +11,10 @@ import MicIcon from '@mui/icons-material/Mic';
 import { IoLibrary } from "react-icons/io5";
 import MailIcon from '@mui/icons-material/Mail';
 import CreateIcon from '@mui/icons-material/Create';
+import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+// import CalendarViewWeekIcon from '@mui/icons-material/CalendarViewWeek';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+// import LyricsIcon from '@mui/icons-material/Lyrics';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -26,7 +30,9 @@ const Breadcrumb = () => {
     "voice": "목소리 녹음",
     "mystudy" : "내 서재",
     "suggest" : "건의사항",
-    "write" : "건의사항 작성"
+    "write" : "건의사항 작성",
+    "library" : "도서마당",
+    "book" : "책 화면"
   };
 
   // 각 경로에 맞는 아이콘 매핑
@@ -39,7 +45,9 @@ const Breadcrumb = () => {
     "voice": <MicIcon sx={{ verticalAlign: "middle" }} />,
     "mystudy": <IoLibrary style={{ verticalAlign: "middle", fontSize: "20px" }} />,
     "suggest": <MailIcon sx={{ verticalAlign: "middle" }} />,
-    "write": <CreateIcon sx={{ verticalAlign: "middle" }} />
+    "write": <CreateIcon sx={{ verticalAlign: "middle" }} />,
+    "library": <LibraryMusicIcon sx={{ verticalAlign: "middle" }} />,
+    "book": <AutoStoriesIcon sx={{ verticalAlign: "middle" }} />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);
