@@ -13,20 +13,80 @@ ELEVENLABS_VOICE_API_URL = "https://api.elevenlabs.io/v1/voices"
 ELEVENLABS_VOICE_ADD_API_URL = "https://api.elevenlabs.io/v1/voices/add"
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio'))
 
-@voice_routes.route('/voices', methods=['GET'])
+@voice_routes.route('/voices', methods=['POST', 'DELETE'])
 def get_voices():
-    headers = {
-        'Accept': 'application/json',
-        'xi-api-key': Config.ELEVENLABS_API_KEY
-    }
-    
-    try:
-        response = requests.get(ELEVENLABS_VOICE_API_URL, headers=headers)
-        response.raise_for_status()
-        return jsonify(response.json())
-    except requests.RequestException as e:
-        print(f"Error fetching voices: {e.response.text if e.response else e}")
-        return jsonify({'error': 'An error occurred while fetching voices.'}), 500
+    data = request.get_json()
+    user_seq = data.get("user_seq")
+
+    if not user_seq:
+        return jsonify({'error': 'User sequence (user_seq) is required'}), 400
+
+    connection = get_db_connection()
+    if connection:
+        try:
+            query = text("SELECT VL_SEQ, EL_ID, VL_NAME, VL_SPEED, VL_PITCH FROM voice_list WHERE USER_SEQ = :user_seq")
+            result = connection.execute(query, {"user_seq": user_seq})
+
+            # 결과를 딕셔너리 형태로 변환
+            keys = result.keys()
+            voices = [
+                dict(zip(keys, row))
+                for row in result.fetchall()
+            ]
+
+            return jsonify(voices)
+
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Database operation failed"}), 500
+        finally:
+            connection.close()
+
+    return jsonify({"error": "Database connection failed"}), 500
+
+@voice_routes.route('/voices/<voice_id>', methods=['DELETE'])
+def delete_voice(voice_id):
+    # DELETE 요청 처리 코드 (특정 voice_id 삭제)
+    if not voice_id:
+        return jsonify({'error': 'Voice ID is required'}), 400
+
+    connection = get_db_connection()
+    if connection:
+        try:
+            # 1. DB에서 목소리 삭제
+            delete_query = text("DELETE FROM voice_list WHERE EL_ID = :voice_id")
+            result = connection.execute(delete_query, {"voice_id": voice_id})
+            connection.commit()
+
+            if result.rowcount == 0:
+                return jsonify({"error": "Voice not found"}), 404
+        
+             # 2. ElevenLabs API에서 목소리 삭제
+            headers = {
+                "Accept": "application/json",
+                "xi-api-key": Config.ELEVENLABS_API_KEY
+            }
+            elevenlabs_url = f"https://api.elevenlabs.io/v1/voices/{voice_id}"
+            elevenlabs_response = requests.delete(elevenlabs_url, headers=headers)
+
+            # 오류 확인을 위한 응답 처리
+            if elevenlabs_response.status_code in [200, 204]:
+                print("ElevenLabs voice deleted successfully")
+            else:
+                # 오류 메시지와 상태 코드 출력
+                print(f"Unexpected ElevenLabs response: {elevenlabs_response.status_code}")
+                print(f"Response content: {elevenlabs_response.text}")
+                return jsonify({"error": "Failed to delete voice from ElevenLabs"}), 500
+
+            return jsonify({"message": "Voice deleted successfully"}), 200
+
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Database operation failed"}), 500
+        finally:
+            connection.close()
+
+    return jsonify({"error": "Database connection failed"}), 500
 
 @voice_routes.route('/voice/upload-and-add', methods=['POST'])
 def upload_and_add_voice():

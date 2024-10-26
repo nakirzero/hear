@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
+import useUserValidation from "../../hooks/useUserValidation";
 import {
   Typography,
   Container,
@@ -16,10 +17,11 @@ import {
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
 import ProfileSection from "../../components/ProfileSection";
-import { fetchVoiceList, saveUserSettings } from "../../api/voiceAPI";
+import { fetchVoiceList, saveUserSettings, deleteVoice } from "../../api/voiceAPI";
 
 const SettingAudio = () => {
   const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
+  const { validateUser } = useUserValidation();
   const [voiceList, setVoiceList] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState("");
   const [speed, setSpeed] = useState(1.0); // 배속 조절 값
@@ -27,24 +29,27 @@ const SettingAudio = () => {
   const [audioElement, setAudioElement] = useState(null);
   const [alertMessage, setAlertMessage] = useState(""); // 알림 메시지
   const [alertSeverity, setAlertSeverity] = useState("success"); // 알림 유형
+  const defaultVoice = ["XOjX7HuCs6jtaR1NqWIW", "CmvK4l3jURa7bBhVQAgX"]; // 남성(기본), 여성(기본)
 
   useEffect(() => {
+    if (!validateUser()) return;
+
     const getVoices = async () => {
       try {
-        const voices = await fetchVoiceList();
+        const voices = await fetchVoiceList(userObject.USER_SEQ);
         console.log(voices);
         
         setVoiceList(voices);
 
         if (voices.length > 0) {
-          setSelectedVoice(voices[0].id);
+          setSelectedVoice(voices[0].EL_ID);
         }
       } catch (error) {
         console.error("Error fetching voice list:", error);
       }
     };
     getVoices();
-  }, []);
+  }, [validateUser, userObject]);
 
   const handlePreview = () => {
     const audioUrl = `/static/audio/${selectedVoice}.mp3`;
@@ -75,11 +80,7 @@ const SettingAudio = () => {
 
   const handleSaveSettings = async () => {
     try {
-      if (!userObject || !userObject.USER_SEQ) {
-        setAlertMessage("사용자 정보가 없습니다.");
-        setAlertSeverity("error");
-        return;
-      }
+      if (!validateUser()) return;
 
       await saveUserSettings({
         user_seq: userObject.USER_SEQ, // 전역 userObject에서 USER_SEQ 사용
@@ -92,6 +93,37 @@ const SettingAudio = () => {
     } catch (error) {
       console.error("Error saving settings:", error);
       setAlertMessage("설정 저장에 실패했습니다.");
+      setAlertSeverity("error");
+    }
+  };
+
+  const handleDeleteVoice = async () => {
+    if (defaultVoice.includes(selectedVoice)) {
+      setAlertMessage("기본 목소리는 삭제할 수 없습니다.");
+      setAlertSeverity("warning");
+      return;
+    }
+
+    try {
+      await deleteVoice(selectedVoice);
+
+      const updatedVoiceList = voiceList.filter(
+        (voice) => voice.EL_ID !== selectedVoice
+      );
+
+      setVoiceList(updatedVoiceList);
+
+      if (updatedVoiceList.length > 0) {
+        setSelectedVoice(updatedVoiceList[0].EL_ID);
+      } else {
+        setSelectedVoice("");
+      }
+
+      setAlertMessage("목소리가 성공적으로 삭제되었습니다.");
+      setAlertSeverity("success");
+    } catch (error) {
+      console.error("Error deleting voice:", error);
+      setAlertMessage("목소리 삭제에 실패했습니다.");
       setAlertSeverity("error");
     }
   };
@@ -118,8 +150,8 @@ const SettingAudio = () => {
           fullWidth
         >
           {voiceList.map((voice) => (
-            <MenuItem key={voice.id} value={voice.id}>
-              {voice.name}
+            <MenuItem key={voice.EL_ID} value={voice.EL_ID} disabled={voice.EL_ID === defaultVoice} >
+              {voice.VL_NAME}
             </MenuItem>
           ))}
         </Select>
@@ -148,6 +180,9 @@ const SettingAudio = () => {
 
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2, mt: 4 }}>
           <Button variant="contained" onClick={handleSaveSettings}>저장하기</Button>
+          <Button variant="outlined" onClick={handleDeleteVoice} color="error">
+            삭제
+          </Button>
           <Button variant="outlined" onClick={handlePreview}>
             미리듣기
           </Button>
