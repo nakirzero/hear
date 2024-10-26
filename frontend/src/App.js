@@ -8,6 +8,7 @@ import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 
+import Book from "./pages/Book";
 import Library from "./pages/Library";
 
 import Setting from "./pages/setting/Setting";
@@ -35,6 +36,7 @@ function App() {
           <Route path="/menu" element={<Menu />} />
 
           <Route path="/library" element={<Library />} />
+          <Route path="/library/book" element={<Book />} />
           
           <Route path="/mystudy" element={<MyStudy />} />
 

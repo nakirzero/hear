@@ -16,24 +16,28 @@ def myTokenizer(text):
         if token.tag in ['NNG', 'NNP']:
             yield token.form
 
-# `myTokenizer`를 `__main__`에 추가하여 pickle이 인식할 수 있게 함
-sys.modules['__main__'].myTokenizer = myTokenizer
+def model_load():
+    # `myTokenizer`를 `__main__`에 추가하여 pickle이 인식할 수 있게 함
+    sys.modules['__main__'].myTokenizer = myTokenizer
+    # 모델 로드 - app/models/ 폴더에서 직접 파일 로드
+    with open('app/models/tfidf_vectorizer.pkl', 'rb') as f:
+        tfidf = pickle.load(f)
 
-# 모델 로드 - app/models/ 폴더에서 직접 파일 로드
-with open('app/models/tfidf_vectorizer.pkl', 'rb') as f:
-    tfidf = pickle.load(f)
+    with open('app/models/category_model.pkl', 'rb') as f:
+        logi = pickle.load(f)
 
-with open('app/models/category_model.pkl', 'rb') as f:
-    logi = pickle.load(f)
+    print("모델 로드 완료")
 
-print("모델 로드 완료")
+    # 타겟 이름 정의 (예측 결과를 해석하기 위한 라벨)
+    target_names = ['맛집', '여행', '날씨', '건강정보', '요리', '상품설명', '인터뷰', '기타']
 
-# 타겟 이름 정의 (예측 결과를 해석하기 위한 라벨)
-target_names = ['맛집', '여행', '날씨', '건강정보', '요리', '상품설명', '인터뷰', '기타']
+    return tfidf, logi, target_names
 
 # 예측 API 엔드포인트
 @predict_bp.route('/predict', methods=['POST'])
 def predict():
+    # model 로드를 한번만 할 수 있게 방안 모색
+    tfidf, logi, target_names = model_load()
     # 클라이언트에서 텍스트 받기
     data = request.json
     sentence = data.get('sentence', '')
