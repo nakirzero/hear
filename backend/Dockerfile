@@ -1,5 +1,5 @@
 # Python 3.11 이미지를 사용하여 컨테이너 생성
-FROM python:3.11
+FROM python:3.11-slim
 
 # 작업 디렉토리 설정
 WORKDIR /app

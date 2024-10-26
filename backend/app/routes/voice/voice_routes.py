@@ -8,6 +8,7 @@ from datetime import datetime
 
 voice_routes = Blueprint('voice_routes', __name__)
 
+# 환경변수로 분리하기
 ELEVENLABS_VOICE_API_URL = "https://api.elevenlabs.io/v1/voices"
 ELEVENLABS_VOICE_ADD_API_URL = "https://api.elevenlabs.io/v1/voices/add"
 UPLOAD_FOLDER = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio'))

@@ -40,14 +40,14 @@ const Header = () => {
             {userObject.NICKNAME}님 환영합니다.
           </Typography>
         )}
-        <box>
+        <Box>
           <Button variant="contained" onClick={goPredict} sx={{mr:2}}>
             예측모델(임시)
           </Button>
           <Button variant="contained" onClick={handleLogout}>
             로그아웃
           </Button>
-        </box>
+        </Box>
       </Toolbar>
     </AppBar>
   );

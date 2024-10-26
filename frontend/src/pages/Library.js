@@ -3,20 +3,26 @@ import Breadcrumb from "../components/BreadCrumb";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-import {Box, Button, Paper, TableContainer, Table, TableBody, TableCell, TableHead, TableRow, Stack, Pagination, } from "@mui/material";
+import {
+  Box,
+  Button,
+  Paper,
+  TableContainer,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Stack,
+  Pagination,
+} from "@mui/material";
 import { fetchLibrary } from "../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
-import usePagination from "../hooks/usePagination";
 
 const Library = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookList, setBookList] = useState([]);
-
-  const { currentData, totalPages, page, handlePageChange } = usePagination(
-    bookList,
-    10
-  );
 
   // 데이터를 가져오는 함수
   useEffect(() => {
@@ -58,7 +64,13 @@ const Library = () => {
 
   const handleBook = (book) => {
     console.log(book.BOOK_NAME);
-    navigate(`/book?BOOK_SEQ=${book.BOOK_SEQ}`);
+    navigate(`/library/book?BOOK_SEQ=${book.BOOK_SEQ}`);
+  };
+
+  const handleKeyPress = (event, book) => {
+    if (event.key === "Enter" || event.key === " ") {
+      handleBook(book);
+    }
   };
 
   return (
@@ -111,7 +123,7 @@ const Library = () => {
 
       <TableContainer
         component={Paper}
-        sx={{ marginTop: 4, width: "80%", marginX: "auto" }}
+        sx={{ marginTop: 4, width: "70%", marginX: "auto" }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -123,35 +135,40 @@ const Library = () => {
                 작가
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                총 파일 시간
+                전체 재생 시간
               </TableCell>
               <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                요약 파일 시간
+                요약 재생 시간
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {currentData.map((book) => (
+            {bookList.map((book) => (
               <TableRow
                 key={book.BOOK_NAME}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                sx={{
+                  "&:last-child td, &:last-child th": { border: 0 },
+                  cursor: "pointer",
+                }}
                 onClick={() => handleBook(book)}
+                onKeyPress={(event) => handleKeyPress(event, book)}
+                tabIndex={0}
               >
                 <TableCell
                   align="center"
                   component="th"
                   scope="row"
-                  sx={{ fontSize: "1.75rem" }}
+                  sx={{ fontSize: "1.6rem" }}
                 >
                   {book.BOOK_NAME}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.75rem" }}>
+                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
                   {book.AUTHOR}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.75rem" }}>
+                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
                   {book.FULL_PATH}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.75rem" }}>
+                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
                   {book.SUM_PATH}
                 </TableCell>
               </TableRow>
@@ -159,13 +176,7 @@ const Library = () => {
           </TableBody>
         </Table>
         <Stack spacing={2} alignItems={"center"} sx={{ mb: 4 }}>
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
-          />
+          <Pagination count={10} variant="outlined" shape="rounded" />
         </Stack>
       </TableContainer>
 
