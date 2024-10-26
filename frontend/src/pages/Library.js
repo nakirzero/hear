@@ -18,11 +18,15 @@ import {
 } from "@mui/material";
 import { fetchLibrary } from "../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
+import usePagination from "../hooks/usePagination"; // usePagination 훅 가져오기
 
 const Library = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookList, setBookList] = useState([]);
+
+  const rowsPerPage = 5;  // 페이지당 표시할 데이터 개수
+  const { currentData, totalPages, page, handlePageChange } = usePagination(bookList, rowsPerPage);
 
   // 데이터를 가져오는 함수
   useEffect(() => {
@@ -89,6 +93,7 @@ const Library = () => {
         <Box sx={{ display: "flex", gap: 4 }}>
           <Button
             variant="contained"
+            color="secondary" 
             sx={buttonStyle}
             onClick={() => handleCategoryFilter("200")}
             aria-label="카테고리 시로 이동"
@@ -97,6 +102,7 @@ const Library = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary" 
             sx={buttonStyle}
             onClick={() => handleCategoryFilter("100")}
             aria-label="카테고리 소설로 이동"
@@ -105,6 +111,7 @@ const Library = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary" 
             sx={buttonStyle}
             onClick={() => handleCategoryFilter("300")}
             aria-label="카테고리 수필로 이동"
@@ -113,6 +120,7 @@ const Library = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary" 
             sx={buttonStyle}
             aria-label="카테고리 혜리언니로 이동"
           >
@@ -143,7 +151,7 @@ const Library = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {bookList.map((book) => (
+            {currentData.map((book) => (
               <TableRow
                 key={book.BOOK_NAME}
                 sx={{
@@ -162,21 +170,27 @@ const Library = () => {
                 >
                   {book.BOOK_NAME}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
+                <TableCell align="center" sx={{ textAlign: "center" }}>
                   {book.AUTHOR}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
+                <TableCell align="center" sx={{ textAlign: "center" }}>
                   {book.FULL_PATH}
                 </TableCell>
-                <TableCell align="center" sx={{ fontSize: "1.6rem" }}>
+                <TableCell align="center" sx={{ textAlign: "center" }}>
                   {book.SUM_PATH}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
-        <Stack spacing={2} alignItems={"center"} sx={{ mb: 4 }}>
-          <Pagination count={10} variant="outlined" shape="rounded" />
+        <Stack spacing={2} alignItems="center" sx={{ mb: 4 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            variant="outlined"
+            shape="rounded"
+          />
         </Stack>
       </TableContainer>
 

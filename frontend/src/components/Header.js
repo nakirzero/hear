@@ -41,10 +41,10 @@ const Header = () => {
           </Typography>
         )}
         <Box>
-          <Button variant="contained" onClick={goPredict} sx={{mr:2}}>
+          <Button variant="contained" color="secondary" onClick={goPredict} sx={{mr:2}}>
             예측모델(임시)
           </Button>
-          <Button variant="contained" onClick={handleLogout}>
+          <Button variant="contained" color="secondary" onClick={handleLogout}>
             로그아웃
           </Button>
         </Box>
