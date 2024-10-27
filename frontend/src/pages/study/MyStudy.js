@@ -49,7 +49,7 @@ const MyStudy = () => {
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/mystudy/mywishbook')}
             >
               <Typography variant="h6">희망도서신청조회</Typography>
             </Button>

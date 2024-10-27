@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
-import useUserValidation from "../../hooks/useUserValidation";
 import useSnackbar from "../../hooks/useSnackbar";
 import useLoading from "../../hooks/useLoading";
 import {Typography, Container, Box, Button, Radio, RadioGroup, FormControlLabel, Select, MenuItem } from "@mui/material";
@@ -12,7 +11,6 @@ import { fetchVoiceList, saveUserSettings, deleteVoice } from "../../api/voiceAP
 
 const SettingAudio = () => {
   const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
-  const { validateUser } = useUserValidation();
   const { openSnackbar, SnackbarComponent } = useSnackbar();
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading("삭제 중...");
 
@@ -24,7 +22,7 @@ const SettingAudio = () => {
   const defaultVoice = ["XOjX7HuCs6jtaR1NqWIW", "CmvK4l3jURa7bBhVQAgX"]; // 남성(기본), 여성(기본)
 
   useEffect(() => {
-    if (!validateUser()) return;
+    if (!userObject) return;
 
     const getVoices = async () => {
       try {
@@ -41,7 +39,7 @@ const SettingAudio = () => {
       }
     };
     getVoices();
-  }, [validateUser, userObject]);
+  }, [userObject]);
 
   const handlePreview = () => {
     const audioUrl = `/static/audio/${selectedVoice}.mp3`;
@@ -72,7 +70,7 @@ const SettingAudio = () => {
 
   const handleSaveSettings = async () => {
     try {
-      if (!validateUser()) return;
+      if (!userObject) return;
 
       await saveUserSettings({
         user_seq: userObject.USER_SEQ, // 전역 userObject에서 USER_SEQ 사용
