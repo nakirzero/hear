@@ -40,7 +40,7 @@ const MyStudy = () => {
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/mystudy/mybookreport')}
             >
               <Typography variant="h6">독서노트</Typography>
             </Button>

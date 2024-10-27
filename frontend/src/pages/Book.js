@@ -76,6 +76,7 @@ const Book = () => {
         <Box sx={{ display: "flex", gap: 4 }}>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
             onClick={handlePoem}
             aria-label="카테고리 시로 이동"
@@ -84,6 +85,7 @@ const Book = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
             onClick={handleNovel}
             aria-label="카테고리 소설로 이동"
@@ -92,6 +94,7 @@ const Book = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
             onClick={handleEssay}
             aria-label="카테고리 수필로 이동"
@@ -100,6 +103,7 @@ const Book = () => {
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
             aria-label="카테고리 혜리언니로 이동"
           >
