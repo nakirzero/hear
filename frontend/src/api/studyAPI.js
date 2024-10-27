@@ -47,8 +47,8 @@ export const submitBookReport = async (reportData) => {
 // STT API 호출 (음성 파일을 텍스트로 변환)
 export const convertSpeechToText = async (audioFile) => {
   const formData = new FormData();
-  formData.append("audioFile", audioFile); // 'audioFile'은 백엔드에서 받을 필드 이름과 일치해야 합니다.
-
+  formData.append('file', audioFile);
+  
   try {
     const response = await axios.post(`/api/stt`, formData, {
       headers: {
