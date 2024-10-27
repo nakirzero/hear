@@ -16,7 +16,9 @@ import Library from "./pages/Library";
 import Book from "./pages/Book";
 
 import MyStudy from "./pages/study/MyStudy";
+import MyBookReport from "./pages/study/MyBookReport";
 import MyWishBook from "./pages/study/MyWishBook";
+import WriteReport from "./pages/study/WriteReport";
 
 import Setting from "./pages/setting/Setting";
 import SettingAudio from "./pages/setting/SettingAudio";
@@ -47,6 +49,8 @@ function App() {
 
             <Route path="/mystudy" element={<MyStudy />} />
             <Route path="/mystudy/mywishbook" element={<MyWishBook />} />
+            <Route path="/mystudy/mybookreport" element={<MyBookReport />} />
+            <Route path="/mystudy/writereport" element={<WriteReport />} />
 
             <Route path="/setting" element={<Setting />} />
             <Route path="/setting/audio" element={<SettingAudio />} />

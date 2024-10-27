@@ -16,6 +16,8 @@ import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 // import LyricsIcon from '@mui/icons-material/Lyrics';
 import { FaPrayingHands } from "react-icons/fa";
+import CommentIcon from '@mui/icons-material/Comment';
+import NoteAltIcon from '@mui/icons-material/NoteAlt';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -34,7 +36,9 @@ const Breadcrumb = () => {
     "write" : "건의사항 작성",
     "library" : "도서마당",
     "book" : "책 화면",
-    "mywishbook" : "희망도서 신청조회"
+    "mywishbook" : "희망도서 신청조회",
+    'mybookreport' : '독서노트',
+    'writereport' : '독서노트 작성',
   };
 
   // 각 경로에 맞는 아이콘 매핑
@@ -51,6 +55,8 @@ const Breadcrumb = () => {
     "library": <LibraryMusicIcon sx={{ verticalAlign: "middle" }} />,
     "book": <AutoStoriesIcon sx={{ verticalAlign: "middle" }} />,
     "mywishbook": <FaPrayingHands style={{ verticalAlign: "middle", fontSize: "20px" }} />,
+    "mybookreport": <CommentIcon sx={{ verticalAlign: "middle" }} />,
+    "writereport": <NoteAltIcon sx={{ verticalAlign: "middle" }} />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);
