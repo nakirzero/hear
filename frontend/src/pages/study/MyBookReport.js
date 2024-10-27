@@ -12,6 +12,7 @@ const MyBookReport = () => {
   const { userObject } = useAuth();
   const navigate = useNavigate();
   const [bookReports, setBookReports] = useState([]);
+  const [selectedRow, setSelectedRow] = useState(null); // 선택된 행 상태
   const [dialogOpen, setDialogOpen] = useState(false); // 다이얼로그 상태
   const rowsPerPage = 5;
   const { currentData, totalPages, page, handlePageChange } = usePagination(bookReports, rowsPerPage);
@@ -48,6 +49,12 @@ const MyBookReport = () => {
   const handleVoiceWrite = () => {
     setDialogOpen(false);
     navigate('/mystudy/writereport', { state: { mode: 'voice' } });
+  };
+
+  // 각 행을 클릭했을 때 상세 페이지로 이동
+  const handleRowClick = (reportId) => {
+    setSelectedRow(reportId);
+    navigate(`/mystudy/mybookreport/${reportId}`, { state: { reportId } });
   };
 
   return (
@@ -90,7 +97,16 @@ const MyBookReport = () => {
           </TableHead>
           <TableBody>
             {currentData.map((report, index) => (
-              <TableRow key={report.REPORT_SEQ}>
+              <TableRow 
+                key={report.REPORT_SEQ} 
+                onClick={() => handleRowClick(report.REPORT_SEQ)} 
+                tabIndex={0} // 키보드 포커스를 위한 tabIndex 설정
+                sx={{ 
+                  backgroundColor: selectedRow === report.REPORT_SEQ ? '#e0f7fa' : 'inherit',
+                  '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' },
+                  '&:focus': { backgroundColor: '#FFC700' } // 키보드 포커스 시 색상 변경
+                }}
+              >
                 <TableCell>{index + 1 + (page - 1) * rowsPerPage}</TableCell>
                 <TableCell>{report.REPORT_TITLE}</TableCell>
                 <TableCell>{truncateText(report.REPORT_DETAIL, 45)}</TableCell>
