@@ -12,8 +12,11 @@ import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 
-import Book from "./pages/Book";
 import Library from "./pages/Library";
+import Book from "./pages/Book";
+
+import MyStudy from "./pages/study/MyStudy";
+import MyWishBook from "./pages/study/MyWishBook";
 
 import Setting from "./pages/setting/Setting";
 import SettingAudio from "./pages/setting/SettingAudio";
@@ -26,8 +29,6 @@ import Suggest from "./pages/board/Suggest";
 import Write from "./pages/board/Write";
 
 import PredictPage from "./pages/PredictPage";
-
-import MyStudy from "./pages/study/MyStudy";
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
             <Route path="/library/book" element={<Book />} />
 
             <Route path="/mystudy" element={<MyStudy />} />
+            <Route path="/mystudy/mywishbook" element={<MyWishBook />} />
 
             <Route path="/setting" element={<Setting />} />
             <Route path="/setting/audio" element={<SettingAudio />} />

@@ -15,8 +15,7 @@ const palette = {
         secondary: '#666666',  // 푸터 및 보조 텍스트 색상 - 회색
     },
     background: {
-        default: '#FFFFFF',
-        paper: '#FFC700',  // 페이지 배경으로 메인 색상 사용
+        default: '#FFFFFF'
     },
 };
 

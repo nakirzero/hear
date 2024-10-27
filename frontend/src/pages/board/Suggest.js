@@ -81,7 +81,7 @@ const Suggest = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Button variant="contained" onClick={() => navigate("/board/write")} fullWidth>
+          <Button variant="contained" color="secondary" onClick={() => navigate("/board/write")} >
             게시글 작성
           </Button>
         </Box>
