@@ -47,8 +47,8 @@ export const submitBookReport = async (reportData) => {
 // STT API 호출 (음성 파일을 텍스트로 변환)
 export const convertSpeechToText = async (audioFile) => {
   const formData = new FormData();
-  formData.append("audioFile", audioFile); // 'audioFile'은 백엔드에서 받을 필드 이름과 일치해야 합니다.
-
+  formData.append('file', audioFile);
+  
   try {
     const response = await axios.post(`/api/stt`, formData, {
       headers: {
@@ -58,6 +58,38 @@ export const convertSpeechToText = async (audioFile) => {
     return response.data.text; // 백엔드에서 반환하는 텍스트 값
   } catch (error) {
     console.error("STT 변환 오류가 발생했습니다:", error);
+    throw error;
+  }
+};
+
+// 특정 독서노트 항목의 상세 정보를 가져오는 API
+export const fetchBookReportById = async (reportId) => {
+  try {
+    const response = await axios.get(`/api/bookreport/${reportId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book report detail:", error);
+    throw error;
+  }
+};
+
+// 기존 독서노트 수정 API
+export const updateBookReport = async (reportId, reportData) => {
+  try {
+    const response = await axios.put(`/api/bookreport/${reportId}`, reportData);
+    return response.data;
+  } catch (error) {
+    console.error("Error updating book report:", error);
+    throw error;
+  }
+};
+
+// 특정 독서노트 항목을 삭제하는 API
+export const deleteBookReport = async (reportId) => {
+  try {
+    await axios.delete(`/api/bookreport/${reportId}`);
+  } catch (error) {
+    console.error("Error deleting book report:", error);
     throw error;
   }
 };
