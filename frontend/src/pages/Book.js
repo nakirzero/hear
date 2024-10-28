@@ -4,14 +4,12 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { Box, Button, Typography, Stack, Paper } from "@mui/material";
 import { fetchLibrary } from "../api/libraryAPI";
-import { useNavigate, useLocation  } from "react-router-dom";
-
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Book = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [ book, setBook ] = useState([]);
-  
+  const [book, setBook] = useState([]);
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -19,7 +17,6 @@ const Book = () => {
       const params = new URLSearchParams(location.search);
       const bookSeq = params.get("BOOK_SEQ");
       console.log(bookSeq);
-      
 
       if (bookSeq) {
         try {
@@ -49,18 +46,25 @@ const Book = () => {
   };
 
   const handlePoem = () => {
-    navigate('/library?category=200');
+    navigate("/library?category=200");
   };
 
   const handleNovel = () => {
-    navigate('/library?category=100');
+    navigate("/library?category=100");
   };
 
   const handleEssay = () => {
-    navigate('/library?category=300');
+    navigate("/library?category=300");
   };
 
-  
+  const handleAISummary = () => {
+    navigate(`/library/book/aisummary?BOOK_SEQ=${book.BOOK_SEQ}`);
+  };
+
+  const handleFull = () => {
+    navigate(`/library/book/full/BOOK_SEQ=${book.BOOK_SEQ}`);
+  };
+
   return (
     <div>
       <Header />
@@ -111,41 +115,51 @@ const Book = () => {
           </Button>
         </Box>
       </Box>
-      <Box display="flex" padding="20px" bgcolor="#f0f0f0" borderRadius="10px" sx={{ marginTop: 4, width: "70%", marginX: "auto" }} >
-      <Paper
-        sx={{
-          width: '300px',
-          height: '400px',
-          backgroundColor: '#d3d3d3',
-          borderRadius: '10px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+      <Box
+        display="flex"
+        padding="20px"
+        bgcolor="#f0f0f0"
+        borderRadius="10px"
+        sx={{ marginTop: 4, width: "70%", marginX: "auto" }}
       >
-        {/* 이미지 아이콘 */}
-        <Typography variant="h6" color="textSecondary">
-          🖼
-        </Typography>
-      </Paper>
-      <Stack spacing={2} ml={2} flex={1}>
-        <Typography variant="body2">{ book.BOOK_NAME}</Typography>
-        <Typography variant="h4" fontWeight="bold">
-        { book.BOOK_NAME}
-        </Typography>
-        <Typography variant="subtitle2" color="textSecondary">
-         { book.FULL_PATH}
-        </Typography>
-        <Typography variant="body1" color="textSecondary">
-          { book.INFORMATION}
-        </Typography>
-        <Stack spacing={1} mt={2}>
-          <Button variant="outlined"  onClick={() => navigate("/library/book/aisummary")}>AI요약듣기</Button>
-          <Button variant="outlined"  onClick={() => navigate("/library/book/full")} >전체듣기</Button>
+        <Paper
+          sx={{
+            width: "300px",
+            height: "400px",
+            backgroundColor: "#d3d3d3",
+            borderRadius: "10px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {/* 이미지 아이콘 */}
+          <Typography variant="h6" color="textSecondary">
+            🖼
+          </Typography>
+        </Paper>
+        <Stack spacing={2} ml={2} flex={1}>
+          <Typography variant="body2">{book.BOOK_NAME}</Typography>
+          <Typography variant="h4" fontWeight="bold">
+            {book.BOOK_NAME}
+          </Typography>
+          <Typography variant="subtitle2" color="textSecondary">
+            {book.FULL_PATH}
+          </Typography>
+          <Typography variant="body1" color="textSecondary">
+            {book.INFORMATION}
+          </Typography>
+          <Stack spacing={1} mt={2}>
+            <Button variant="outlined" onClick={handleAISummary}>
+              AI요약듣기
+            </Button>
+            <Button variant="outlined" onClick={handleFull}>
+              전체듣기
+            </Button>
+          </Stack>
         </Stack>
-      </Stack>
-    </Box>
-      
+      </Box>
+
       <Footer />
     </div>
   );
