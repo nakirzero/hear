@@ -104,6 +104,7 @@ function Join() {
                 onClick={handleCheckUserId}
                 variant="contained"
                 size="small"
+                sx={{ minWidth: 80 }} // 최소 너비 지정
               >
                 중복확인
               </Button>
