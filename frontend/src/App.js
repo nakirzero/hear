@@ -5,7 +5,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 
-import { AuthProvider } from "./context/AuthContext"; // AuthProvider 임포트
+import { AuthProvider } from "./context/AuthContext";
 
 import Main from "./pages/Main";
 import Join from "./pages/Join";
