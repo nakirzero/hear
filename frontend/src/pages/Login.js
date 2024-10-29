@@ -82,7 +82,7 @@ function Login() {
       </Typography>
 
       <Box sx={{ width: "100%", maxWidth: 600, padding: 3 }}>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} alignItems="center">
           <Grid item xs={3}>
             <Typography sx={{ textAlign: "right" }}>아이디</Typography>
           </Grid>
