@@ -14,6 +14,7 @@ import Menu from "./pages/Menu";
 
 import Library from "./pages/Library";
 import Book from "./pages/Book";
+import AISummary from "./pages/AISummary";
 
 import MyStudy from "./pages/study/MyStudy";
 import MyBookReport from "./pages/study/MyBookReport";
@@ -47,6 +48,7 @@ function App() {
 
             <Route path="/library" element={<Library />} />
             <Route path="/library/book" element={<Book />} />
+            <Route path="/library/book/aisummary" element={<AISummary />} />
 
             <Route path="/mystudy" element={<MyStudy />} />
             <Route path="/mystudy/mywishbook" element={<MyWishBook />} />

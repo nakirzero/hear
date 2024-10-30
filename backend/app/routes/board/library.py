@@ -4,6 +4,7 @@ from sqlalchemy import text
 
 library_bp = Blueprint('library', __name__)
 
+# 도서마당
 @library_bp.route('/library', methods=['GET'])
 def library():
     connection = get_db_connection()
@@ -20,7 +21,10 @@ def library():
                 dict(zip(keys, row))
                 for row in result.fetchall()
             ]
-
+           
+            for item in book:
+                item['test'] = '/static/audio/Butter Ringtone.mp3'
+                
             return jsonify(book)
         except Exception as db_error:
             print(f"Database operation failed: {db_error}")
