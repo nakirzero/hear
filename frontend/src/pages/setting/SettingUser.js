@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, Button, TextField, Card, CardContent } from "@mui/material";
+import { Typography, Container, Box, Button, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { userModify, checkNickName } from "../../api/userAPI";
