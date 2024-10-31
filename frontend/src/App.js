@@ -22,6 +22,7 @@ import MyWishBook from "./pages/study/MyWishBook";
 import WriteReport from "./pages/study/WriteReport";
 import BookReportDetail from "./pages/study/BookReportDetail";
 import History from "./pages/study/History";
+import Highlight from "./pages/study/Highlight";
 
 import Setting from "./pages/setting/Setting";
 import SettingAudio from "./pages/setting/SettingAudio";
@@ -57,6 +58,7 @@ function App() {
             <Route path="/mystudy/writereport" element={<WriteReport />} />
             <Route path="/mystudy/mybookreport/:reportId" element={<BookReportDetail />} />
             <Route path="/mystudy/history" element={<History />} />
+            <Route path="/mystudy/highlight" element={<Highlight />} />
 
             <Route path="/setting" element={<Setting />} />
             <Route path="/setting/audio" element={<SettingAudio />} />

@@ -1,8 +1,16 @@
 from flask import Blueprint, jsonify
 from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
+from datetime import timedelta
 
 library_bp = Blueprint('library', __name__)
+
+def convert_timedelta_to_str(book):
+    for item in book:
+        for key, value in item.items():
+            if isinstance(value, timedelta):
+                item[key] = str(value)  # timedelta 객체를 문자열로 변환
+    return book
 
 # 도서마당
 @library_bp.route('/library', methods=['GET'])
@@ -22,6 +30,9 @@ def library():
                 for row in result.fetchall()
             ]
            
+            # timedelta 데이터를 문자열로 변환
+            book = convert_timedelta_to_str(book)
+
             for item in book:
                 item['test'] = '/static/audio/ButterRingtone.mp3'
                 

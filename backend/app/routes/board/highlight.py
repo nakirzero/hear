@@ -9,7 +9,6 @@ highlight_bp = Blueprint("highlight", __name__)
 
 @highlight_bp.route("/highlight", methods=["POST"])
 def highlight():
-    print('1번입니다.')
     data = request.get_json()
     startPoint = data.get("startPoint")
     endPoint = data.get("endPoint")
@@ -18,9 +17,10 @@ def highlight():
     print("startPoint", startPoint, "endPoint", endPoint)
     # POST 요청으로 받은 'test' 경로를 절대 경로로 변환
     inputFile = os.path.join(current_app.root_path, data.get("test").lstrip("/"))
-    highlight_folder = os.path.join(current_app.root_path, "static", "highlight")
+    highlight_folder = os.path.join(current_app.root_path, "static", "audio", "highlight")
     os.makedirs(highlight_folder, exist_ok=True)  # 폴더가 없으면 생성
     outputFile = os.path.join(highlight_folder, f"{startPoint}_{endPoint}_user{userSeq}_book{bookSeq}.mp3")
+    outputFileName = os.path.basename(outputFile)  # 파일명만 추출
     print("inputFile", inputFile)
 
     # FFmpeg를 사용하여 오디오 파일 자르기
@@ -38,14 +38,14 @@ def highlight():
         try:
             query = text("""
                 INSERT INTO highlight (USER_SEQ, BOOK_SEQ, HL_StPt, HL_EdPt, HL_PATH, HL_CrtDt) 
-                VALUES (:userSeq, :bookSeq, :startPoint, :endPoint, :outputFile, NOW())
+                VALUES (:userSeq, :bookSeq, :startPoint, :endPoint, :outputFileName, NOW())
             """)
             connection.execute(query, {
                 "userSeq": userSeq,
                 "bookSeq": bookSeq,
                 "startPoint": startPoint,
                 "endPoint": endPoint,
-                "outputFile": outputFile
+                "outputFileName": outputFileName
             })
             connection.commit()
             return jsonify({"exists": True})

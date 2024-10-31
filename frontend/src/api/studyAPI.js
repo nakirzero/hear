@@ -105,3 +105,27 @@ export const fetchHistory = async (userSeq) => {
     return []; // 에러 발생 시 빈 배열 반환
   }
 };
+
+// Highlight 데이터를 가져오는 API 함수
+export const fetchHighlight = async (userSeq) => {
+  try {
+    const response = await axios.get("/api/highlights", {
+      params: { userSeq },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching highlight:", error);
+    return []; // 에러 발생 시 빈 배열 반환
+  }
+};
+
+// 하이라이트 오디오 파일을 가져오는 API 함수
+export const fetchHighlightAudio = async (highlightId) => {
+  try {
+    const response = await axios.get(`/api/highlight/audio/${highlightId}`, { responseType: "blob" });
+    return URL.createObjectURL(response.data); // 오디오 파일 URL 생성
+  } catch (error) {
+    console.error("Error fetching highlight audio:", error);
+    return null; // 에러 발생 시 null 반환
+  }
+};

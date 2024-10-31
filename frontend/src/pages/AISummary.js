@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import Breadcrumb from "../components/BreadCrumb";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -9,6 +9,7 @@ import {
   Typography,
   IconButton,
   Slider,
+  Alert
 } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
@@ -16,6 +17,8 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { useNavigate, useLocation } from "react-router-dom";
 import { fetchLibrary, fetchLibrarySave, highlight } from "../api/libraryAPI";
 import { useAuth } from "../context/AuthContext";
+import useMenuShortcut from "../hooks/useMenuShortcut";
+import usePlayShortcut from "../hooks/usePlayShortcut";
 
 const AISummary = () => {
   const navigate = useNavigate();
@@ -29,8 +32,7 @@ const AISummary = () => {
   const [duration, setDuration] = useState(0);
   const { userObject } = useAuth();
   const [startPoint, setStartPoint] = useState();
-  const [endPoint, setEndPoint] = useState();
-
+  const [alertMessage,setAlertMessage]=useState();
   const audioRef = useRef(null);
   const histDiv = 2;
 
@@ -40,6 +42,8 @@ const AISummary = () => {
     borderRadius: 10,
     fontSize: "1.5rem",
   };
+
+  
 
   const handlePoem = () => {
     navigate("/library?category=200");
@@ -52,6 +56,49 @@ const AISummary = () => {
   const handleEssay = () => {
     navigate("/library?category=300");
   };
+
+  const menuItems = useMemo(() => [
+    {  label: "1 시", path: "/library?category=200" },
+    {  label: "2 소설", path: "/library?category=100" },
+    {  label: "3 수필", path: "/library?category=300" },
+    {  label: "4 공유세상", path: "/board" }
+  ], []);
+
+  // 단축키 설정, 각 숫자에 대응하는 메뉴의 인덱스에 따라 이동
+  useMenuShortcut({
+    '1': () => navigate(menuItems[0].path),
+    '2': () => navigate(menuItems[1].path),
+    '3': () => navigate(menuItems[2].path),
+    '4': () => navigate(menuItems[3].path)
+  });
+
+
+
+  usePlayShortcut({
+  'ArrowLeft':()=> ArrowLeft(),
+  'ArrowRight':()=> ArrowRight(),
+  'ArrowUp':()=> handleClick(),
+  'ArrowDown':()=> handleTime(),
+  ' ':()=>togglePlayPause()
+  })
+
+  const ArrowLeft = ()=>{
+    audioRef.current.currentTime = Math.max(
+        0,
+        audioRef.current.currentTime - 5
+      );
+      setCurrentTime(audioRef.current.currentTime)
+}
+
+  const ArrowRight = () => {
+    audioRef.current.currentTime = Math.max(
+      0,
+      audioRef.current.currentTime + 5
+    );
+    setCurrentTime(audioRef.current.currentTime)
+  }
+
+
 
   useEffect(() => {
     let intervalId;
@@ -96,14 +143,7 @@ const AISummary = () => {
             }, 5000);
             isAudioPlaying = true; // 재생 중 상태로 설정
           }
-        } else {
-          // 오디오가 끝난 경우
-          setCurrentTime(0);
-          setIsPlaying(false);
-          isAudioPlaying = false;
-          console.log("멈춤");
-          clearInterval(intervalId); // intervalId 정리
-        }
+        } 
       }
     };
 
@@ -191,6 +231,28 @@ const AISummary = () => {
     }
   }, [test]);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+  
+    const handleTimeUpdate = () => {
+      if (audio.currentTime === audio.duration) {
+        // 오디오가 끝난 경우
+        setCurrentTime(formatTime(0));
+        setIsPlaying(false);
+        console.log("멈춤");
+      }
+    };
+  
+    // 'timeupdate' 이벤트 리스너 추가
+    audio.addEventListener('timeupdate', handleTimeUpdate);
+  
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      audio.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, [currentTime]);
+  
+
   const handleTime = () => {
     if (audioRef.current) {
       const time = audioRef.current.currentTime;
@@ -233,6 +295,11 @@ const AISummary = () => {
   };
 
   function formatTime(seconds) {
+
+    if (isNaN(seconds) || seconds < 0) {
+      return "00:00:00";
+    }
+    
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = Math.floor(seconds % 60);
@@ -243,17 +310,20 @@ const AISummary = () => {
   }
 
   const handleClick = async () => {
-    console.log(clickCount);
+
 
     if (clickCount) {
       setStartPoint(currentTime); // 홀수일 경우 startPoint 설정
       setClickCount(false);
+      console.log(clickCount,"시작");
+      
     } else {
-      setEndPoint(currentTime); // 짝수일 경우 endPoint 설정 후 highlight 호출
-
+      setClickCount(true);
+      console.log(clickCount,"끝");
+      
       const bookSeq = book.BOOK_SEQ;
       const userSeq = userObject.USER_SEQ;
-      setClickCount(true);
+ 
 
       try {
         const response = await highlight(
@@ -263,7 +333,11 @@ const AISummary = () => {
           bookSeq,
           test
         );
-        console.log(startPoint, currentTime, userSeq, bookSeq, "클릭카운트");
+        setAlertMessage("하이라이트 저장을 완료하였습니다.");
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 1000);
+        console.log(response);
       } catch (error) {
         console.error("입력 중 오류가 발생했습니다.", error);
       }
@@ -331,6 +405,7 @@ const AISummary = () => {
               marginRight: 2,
             }}
           >
+          
             {/* Placeholder for the image */}
           </Box>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -397,7 +472,7 @@ const AISummary = () => {
               sx={buttonStyles}
               onClick={togglePlayPause}
             >
-              일시정지 <br /> [ SPACE ]
+              일시정지 <br /> [ SPACE + . ]
             </Button>
           </Grid>
           <Grid item xs={2.4} sx={{ padding: 1 }}>
@@ -413,7 +488,7 @@ const AISummary = () => {
                 setCurrentTime(audioRef.current.currentTime);
               }}
             >
-              5초 뒤로 <br /> [ 방향키 왼쪽]
+              5초 뒤로 <br /> [ 방향키 왼쪽 + . ]
             </Button>
           </Grid>
           <Grid item xs={2.4} sx={{ padding: 1 }}>
@@ -429,7 +504,7 @@ const AISummary = () => {
                 setCurrentTime(audioRef.current.currentTime);
               }}
             >
-              5초 앞으로 <br /> [ 방향키 오른쪽 ]
+              5초 앞으로 <br /> [ 방향키 오른쪽 + . ]
             </Button>
           </Grid>
           <Grid item xs={2.4} sx={{ padding: 1 }}>
@@ -439,7 +514,7 @@ const AISummary = () => {
               sx={buttonStyles}
               onClick={handleClick}
             >
-              하이라이트 <br /> [ ALT + H]
+              하이라이트 <br /> [ 방향키 위쪽  + . ]
             </Button>
           </Grid>
           <Grid item xs={2.4} sx={{ padding: 1 }}>
@@ -449,12 +524,18 @@ const AISummary = () => {
               sx={buttonStyles}
               onClick={handleTime}
             >
-              현재 재생시간 <br /> [ 즐거운 코딩 ]
+              현재 재생시간 <br /> [ 방향키 아래쪽 + . ]
             </Button>
           </Grid>
         </Grid>
       </Box>
-
+            <Box sx={{ margin: "0 auto", width: "30%", padding: 2 }}>
+          {alertMessage && (
+           <Alert variant="filled" severity="success" sx={{ mb: 4 }}>
+            {alertMessage}
+          </Alert>
+           )} 
+          </Box>
       <Footer />
     </div>
   );

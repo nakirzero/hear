@@ -25,7 +25,7 @@ const PredictPage = () => {
   const [error, setError] = useState(null); // 에러 상태
 
   // useLoading 훅 호출
-  const { isLoading, setIsLoading, LoadingIndicator } = useLoading();
+  const { isLoading, setIsLoading, LoadingIndicator } = useLoading("AI 예측을 진행 중입니다...");
 
   // 파일 선택 핸들러
   const handleFileChange = (event) => {
@@ -71,12 +71,33 @@ const fetchResults = async () => {
           eventSource.close();
           fetchResults(); // 예측 결과 가져오기
           setIsLoading(false); // 로딩 종료
+          setProgress(100); // 백에서 완료하면 완료로 설정
         }
       };
     } catch (error) {
       setError("파일 업로드 중 오류가 발생했습니다.");
       console.error("Error uploading file:", error);
       setIsLoading(false); // 에러 시 로딩 종료
+    }
+  };
+
+
+  // json추가 함수
+  const handleAddBookFromJson = async () => {
+    try {
+      const response = await fetch("api/add-book-from-json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const result = await response.json();
+      
+      if (response.ok) {
+        console.log(result.message);
+      } else {
+        console.error(result.error);
+      }
+    } catch (error) {
+      console.error("Error adding book from JSON:", error);
     }
   };
 
@@ -117,9 +138,19 @@ const fetchResults = async () => {
         예측 실행
       </Button>
 
+      {/* 새로 추가된 버튼 */}
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{ marginTop: 2 }}
+        onClick={handleAddBookFromJson}
+      >
+        json에서 데이터 적재
+      </Button>
+
       {/* 진행 상태 표시 */}
       {progress > 0 && (
-        <Box mt={2} width="100%">
+        <Box mt={2} width="80%">
           <Typography variant="body1">진행률: {progress.toFixed(2)}%</Typography>
           <LinearProgress variant="determinate" value={progress} />
         </Box>
