@@ -88,3 +88,59 @@ def get_highlight_audio(highlight_id):
         return jsonify({"error": "Audio file not found"}), 404
 
 
+# 특정 Highlight의 코멘트 수정 (Update)
+@highlight_bp.route('/highlight/comment/<int:highlight_id>', methods=['PUT'])
+def update_highlight_comment(highlight_id):
+    data = request.get_json()
+    comment = data.get('comment')
+
+    if not comment:
+        return jsonify({"error": "Comment content is required"}), 400
+
+    # MySQL 데이터베이스 연결
+    connection = get_db_connection()
+
+    if connection:
+        try:
+            # Highlight 코멘트 업데이트 쿼리
+            query = text("""
+                UPDATE highlight
+                SET HL_COMMENT = :comment, HL_MdfDt = NOW()
+                WHERE HL_SEQ = :highlight_id
+            """)
+            connection.execute(query, {"comment": comment, "highlight_id": highlight_id})
+            connection.commit()  # 데이터베이스 변경 사항 커밋
+
+            return jsonify({"message": "Highlight comment updated successfully"})
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Failed to update highlight comment"}), 500
+        finally:
+            # 데이터베이스 연결 닫기
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500
+
+
+# 특정 Highlight 삭제 (Delete)
+@highlight_bp.route('/highlight/<int:highlight_id>', methods=['DELETE'])
+def delete_highlight(highlight_id):
+    # MySQL 데이터베이스 연결
+    connection = get_db_connection()
+
+    if connection:
+        try:
+            # Highlight 삭제 쿼리
+            query = text("DELETE FROM highlight WHERE HL_SEQ = :highlight_id")
+            connection.execute(query, {"highlight_id": highlight_id})
+            connection.commit()  # 데이터베이스 변경 사항 커밋
+
+            return jsonify({"message": "Highlight deleted successfully"})
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Failed to delete highlight"}), 500
+        finally:
+            # 데이터베이스 연결 닫기
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500
