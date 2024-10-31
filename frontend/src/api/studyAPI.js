@@ -129,3 +129,25 @@ export const fetchHighlightAudio = async (highlightId) => {
     return null; // 에러 발생 시 null 반환
   }
 };
+
+// 코멘트 수정 API 함수
+export const updateHighlightComment = async (highlightId, comment) => {
+  try {
+    const response = await axios.put(`/api/highlight/comment/${highlightId}`, { comment });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating highlight comment:", error);
+    return null;
+  }
+};
+
+// 특정 Highlight 삭제 API 함수
+export const deleteHighlight = async (highlightId) => {
+  try {
+    const response = await axios.delete(`/api/highlight/${highlightId}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting highlight:", error);
+    return null;
+  }
+};
