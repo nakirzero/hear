@@ -31,7 +31,7 @@ const MyStudy = () => {
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/mystudy/highlight')}
             >
               <Typography variant="h6">하이라이트</Typography>
             </Button>

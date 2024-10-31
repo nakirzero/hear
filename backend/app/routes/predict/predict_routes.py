@@ -84,8 +84,8 @@ def upload_csv():
         try:
             for item in subtitles:
                 insert_query = text("""
-                    INSERT INTO json (PRO_NAME, JSON_PUBLISHER, JSON_DETAIL, JSON_DIVISION, JSON_CrtDt, JSON_MdfDt) 
-                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :JSON_DETAIL, :JSON_DIVISION, :JSON_CrtDt, :JSON_MdfDt)
+                    INSERT INTO json (PRO_NAME, JSON_PUBLISHER, JSON_DETAIL, JSON_DIVISION, JSON_CrtDt) 
+                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :JSON_DETAIL, :JSON_DIVISION, :JSON_CrtDt)
                 """)
                 connection.execute(insert_query, item)
             connection.commit()
@@ -106,6 +106,7 @@ def perform_predictions(subtitles):
     global progress
     connection = get_db_connection()
     processed_count = 0
+    
     try:
         for item in subtitles:
             # 예측 및 신뢰도 계산
@@ -172,7 +173,7 @@ def get_results():
             {
                 "JSON_DETAIL": row._mapping["JSON_DETAIL"],
                 "JSON_DIVISION": row._mapping["JSON_DIVISION"],
-                "JSON_MdfDt": row._mapping["JSON_MdfDt"]
+                "JSON_MdfDt": row._mapping["JSON_MdfDt"].strftime("%Y-%m-%d %H:%M:%S")  # datetime을 문자열로 변환
             }
             for row in result
         ]
@@ -183,3 +184,46 @@ def get_results():
         return jsonify({"error": "Failed to fetch results"}), 500
     finally:
         close_db_connection(connection)
+
+# json 테이블의 데이터를 book 테이블로 삽입하는 API
+@predict_bp.route('/add-book-from-json', methods=['POST'])
+def add_book_from_json():
+    connection = get_db_connection()
+    if connection:
+        try:
+            query = text("""
+                INSERT INTO book (CATEGORY, BOOK_NAME, PUBLISHER, INFORMATION, BOOK_CrtDt)
+                SELECT 
+                    CASE 
+                        WHEN JSON_DIVISION = '건강' THEN 410
+                        WHEN JSON_DIVISION = '기타' THEN 420
+                        WHEN JSON_DIVISION = '먹거리' THEN 430
+                        WHEN JSON_DIVISION = '여행' THEN 440
+                        WHEN JSON_DIVISION = '인터뷰' THEN 450
+                        WHEN JSON_DIVISION = '해설' THEN 460
+                        ELSE NULL
+                    END AS CATEGORY,
+                    PRO_NAME AS BOOK_NAME,
+                    JSON_PUBLISHER AS PUBLISHER,
+                    JSON_DETAIL AS INFORMATION,
+                    JSON_CrtDt AS BOOK_CrtDt
+                FROM json
+                WHERE JSON_DIVISION IS NOT NULL
+                ORDER BY JSON_CrtDt DESC
+                LIMIT 100
+            """)
+            connection.execute(query)
+            connection.commit()
+            
+            # 성공 메시지 반환
+            return jsonify({
+                "message": "Data inserted into book table",
+                "information": "Up to 100 rows of JSON_DETAIL added to INFORMATION column in book table."
+            }), 201
+            
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Failed to insert data into book table"}), 500
+        finally:
+            close_db_connection(connection)
+    return jsonify({"error": "Database connection failed"}), 500

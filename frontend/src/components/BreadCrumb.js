@@ -17,6 +17,8 @@ import { FaPrayingHands } from "react-icons/fa";
 import CommentIcon from '@mui/icons-material/Comment';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import LyricsIcon from '@mui/icons-material/Lyrics';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import TimelineIcon from '@mui/icons-material/Timeline';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -38,6 +40,8 @@ const Breadcrumb = () => {
     'mybookreport' : '독서노트',
     'writereport' : '독서노트 작성',
     'aisummary' : 'AI 요약듣기',
+    'highlight':'하이라이트',
+    'history':'최근읽은기록',
   };
 
   const iconMap = {
@@ -56,6 +60,8 @@ const Breadcrumb = () => {
     "mybookreport": <CommentIcon sx={{ verticalAlign: "middle" }} />,
     "writereport": <NoteAltIcon sx={{ verticalAlign: "middle" }} />,
     "aisummary": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
+    "highlight": <FavoriteIcon sx={{ verticalAlign: "middle" }} />,
+    "history": <TimelineIcon sx={{ verticalAlign: "middle" }} />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);
