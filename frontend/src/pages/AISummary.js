@@ -14,9 +14,8 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { useNavigate, useLocation } from "react-router-dom";
-import { fetchLibrary, fetchLibrarySave } from "../api/libraryAPI";
+import { fetchLibrary, fetchLibrarySave, highlight } from "../api/libraryAPI";
 import { useAuth } from "../context/AuthContext";
-
 
 const AISummary = () => {
   const navigate = useNavigate();
@@ -25,9 +24,12 @@ const AISummary = () => {
   const [test, setTest] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
   const [volume, setVolume] = useState(0.5);
+  const [clickCount, setClickCount] = useState(true);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const { userObject } = useAuth();
+  const [startPoint, setStartPoint] = useState();
+  const [endPoint, setEndPoint] = useState();
 
   const audioRef = useRef(null);
   const histDiv = 2;
@@ -53,16 +55,25 @@ const AISummary = () => {
 
   useEffect(() => {
     let intervalId;
+    const audioElement = audioRef.current; // audioRef.current를 내부 변수에 저장
+    let isAudioPlaying = false; // 재생 상태 확인 변수
 
     const handlePlayPause = () => {
-      if (audioRef.current && !audioRef.current.paused) {
-        intervalId = setInterval(() => {
-          if (audioRef.current) {
-            const saveUserProgress = async () => {
+      if (audioElement) {
+        if (audioElement.currentTime !== audioElement.duration) {
+          if (!isAudioPlaying) {
+            // 오디오 재생 중일 때만 저장을 진행
+            intervalId = setInterval(async () => {
+              console.log(
+                audioElement.currentTime,
+                "현재시간 : duration",
+                audioElement.duration
+              );
+
               const params = new URLSearchParams(location.search);
               const bookSeq = params.get("BOOK_SEQ");
               const userSeq = userObject?.USER_SEQ;
-              const time = audioRef.current ? audioRef.current.currentTime : 0; // 유효성 검사 추가
+              const time = audioElement ? audioElement.currentTime : 0;
 
               if (userSeq && bookSeq) {
                 try {
@@ -82,33 +93,36 @@ const AISummary = () => {
                   );
                 }
               }
-            };
-            saveUserProgress();
-
-            if (currentTime === duration) {
-              setIsPlaying(false);
-              return;
-            }
+            }, 5000);
+            isAudioPlaying = true; // 재생 중 상태로 설정
           }
-        }, 5000);
-      } else {
-        clearInterval(intervalId);
+        } else {
+          // 오디오가 끝난 경우
+          setCurrentTime(0);
+          setIsPlaying(false);
+          isAudioPlaying = false;
+          console.log("멈춤");
+          clearInterval(intervalId); // intervalId 정리
+        }
       }
     };
 
-    if (audioRef.current) {
-      audioRef.current.addEventListener("play", handlePlayPause);
-      audioRef.current.addEventListener("pause", handlePlayPause);
+    if (audioElement) {
+      audioElement.addEventListener("playing", handlePlayPause);
+      audioElement.addEventListener("pause", () => {
+        clearInterval(intervalId);
+        isAudioPlaying = false; // 일시정지 시 상태 변경
+      });
     }
 
     return () => {
-      clearInterval(intervalId);
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("play", handlePlayPause);
-        audioRef.current.removeEventListener("pause", handlePlayPause);
+      if (audioElement) {
+        audioElement.removeEventListener("playing", handlePlayPause);
+        audioElement.removeEventListener("pause", handlePlayPause);
       }
+      clearInterval(intervalId); // 클린업 시 interval 정리
     };
-  }, [location.search, userObject?.USER_SEQ, currentTime, duration]);
+  }, [location.search, userObject?.USER_SEQ]);
 
   useEffect(() => {
     // 책 정보 불러오기
@@ -124,7 +138,6 @@ const AISummary = () => {
           if (bookData) {
             setBook(bookData);
             setTest(bookData.test);
-            
           } else {
             console.error("해당 책을 찾을 수 없습니다.");
           }
@@ -137,56 +150,60 @@ const AISummary = () => {
   }, [location.search]);
 
   useEffect(() => {
-    if (test && audioRef.current) {
-      audioRef.current.src = test;
+    const audioElement = audioRef.current;
+
+    if (test && audioElement) {
+      audioElement.src = test;
       console.log(test, "오디오 경로가 설정되었습니다.");
 
       const handleAudioLoaded = () => {
-        audioRef.current.play().catch((error) => {
+        audioElement.play().catch((error) => {
           console.error("오디오 자동 재생 실패:", error);
         });
       };
 
       const handleLoadedMetadata = () => {
-        setDuration(audioRef.current.duration);
-      };
-
-      const handleTimeUpdate = () => {
-        if (audioRef.current) {
-          setCurrentTime(audioRef.current.currentTime);
+        if (audioElement) {
+          setDuration(audioElement.duration || 0);
         }
       };
 
-      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-      audioRef.current.addEventListener("loadeddata", handleAudioLoaded);
+      const handleTimeUpdate = () => {
+        if (audioElement) {
+          setCurrentTime(audioElement.currentTime);
+        }
+      };
+
+      audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
+      audioElement.addEventListener("timeupdate", handleTimeUpdate);
+      audioElement.addEventListener("loadeddata", handleAudioLoaded);
 
       return () => {
-        if (audioRef.current) {
-          audioRef.current.removeEventListener(
+        if (audioElement) {
+          audioElement.removeEventListener(
             "loadedmetadata",
             handleLoadedMetadata
           );
-          audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
-          audioRef.current.removeEventListener("loadeddata", handleAudioLoaded);
+          audioElement.removeEventListener("timeupdate", handleTimeUpdate);
+          audioElement.removeEventListener("loadeddata", handleAudioLoaded);
         }
       };
     }
   }, [test]);
 
-  window.addEventListener("beforeunload", () => {
-    // 경고 메시지를 표시하도록 설정
-  });
-
   const handleTime = () => {
-    const time = audioRef.current.currentTime;
-    const percentage = Math.floor((time / duration) * 100);
-    console.log(`전체 내용의 ${percentage}퍼센트를 들으셨습니다.`);
+    if (audioRef.current) {
+      const time = audioRef.current.currentTime;
+      const percentage = Math.floor((time / duration) * 100);
+      console.log(`전체 내용의 ${percentage}퍼센트를 들으셨습니다.`);
+    }
   };
 
   const handleVolumeChange = (newValue) => {
-    setVolume(newValue);
-    audioRef.current.volume = newValue;
+    if (audioRef.current) {
+      setVolume(newValue);
+      audioRef.current.volume = newValue;
+    }
   };
 
   const handleSliderChange = (newValue) => {
@@ -223,10 +240,35 @@ const AISummary = () => {
     return `${hrs.toString().padStart(2, "0")}:${mins
       .toString()
       .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  }
+
+  const handleClick = async () => {
+    console.log(clickCount);
+
+    if (clickCount) {
+      setStartPoint(currentTime); // 홀수일 경우 startPoint 설정
+      setClickCount(false);
+    } else {
+      setEndPoint(currentTime); // 짝수일 경우 endPoint 설정 후 highlight 호출
+
+      const bookSeq = book.BOOK_SEQ;
+      const userSeq = userObject.USER_SEQ;
+      setClickCount(true);
+
+      try {
+        const response = await highlight(
+          startPoint,
+          currentTime,
+          userSeq,
+          bookSeq,
+          test
+        );
+        console.log(startPoint, currentTime, userSeq, bookSeq, "클릭카운트");
+      } catch (error) {
+        console.error("입력 중 오류가 발생했습니다.", error);
+      }
+    }
   };
-
-
- 
 
   return (
     <div>
@@ -391,7 +433,12 @@ const AISummary = () => {
             </Button>
           </Grid>
           <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button fullWidth variant="outlined" sx={buttonStyles}>
+            <Button
+              fullWidth
+              variant="outlined"
+              sx={buttonStyles}
+              onClick={handleClick}
+            >
               하이라이트 <br /> [ ALT + H]
             </Button>
           </Grid>

@@ -1,4 +1,3 @@
-// Breadcrumb 컴포넌트 코드
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, Breadcrumbs, Link } from "@mui/material";
@@ -17,6 +16,7 @@ import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import { FaPrayingHands } from "react-icons/fa";
 import CommentIcon from '@mui/icons-material/Comment';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
+import LyricsIcon from '@mui/icons-material/Lyrics';
 
 const Breadcrumb = () => {
   const navigate = useNavigate();
@@ -37,6 +37,7 @@ const Breadcrumb = () => {
     "mywishbook" : "희망도서 신청조회",
     'mybookreport' : '독서노트',
     'writereport' : '독서노트 작성',
+    'aisummary' : 'AI 요약듣기',
   };
 
   const iconMap = {
@@ -54,6 +55,7 @@ const Breadcrumb = () => {
     "mywishbook": <FaPrayingHands style={{ verticalAlign: "middle", fontSize: "20px" }} />,
     "mybookreport": <CommentIcon sx={{ verticalAlign: "middle" }} />,
     "writereport": <NoteAltIcon sx={{ verticalAlign: "middle" }} />,
+    "aisummary": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);

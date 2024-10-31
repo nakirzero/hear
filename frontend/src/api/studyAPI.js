@@ -93,3 +93,15 @@ export const deleteBookReport = async (reportId) => {
     throw error;
   }
 };
+
+export const fetchHistory = async (userSeq) => {
+  try {
+    const response = await axios.get("/api/historys", {
+      params: { userSeq },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching history:", error);
+    return []; // 에러 발생 시 빈 배열 반환
+  }
+};

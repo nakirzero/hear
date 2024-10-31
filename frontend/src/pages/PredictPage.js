@@ -2,146 +2,166 @@ import React, { useState } from "react";
 import {
   Typography,
   Box,
-  Grid,
-  IconButton,
-  TextField,
   Button,
+  LinearProgress,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper
 } from "@mui/material";
-import SettingsIcon from "@mui/icons-material/Settings";
-
+import axios from "axios";
 import Header from "../components/Header"; // 기존 Header 컴포넌트
 import Breadcrumb from "../components/BreadCrumb";
 import Footer from "../components/Footer"; // 기존 Footer 컴포넌트
+import useLoading from "../hooks/useLoading"; // useLoading 훅 import
 
 const PredictPage = () => {
-  const [inputText, setInputText] = useState(""); // 입력 텍스트 상태
+  const [file, setFile] = useState(null); // 파일 상태
+  const [progress, setProgress] = useState(0); // 진행 상태
   const [results, setResults] = useState(null); // 예측 결과 상태
   const [error, setError] = useState(null); // 에러 상태
-  const [loading, setLoading] = useState(false); // 로딩 상태
-  const [jsonIndex, setJsonIndex] = useState(0); // JSON 데이터를 순차적으로 불러오기 위한 인덱스
 
-  // AI 예측 요청 함수
-  const handlePredict = async () => {
-    setLoading(true); // 로딩 시작
-    setError(null); // 에러 초기화
-    setResults(null); // 기존 결과 초기화
+  // useLoading 훅 호출
+  const { isLoading, setIsLoading, LoadingIndicator } = useLoading();
 
-    try {
-      const response = await fetch("/api/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ sentence: inputText }), // 입력 텍스트 전송
-      });
-
-      if (!response.ok) {
-        throw new Error("예측 요청에 실패했습니다.");
-      }
-
-      const data = await response.json();
-      setResults(data); // 결과 상태 업데이트
-    } catch (error) {
-      setError(error.message); // 에러 상태 업데이트
-    } finally {
-      setLoading(false); // 로딩 종료
-    }
+  // 파일 선택 핸들러
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+    setProgress(0);
+    setResults(null);
+    setError(null);
   };
 
-  // JSON_DETAIL 불러오는 함수
-  const fetchNextJsonDetail = async () => {
-    try {
-      const response = await fetch(`/api/get_json_detail/${jsonIndex}`); // JSON_DETAIL을 순차적으로 불러오기
-      if (!response.ok) {
-        throw new Error("JSON_DETAIL을 불러오는 중 오류가 발생했습니다.");
-      }
+// 예측 결과 가져오기
+const fetchResults = async () => {
+  try {
+    const response = await axios.get("/api/get_results");
+    setResults(response.data);
+  } catch (error) {
+    setError("결과를 가져오는 중 오류가 발생했습니다.");
+    console.error("Error fetching results:", error);
+  }
+};
 
-      const data = await response.json();
-      setInputText(data.json_detail); // 불러온 JSON_DETAIL을 입력 필드에 설정
-      setJsonIndex(jsonIndex + 1); // 인덱스 증가
+
+  // 파일 업로드 및 예측 실행 함수
+  const handleUploadAndPredict = async () => {
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      setIsLoading(true); // 로딩 시작
+      await axios.post("/api/upload_csv", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const eventSource = new EventSource("/api/predict_status");
+      eventSource.onmessage = (event) => {
+        const progressValue = parseFloat(event.data);
+        setProgress(progressValue);
+
+        if (progressValue >= 100) {
+          eventSource.close();
+          fetchResults(); // 예측 결과 가져오기
+          setIsLoading(false); // 로딩 종료
+        }
+      };
     } catch (error) {
-      setError("JSON_DETAIL을 불러오는 중 오류가 발생했습니다.");
+      setError("파일 업로드 중 오류가 발생했습니다.");
+      console.error("Error uploading file:", error);
+      setIsLoading(false); // 에러 시 로딩 종료
     }
   };
 
   return (
-    <Box minHeight="100vh" display="flex" flexDirection="column">
+    <Box minHeight="100vh" display="flex" flexDirection="column" alignItems="center">
       <Header /> {/* Header 컴포넌트 */}
       <Breadcrumb />
-      {/* Main Content */}
-      <Box
-        flexGrow={1}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
+
+      <Typography variant="h6">CSV 파일 업로드 및 AI 예측</Typography>
+
+      {/* 파일 선택 및 업로드 */}
+      <input
+        type="file"
+        accept=".csv"
+        onChange={handleFileChange}
+        style={{ display: "none" }}
+        id="file-upload"
+      />
+      <label htmlFor="file-upload">
+        <Button variant="contained" color="primary" component="span" sx={{ marginTop: 2 }}>
+          파일 선택
+        </Button>
+      </label>
+
+      {file && (
+        <Typography variant="body1" mt={2}>
+          선택된 파일: {file.name}
+        </Typography>
+      )}
+
+      <Button
+        variant="contained"
+        color="secondary"
+        onClick={handleUploadAndPredict}
+        disabled={!file}
+        sx={{ marginTop: 2 }}
       >
-        <Grid container spacing={4} justifyContent="center" alignItems="center">
-          <Grid item xs={12} sm={6} md={4}>
-            <Box textAlign="center">
-              <IconButton sx={{ fontSize: 100 }} color="primary">
-                <SettingsIcon fontSize="inherit" />
-              </IconButton>
+        예측 실행
+      </Button>
 
-              <Typography variant="h6">AI 카테고리 예측</Typography>
+      {/* 진행 상태 표시 */}
+      {progress > 0 && (
+        <Box mt={2} width="100%">
+          <Typography variant="body1">진행률: {progress.toFixed(2)}%</Typography>
+          <LinearProgress variant="determinate" value={progress} />
+        </Box>
+      )}
 
-              {/* 입력 필드 */}
-              <TextField
-                label="텍스트 입력"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
-                variant="outlined"
-                fullWidth
-                margin="normal"
-              />
+      {/* 로딩 인디케이터 */}
+      {isLoading && <LoadingIndicator />}
 
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handlePredict}
-                disabled={loading}
-                sx={{ marginTop: 2 , mr : 2}}
-              >
-                {loading ? "예측 중..." : "예측 실행"}
-              </Button>
+      {/* 오류 메시지 */}
+      {error && (
+        <Typography color="error" variant="body1" mt={2}>
+          오류: {error}
+        </Typography>
+      )}
 
-              {/* JSON_DETAIL 불러오기 버튼 */}
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={fetchNextJsonDetail}
-                sx={{ marginTop: 2 }}
-              >
-                다음 JSON_DETAIL 불러오기
-              </Button>
+      {/* 예측 결과 표 */}
+      {results && (
+        <TableContainer component={Paper} sx={{ marginTop: 4, maxWidth: 800 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>문장</TableCell>
+                <TableCell>예측된 카테고리</TableCell>
+                <TableCell>신뢰도</TableCell>
+                <TableCell>진행률</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {results.map((result, index) => (
+                <TableRow key={index}>
+                  <TableCell>{result.JSON_DETAIL.slice(0, 100)}...</TableCell>
+                  <TableCell>{result.JSON_DIVISION}</TableCell>
+                  <TableCell>{result.confidence ? `${result.confidence.toFixed(2)}%` : "N/A"}</TableCell>
+                  <TableCell><LinearProgress variant="determinate" value={progress} /></TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
 
-              {/* 오류 메시지 */}
-              {error && (
-                <Typography color="error" variant="body1" mt={2}>
-                  오류: {error}
-                </Typography>
-              )}
-
-              {/* 예측 결과 */}
-              {results && (
-                <Box mt={4}>
-                  <Typography variant="h6">예측 결과</Typography>
-                  <Typography>
-                    <strong>입력 텍스트:</strong> {results.sentence}
-                  </Typography>
-                  <Typography>
-                    <strong>예측된 카테고리:</strong>{" "}
-                    {results.predicted_category}
-                  </Typography>
-                  <Typography>
-                    <strong>신뢰도:</strong> {results.confidence}
-                  </Typography>
-                </Box>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      </Box>
-      <Footer />
+      <Footer /> {/* Footer 컴포넌트 */}
     </Box>
   );
 };

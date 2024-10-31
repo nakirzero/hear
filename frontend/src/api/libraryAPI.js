@@ -23,3 +23,14 @@ export const fetchLibrarySave = async (userSeq, bookSeq, histDiv, time) => {
     throw error;
   }
 };
+
+export const highlight = async (startPoint, endPoint, userSeq, bookSeq, test) => {
+  try {
+    const response = await axios.post("/api/highlight", {startPoint,endPoint, userSeq, bookSeq, test})
+    console.log(response, "응답하라 ");
+    
+  }catch (error){
+    console.error("Error fetching highlight:", error);
+    throw error;
+  }
+}

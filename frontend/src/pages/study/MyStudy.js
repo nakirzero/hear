@@ -22,7 +22,7 @@ const MyStudy = () => {
             <Button
               variant="contained"
               sx={{ padding: 10, textAlign: 'center', width: '100%' }}
-              onClick={() => navigate('/')}
+              onClick={() => navigate('/mystudy/history')}
             >
               <Typography variant="h6">최근 읽은 기록</Typography>
             </Button>
