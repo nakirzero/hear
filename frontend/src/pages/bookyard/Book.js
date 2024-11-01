@@ -5,11 +5,15 @@ import Footer from "../../components/Footer";
 import { Box, Button, Typography, Stack, Paper } from "@mui/material";
 import { fetchLibrary } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
+import useElevenLabsTTS from "../../hooks/useElevenLabsTTS"; // 커스텀 훅 불러오기
+import { useAuth } from "../../context/AuthContext";
 
 const Book = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [book, setBook] = useState([]);
+  const { saveTTSFile } = useElevenLabsTTS(); // TTS 저장 함수 가져오기
+  const { userObject } = useAuth();
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -24,6 +28,8 @@ const Book = () => {
           const response = await fetchLibrary(); // 전체 책 목록을 불러오는 API
           const bookData = response.find((b) => b.BOOK_SEQ === Number(bookSeq));
 
+          console.log('bookData', bookData);
+
           if (bookData) {
             setBook(bookData);
           } else {
@@ -37,6 +43,18 @@ const Book = () => {
 
     fetchBookData();
   }, [location.search]);
+
+  const handleAISummary = async () => {
+    if (userObject) {
+      console.log('userObject', userObject);
+      try {
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ);
+        navigate(`/library/book/aisummary?BOOK_SEQ=${book.BOOK_SEQ}`);
+      } catch (error) {
+        console.error("AI 요약 파일 생성 중 오류 발생:", error);
+      }
+    }
+  };
 
   const buttonStyle = {
     width: 300,
@@ -55,10 +73,6 @@ const Book = () => {
 
   const handleEssay = () => {
     navigate("/library?category=300");
-  };
-
-  const handleAISummary = () => {
-    navigate(`/library/book/aisummary?BOOK_SEQ=${book.BOOK_SEQ}`);
   };
 
   const handleFull = () => {

@@ -1,4 +1,5 @@
-from flask import Blueprint, jsonify
+import os
+from flask import Blueprint, jsonify, request
 from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
 from datetime import timedelta
@@ -16,26 +17,39 @@ def convert_timedelta_to_str(book):
 @library_bp.route('/library', methods=['GET'])
 def library():
     connection = get_db_connection()
- 
+    upload_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio/play'))
+
+    # 요청에서 voice_id와 EL_ID 가져오기
+    voice_id = request.args.get('EL_ID')
+
     if connection:
         try:
             # 도서마당 전체 불러오는 쿼리
-            query = text("SELECT * FROM book ")
+            query = text("SELECT * FROM book")
             result = connection.execute(query)
-          
+
             # 결과를 딕셔너리 형태로 변환
             keys = result.keys()
             book = [
                 dict(zip(keys, row))
                 for row in result.fetchall()
             ]
-           
+
             # timedelta 데이터를 문자열로 변환
             book = convert_timedelta_to_str(book)
 
+            # 각 책에 대해 TTS 파일 경로 확인 및 추가
             for item in book:
-                item['test'] = '/static/audio/ButterRingtone.mp3'
-                
+                book_seq = item['BOOK_SEQ']
+                filename = f"book_{book_seq}_voice_{voice_id}.mp3"
+                file_path = os.path.join(upload_folder, filename)
+
+                if os.path.exists(file_path):
+                    item['test'] = f"/static/audio/play/{filename}"
+                else:
+                    # 파일이 없을 경우 기본 파일 경로를 설정
+                    item['test'] = '/static/audio/ButterRingtone.mp3'
+
             return jsonify(book)
         except Exception as db_error:
             print(f"Database operation failed: {db_error}")
