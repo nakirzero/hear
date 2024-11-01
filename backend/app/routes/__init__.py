@@ -4,6 +4,7 @@ from app.routes.predict import predict_blueprints
 from app.routes.board import board_blueprints  # 추가
 from app.routes.study import wishbook_blueprint
 from app.routes.STT import stt_blueprint
+from app.routes.TTS import tts_blueprint
 
 def register_blueprints(app):
     # 인증 관련 블루프린트 등록
@@ -28,3 +29,7 @@ def register_blueprints(app):
 
     for bp in stt_blueprint:
         app.register_blueprint(bp, url_prefix='/api')
+
+    for bp in tts_blueprint:
+        app.register_blueprint(bp, url_prefix='/api')
+

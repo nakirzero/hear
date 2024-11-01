@@ -1,8 +1,13 @@
 import axios from 'axios';
 
-export const fetchLibrary = async () => {
+export const fetchLibrary = async (bookSeq, elId) => {
   try {
-    const response = await axios.get("/api/library");
+    const response = await axios.get("/api/library", {
+      params: {
+        BOOK_SEQ: bookSeq,
+        EL_ID: elId,
+      },
+    });
     return response.data;
   } catch (error) {
     console.error("Error fetching library:", error);

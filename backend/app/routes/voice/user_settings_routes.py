@@ -9,7 +9,7 @@ def save_user_settings():
     try:
         data = request.json
         user_seq = data.get("user_seq")
-        # selected_voice = data.get("selectedVoice")
+        selected_voice = data.get("selectedVoice")
         speed = data.get("speed")
 
         # MySQL 연결
@@ -21,10 +21,11 @@ def save_user_settings():
                 query = text("""
                     UPDATE user
                     SET speed = :speed
+                      , EL_ID = :selected_voice
                     WHERE user_seq = :user_seq
                 """)
                 connection.execute(query, {
-                    # "selected_voice": selected_voice,
+                    "selected_voice": selected_voice,
                     "speed": speed,
                     "user_seq": user_seq
                 })

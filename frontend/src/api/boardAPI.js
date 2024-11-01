@@ -1,4 +1,3 @@
-// src/api/boardAPI.js
 import axios from 'axios';
 
 export const fetchNotices = async () => {
