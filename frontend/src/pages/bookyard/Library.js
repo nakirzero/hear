@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import Breadcrumb from "../components/BreadCrumb";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Breadcrumb from "../../components/BreadCrumb";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 import {
   Box,
@@ -16,9 +16,9 @@ import {
   Stack,
   Pagination,
 } from "@mui/material";
-import { fetchLibrary } from "../api/libraryAPI";
+import { fetchLibrary } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
-import usePagination from "../hooks/usePagination"; // usePagination 훅 가져오기
+import usePagination from "../../hooks/usePagination"; // usePagination 훅 가져오기
 
 const Library = () => {
   const navigate = useNavigate();

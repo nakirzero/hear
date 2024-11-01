@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Breadcrumb from "../components/BreadCrumb";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Breadcrumb from "../../components/BreadCrumb";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import { Box, Button, Typography, Stack, Paper } from "@mui/material";
-import { fetchLibrary } from "../api/libraryAPI";
+import { fetchLibrary } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const Book = () => {
@@ -62,7 +62,7 @@ const Book = () => {
   };
 
   const handleFull = () => {
-    navigate(`/library/book/full/BOOK_SEQ=${book.BOOK_SEQ}`);
+    navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`);
   };
 
   return (
