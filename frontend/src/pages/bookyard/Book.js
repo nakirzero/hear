@@ -56,6 +56,18 @@ const Book = () => {
     }
   };
 
+  const handleFull = async () => {
+    if (userObject) {
+      console.log('userObject', userObject);
+      try {
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ);
+        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`);
+      } catch (error) {
+        console.error("AI 요약 파일 생성 중 오류 발생:", error);
+      }
+    }
+  };
+
   const buttonStyle = {
     width: 300,
     height: 160,
@@ -73,10 +85,6 @@ const Book = () => {
 
   const handleEssay = () => {
     navigate("/library?category=300");
-  };
-
-  const handleFull = () => {
-    navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`);
   };
 
   return (

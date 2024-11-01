@@ -15,7 +15,7 @@ const useElevenLabsTTS = () => {
       // API 호출
       console.log('voiceId', voiceId);
       console.log('bookSeq', bookSeq);
-      const fileData = await generateTTSFile(voiceId, text, userObject.USER_SEQ, bookSeq);
+      const fileData = await generateTTSFile(voiceId, text, bookSeq);
       return fileData;
     } catch (error) {
       console.error("Error saving TTS file:", error);

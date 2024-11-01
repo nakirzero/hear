@@ -169,10 +169,11 @@ const Play = () => {
     const fetchBookData = async () => {
       const params = new URLSearchParams(location.search);
       const bookSeq = params.get("BOOK_SEQ");
+      const elId = userObject?.EL_ID; // userObject에서 EL_ID를 가져옴
 
       if (bookSeq) {
         try {
-          const response = await fetchLibrary();
+          const response = await fetchLibrary(bookSeq, elId);
           const bookData = response.find((b) => b.BOOK_SEQ === Number(bookSeq));
 
           if (bookData) {
@@ -187,7 +188,7 @@ const Play = () => {
       }
     };
     fetchBookData();
-  }, [location.search]);
+  }, [location.search, userObject?.EL_ID]);
 
   useEffect(() => {
     const audioElement = audioRef.current;
