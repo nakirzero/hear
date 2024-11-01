@@ -12,9 +12,10 @@ import Join from "./pages/Join";
 import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 
-import Library from "./pages/Library";
-import Book from "./pages/Book";
-import AISummary from "./pages/AISummary";
+import Library from "./pages/bookyard/Library";
+import Book from "./pages/bookyard/Book";
+import AISummary from "./pages/bookyard/AISummary";
+import Play from "./pages/bookyard/Play";
 
 import MyStudy from "./pages/study/MyStudy";
 import MyBookReport from "./pages/study/MyBookReport";
@@ -51,6 +52,7 @@ function App() {
             <Route path="/library" element={<Library />} />
             <Route path="/library/book" element={<Book />} />
             <Route path="/library/book/aisummary" element={<AISummary />} />
+            <Route path="/library/book/play" element={<Play />} />
 
             <Route path="/mystudy" element={<MyStudy />} />
             <Route path="/mystudy/mywishbook" element={<MyWishBook />} />

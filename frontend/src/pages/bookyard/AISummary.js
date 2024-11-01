@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
-import Breadcrumb from "../components/BreadCrumb";
-import Header from "../components/Header";
-import Footer from "../components/Footer";
+import Breadcrumb from "../../components/BreadCrumb";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 import {
   Box,
   Button,
@@ -15,10 +15,10 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PauseIcon from "@mui/icons-material/Pause";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { useNavigate, useLocation } from "react-router-dom";
-import { fetchLibrary, fetchLibrarySave, highlight } from "../api/libraryAPI";
-import { useAuth } from "../context/AuthContext";
-import useMenuShortcut from "../hooks/useMenuShortcut";
-import usePlayShortcut from "../hooks/usePlayShortcut";
+import { fetchLibrary, fetchLibrarySave, highlight } from "../../api/libraryAPI";
+import { useAuth } from "../../context/AuthContext";
+import useMenuShortcut from "../../hooks/useMenuShortcut";
+import usePlayShortcut from "../../hooks/usePlayShortcut";
 
 const AISummary = () => {
   const navigate = useNavigate();
