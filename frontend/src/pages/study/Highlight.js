@@ -157,6 +157,10 @@ const Highlight = () => {
             updatedHighlights[bookName].highlights = updatedHighlights[bookName].highlights.filter(
               (highlight) => highlight.HL_SEQ !== selectedHighlightId
             );
+            // 책의 모든 하이라이트가 삭제되면 책 정보를 제거
+            if (updatedHighlights[bookName].highlights.length === 0) {
+              delete updatedHighlights[bookName];
+            }
           });
           return updatedHighlights;
         });
