@@ -201,45 +201,43 @@ const Play = () => {
 
   useEffect(() => {
     const audioElement = audioRef.current;
-
+  
     if (test && audioElement) {
       audioElement.src = test;
       console.log(test, "오디오 경로가 설정되었습니다.");
-
+  
       const handleAudioLoaded = () => {
         audioElement.play().catch((error) => {
           console.error("오디오 자동 재생 실패:", error);
         });
       };
-
+  
       const handleLoadedMetadata = () => {
         if (audioElement) {
           setDuration(audioElement.duration || 0);
         }
       };
-
-      const handleTimeUpdate = () => {
-        if (audioElement) {
+  
+      // 100ms마다 currentTime을 업데이트하는 setInterval
+      const intervalId = setInterval(() => {
+        if (audioElement && !audioElement.paused) {
           setCurrentTime(audioElement.currentTime);
         }
-      };
-
+      }, 100);
+  
       audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
-      audioElement.addEventListener("timeupdate", handleTimeUpdate);
       audioElement.addEventListener("loadeddata", handleAudioLoaded);
-
+  
       return () => {
-        if (audioElement) {
-          audioElement.removeEventListener(
-            "loadedmetadata",
-            handleLoadedMetadata
-          );
-          audioElement.removeEventListener("timeupdate", handleTimeUpdate);
-          audioElement.removeEventListener("loadeddata", handleAudioLoaded);
-        }
+        audioElement.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        audioElement.removeEventListener("loadeddata", handleAudioLoaded);
+        clearInterval(intervalId); // 컴포넌트 언마운트 시 interval 해제
       };
     }
   }, [test]);
+  
+    
+  
 
   useEffect(() => {
     const audio = audioRef.current;
