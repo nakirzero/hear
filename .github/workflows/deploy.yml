@@ -46,4 +46,5 @@ jobs:
         docker-compose down
         docker-compose pull
         docker-compose up -d
+        docker image prune -f  # 사용하지 않는 이미지 자동 정리
         EOF
