@@ -1,11 +1,12 @@
 import axios from 'axios';
 
-export const fetchLibrary = async (bookSeq, elId) => {
+export const fetchLibrary = async (bookSeq, elId, isSummary = false) => {
   try {
     const response = await axios.get("/api/library", {
       params: {
         BOOK_SEQ: bookSeq,
         EL_ID: elId,
+        isSummary: isSummary, // 요약 요청 여부를 추가
       },
     });
     return response.data;

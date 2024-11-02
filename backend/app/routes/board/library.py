@@ -17,10 +17,14 @@ def convert_timedelta_to_str(book):
 @library_bp.route('/library', methods=['GET'])
 def library():
     connection = get_db_connection()
-    upload_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio/play'))
-
+    
+    # 업로드 폴더 경로 설정
+    play_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio/play'))
+    summary_folder = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static/audio/summary'))
+    
     # 요청에서 voice_id와 EL_ID 가져오기
     voice_id = request.args.get('EL_ID')
+    is_summary = request.args.get('isSummary', 'false').lower() == 'true'  # 요약 여부 확인
 
     if connection:
         try:
@@ -41,11 +45,12 @@ def library():
             # 각 책에 대해 TTS 파일 경로 확인 및 추가
             for item in book:
                 book_seq = item['BOOK_SEQ']
-                filename = f"book_{book_seq}_voice_{voice_id}.mp3"
-                file_path = os.path.join(upload_folder, filename)
+                filename = f"{'summary' if is_summary else 'book'}_{book_seq}_voice_{voice_id}.mp3"
+                file_folder = summary_folder if is_summary else play_folder
+                file_path = os.path.join(file_folder, filename)
 
                 if os.path.exists(file_path):
-                    item['test'] = f"/static/audio/play/{filename}"
+                    item['test'] = f"/static/audio/{'summary' if is_summary else 'play'}/{filename}"
                 else:
                     # 파일이 없을 경우 기본 파일 경로를 설정
                     item['test'] = '/static/audio/ButterRingtone.mp3'
@@ -54,7 +59,6 @@ def library():
         except Exception as db_error:
             print(f"Database operation failed: {db_error}")
             return jsonify({"error": "Failed to fetch library"}), 500
-
         finally:
             # 데이터베이스 연결 닫기
             close_db_connection(connection)

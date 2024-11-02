@@ -170,10 +170,11 @@ const AISummary = () => {
       const params = new URLSearchParams(location.search);
       const bookSeq = params.get("BOOK_SEQ");
       const elId = userObject?.EL_ID; // userObject에서 EL_ID를 가져옴
+      const isSummary = true; // 요약 요청 여부 설정 (true로 설정 시 요약 요청)
 
       if (bookSeq) {
         try {
-          const response = await fetchLibrary(bookSeq, elId);
+          const response = await fetchLibrary(bookSeq, elId, isSummary);
           const bookData = response.find((b) => b.BOOK_SEQ === Number(bookSeq));
 
           if (bookData) {
