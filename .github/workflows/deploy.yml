@@ -42,7 +42,7 @@ jobs:
         NCP_SERVER_IP: ${{ secrets.NCP_SERVER_IP }}
       run: |
         ssh -o StrictHostKeyChecking=no $NCP_USERNAME@$NCP_SERVER_IP << 'EOF'
-        cd ~/hear-project/   # hear-project 폴더로 경로 수정
+        cd /home/hear-project/   # hear-project 폴더로 경로 수정
         docker-compose down
         docker-compose pull
         docker-compose up -d
