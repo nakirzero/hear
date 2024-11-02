@@ -5,14 +5,16 @@ import Footer from "../../components/Footer";
 import { Box, Button, Typography, Stack, Paper } from "@mui/material";
 import { fetchLibrary } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
-import useElevenLabsTTS from "../../hooks/useElevenLabsTTS"; // 커스텀 훅 불러오기
+import useOpenAISummary from "../../hooks/useOpenAISummary";
+import useElevenLabsTTS from "../../hooks/useElevenLabsTTS";
 import { useAuth } from "../../context/AuthContext";
 
 const Book = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [book, setBook] = useState([]);
-  const { saveTTSFile } = useElevenLabsTTS(); // TTS 저장 함수 가져오기
+  const { saveTTSFile } = useElevenLabsTTS();
+  const { getSummary, isLoading: summaryLoading } = useOpenAISummary();
   const { userObject } = useAuth();
 
   useEffect(() => {
@@ -48,7 +50,8 @@ const Book = () => {
     if (userObject) {
       console.log('userObject', userObject);
       try {
-        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ);
+        const summary = await getSummary(book.INFORMATION);
+        await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true); // 요약 플래그 추가
         navigate(`/library/book/aisummary?BOOK_SEQ=${book.BOOK_SEQ}`);
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
@@ -60,7 +63,7 @@ const Book = () => {
     if (userObject) {
       console.log('userObject', userObject);
       try {
-        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ);
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false);
         navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`);
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
@@ -172,8 +175,8 @@ const Book = () => {
             {book.INFORMATION}
           </Typography>
           <Stack spacing={1} mt={2}>
-            <Button variant="outlined" onClick={handleAISummary}>
-              AI요약듣기
+            <Button variant="outlined" onClick={handleAISummary} disabled={summaryLoading}>
+              {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
             </Button>
             <Button variant="outlined" onClick={handleFull}>
               전체듣기
