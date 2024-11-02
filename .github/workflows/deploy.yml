@@ -1,0 +1,46 @@
+name: Deploy to NCP Server
+
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Login to NCR
+      env:
+        NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
+        NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
+      run: |
+        echo $NCR_PASSWORD | docker login -u $NCR_USERNAME --password-stdin hear.kr.ncr.ntruss.com
+
+    - name: Build and Push Frontend
+      run: |
+        docker build -t hear.kr.ncr.ntruss.com/hear-frontend:latest -f ./frontend/Dockerfile ./frontend
+        docker push hear.kr.ncr.ntruss.com/hear-frontend:latest
+
+    - name: Build and Push Backend
+      run: |
+        docker build -t hear.kr.ncr.ntruss.com/hear-backend:latest -f ./backend/Dockerfile ./backend
+        docker push hear.kr.ncr.ntruss.com/hear-backend:latest
+
+    - name: Deploy to NCP Server
+      env:
+        NCP_USERNAME: ${{ secrets.NCP_USERNAME }}
+        NCP_SERVER_IP: ${{ secrets.NCP_SERVER_IP }}
+        SSH_PRIVATE_KEY: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.NCP_SERVER_IP }}
+        username: ${{ secrets.NCP_USERNAME }}
+        key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+        script: |
+          cd ~/hear-project
+          docker-compose down
+          docker-compose pull
+          docker-compose up -d
