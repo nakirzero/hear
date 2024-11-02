@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import useSnackbar from "../../hooks/useSnackbar";
 import useLoading from "../../hooks/useLoading";
+import useElevenLabsTTS from "../../hooks/useElevenLabsTTS";
 import { Typography, Container, Box, Button, Radio, RadioGroup, FormControlLabel, Select, MenuItem, CardContent, Dialog, DialogActions, DialogContent, DialogContentText } from "@mui/material";
 
 import Header from "../../components/Header";
@@ -15,6 +16,7 @@ const SettingAudio = () => {
   const { userObject } = useAuth();
   const { openSnackbar, SnackbarComponent } = useSnackbar();
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading("삭제 중...");
+  const { saveTTSFile } = useElevenLabsTTS();
 
   const [voiceList, setVoiceList] = useState([]);
   const [selectedVoice, setSelectedVoice] = useState("");
@@ -41,16 +43,23 @@ const SettingAudio = () => {
     getVoices();
   }, [userObject]);
 
-  const handlePreview = () => {
-    const audioUrl = `/static/audio/${selectedVoice}.mp3`;
-    if (audioElement) {
-      audioElement.pause();
-      audioElement.currentTime = 0;
+  const handlePreview = async () => {
+    try {
+      await saveTTSFile(selectedVoice, "", "preview");
+      const audioUrl = `/static/audio/preview/preview_voice_${selectedVoice}.mp3`;
+
+      if (audioElement) {
+        audioElement.pause();
+        audioElement.currentTime = 0;
+      }
+      const newAudio = new Audio(audioUrl);
+      newAudio.playbackRate = speed;
+      newAudio.play();
+      setAudioElement(newAudio);
+    } catch (error) {
+      console.error("Error generating TTS preview:", error);
+      openSnackbar("미리듣기 생성에 실패했습니다.", "error");
     }
-    const newAudio = new Audio(audioUrl);
-    newAudio.playbackRate = speed;
-    newAudio.play();
-    setAudioElement(newAudio);
   };
 
   const handleStopPreview = () => {
