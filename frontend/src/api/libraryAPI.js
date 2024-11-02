@@ -40,3 +40,19 @@ export const highlight = async (startPoint, endPoint, userSeq, bookSeq, test) =>
     throw error;
   }
 }
+
+// getLastPosition 함수 추가
+export const getLastPosition = async (bookSeq, userSeq) => {
+  try {
+    const response = await axios.get("/api/history/last-position", {
+      params: {
+        BOOK_SEQ: bookSeq,
+        USER_SEQ: userSeq,
+      },
+    });
+    return response.data.lastPosition; // 마지막 재생 위치 반환
+  } catch (error) {
+    console.error("Error fetching last position:", error);
+    throw error;
+  }
+};

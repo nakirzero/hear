@@ -3,7 +3,7 @@ import Breadcrumb from "../../components/BreadCrumb";
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import { Box, Button, Typography, Stack, Paper } from "@mui/material";
-import { fetchLibrary } from "../../api/libraryAPI";
+import { fetchLibrary, getLastPosition } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
 import useOpenAISummary from "../../hooks/useOpenAISummary";
 import useElevenLabsTTS from "../../hooks/useElevenLabsTTS";
@@ -16,6 +16,8 @@ const Book = () => {
   const { saveTTSFile } = useElevenLabsTTS();
   const { getSummary, isLoading: summaryLoading } = useOpenAISummary();
   const { userObject } = useAuth();
+  const [lastPosition, setLastPosition] = useState(0); // 마지막 위치 상태 추가
+  const [hasHistory, setHasHistory] = useState(false); // 히스토리 존재 여부
 
   useEffect(() => {
     const fetchBookData = async () => {
@@ -34,6 +36,16 @@ const Book = () => {
 
           if (bookData) {
             setBook(bookData);
+            // 마지막 재생 위치 조회
+            const position = await getLastPosition(bookSeq, userObject?.USER_SEQ);
+            
+            if (position > 0) {
+              setLastPosition(position); // 마지막 위치 설정
+              setHasHistory(true); // 히스토리가 있는 경우
+            } else {
+              setHasHistory(false); // 히스토리가 있는 경우
+            }
+            
           } else {
             console.error("해당 책을 찾을 수 없습니다.");
           }
@@ -44,7 +56,7 @@ const Book = () => {
     };
 
     fetchBookData();
-  }, [location.search]);
+  }, [location.search, userObject]);
 
   const handleAISummary = async () => {
     if (userObject) {
@@ -59,14 +71,24 @@ const Book = () => {
     }
   };
 
-  const handleFull = async () => {
+  const handleListenFromStart = async () => {
     if (userObject) {
-      console.log('userObject', userObject);
       try {
-        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false);
-        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`);
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false); // TTS 파일 생성
+        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`, { state: { lastPosition: 0 } });
       } catch (error) {
-        console.error("AI 요약 파일 생성 중 오류 발생:", error);
+        console.error("파일 생성 중 오류 발생:", error);
+      }
+    }
+  };
+  
+  const handleContinueListening = async () => {
+    if (userObject) {
+      try {
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false); // TTS 파일 생성
+        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`, { state: { lastPosition } });
+      } catch (error) {
+        console.error("파일 생성 중 오류 발생:", error);
       }
     }
   };
@@ -178,9 +200,14 @@ const Book = () => {
             <Button variant="outlined" onClick={handleAISummary} disabled={summaryLoading}>
               {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
             </Button>
-            <Button variant="outlined" onClick={handleFull}>
-              전체듣기
-            </Button>
+            {hasHistory ? (
+            <>
+                <Button variant="outlined" onClick={handleListenFromStart}>처음부터 듣기</Button>
+                <Button variant="outlined" onClick={handleContinueListening}>이어 듣기</Button>
+              </>
+            ) : (
+              <Button variant="outlined" onClick={handleListenFromStart}>전체 듣기</Button>
+            )}
           </Stack>
         </Stack>
       </Box>

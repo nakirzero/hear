@@ -59,8 +59,10 @@ const History = () => {
     setDisplayedItems(itemsPerPage); // 기본 항목 수로 초기화
   };
 
-  const handleNavigate = (bookSeq) => {
-    navigate(`/book/${bookSeq}`);
+  const handleNavigate = (bookSeq, lastPosition) => {
+    const positionInSeconds = timeToSeconds(lastPosition);
+    lastPosition = positionInSeconds;
+    navigate(`/library/book/play?BOOK_SEQ=${bookSeq}`, { state: { lastPosition } });
   };
 
   const handleLibrary = () => {
@@ -94,7 +96,7 @@ const History = () => {
                   <TimelineItem key={index}>
                     <TimelineSeparator>
                       <Box 
-                        onClick={() => handleNavigate(row.BOOK_SEQ)}
+                        onClick={() => handleNavigate(row.BOOK_SEQ, row.HIST_EdPt)}
                         sx={{ position: 'relative', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}
                       >
                         <CircularProgress variant="determinate" value={progressValue} size={40} />
