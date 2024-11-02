@@ -29,8 +29,8 @@ def join():
                 return jsonify({"error": "유저 패스워드 불일치"}), 410
             
             # 사용자가 존재하지 않으면 새로운 사용자 추가
-            user_insert_query = text("INSERT INTO user (USER_ID, USER_PW, NICKNAME, DISABLED_CODE, USER_CrtDt) VALUES (:id, :pw, :nickname, :disabled, now())")
-            connection.execute(user_insert_query, {"id": id, "pw": pw, "nickname": nickname.nickName(), "disabled": disabled})
+            user_insert_query = text("INSERT INTO user (USER_ID, USER_PW, NICKNAME, EL_ID, SPEED, DISABLED_CODE, USER_CrtDt) VALUES (:id, :pw, :nickname, :el_id, :speed, :disabled, now())")
+            connection.execute(user_insert_query, {"id": id, "pw": pw, "nickname": nickname.nickName(), 'el_id':"XOjX7HuCs6jtaR1NqWIW", 'speed':1 , "disabled": disabled})
 
             # 방금 삽입한 USER_SEQ 가져오기
             user_seq_query = text("SELECT LAST_INSERT_ID()")

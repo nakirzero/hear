@@ -13,7 +13,7 @@ import { fetchVoiceList, saveUserSettings, deleteVoice } from "../../api/voiceAP
 
 const SettingAudio = () => {
   const navigate = useNavigate();
-  const { userObject } = useAuth();
+  const { userObject, setUserObject } = useAuth(); // setUserObject 가져오기
   const { openSnackbar, SnackbarComponent } = useSnackbar();
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading("삭제 중...");
   const { saveTTSFile } = useElevenLabsTTS();
@@ -33,9 +33,10 @@ const SettingAudio = () => {
       try {
         const voices = await fetchVoiceList(userObject.USER_SEQ);
         setVoiceList(voices);
-        if (voices.length > 0) {
-          setSelectedVoice(voices[0].EL_ID);
-        }
+        
+        // 저장된 EL_ID가 있는 경우, 그 값을 selectedVoice의 기본값으로 설정
+        const initialVoice = userObject.EL_ID || (voices[0]?.EL_ID ?? "");
+        setSelectedVoice(initialVoice);
       } catch (error) {
         console.error("Error fetching voice list:", error);
       }
@@ -78,6 +79,13 @@ const SettingAudio = () => {
         selectedVoice,
         speed,
       });
+
+      // userObject 업데이트
+      const updatedUser = {
+        ...userObject,
+        EL_ID: selectedVoice,
+      };
+      setUserObject(updatedUser);
 
       openSnackbar("설정이 저장되었습니다.", "success");
     } catch (error) {

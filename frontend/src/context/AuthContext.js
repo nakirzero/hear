@@ -14,6 +14,14 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
+  useEffect(() => {
+    // userObject가 변경될 때마다 세션 및 로컬 스토리지 업데이트
+    if (userObject) {
+      sessionStorage.setItem('userInfo', JSON.stringify({ userInfo: userObject }));
+      localStorage.setItem('userInfo', JSON.stringify({ userInfo: userObject }));
+    }
+  }, [userObject]);
+
   return (
     <AuthContext.Provider value={{ userObject, setUserObject }}>
       {children}

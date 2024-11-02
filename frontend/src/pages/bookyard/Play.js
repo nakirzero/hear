@@ -23,6 +23,7 @@ import usePlayShortcut from "../../hooks/usePlayShortcut";
 const Play = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const lastPosition = location.state?.lastPosition || 0; // 전달받은 마지막 위치
   const [book, setBook] = useState([]);
   const [test, setTest] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
@@ -105,6 +106,11 @@ const Play = () => {
     const audioElement = audioRef.current; // audioRef.current를 내부 변수에 저장
     let isAudioPlaying = false; // 재생 상태 확인 변수
 
+    // 초기 재생 위치 설정
+    const handleLoadedMetadata = () => {
+      audioElement.currentTime = lastPosition;
+    };
+
     const handlePlayPause = () => {
       if (audioElement) {
         if (audioElement.currentTime !== audioElement.duration) {
@@ -148,6 +154,8 @@ const Play = () => {
     };
 
     if (audioElement) {
+      // 초기 로드 시 마지막 재생 위치 설정
+      audioElement.addEventListener("loadedmetadata", handleLoadedMetadata);
       audioElement.addEventListener("playing", handlePlayPause);
       audioElement.addEventListener("pause", () => {
         clearInterval(intervalId);
@@ -162,7 +170,7 @@ const Play = () => {
       }
       clearInterval(intervalId); // 클린업 시 interval 정리
     };
-  }, [location.search, userObject?.USER_SEQ]);
+  }, [location.search, userObject?.USER_SEQ, lastPosition]);
 
   useEffect(() => {
     // 책 정보 불러오기
