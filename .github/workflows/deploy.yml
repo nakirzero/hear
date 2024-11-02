@@ -3,44 +3,47 @@ name: Deploy to NCP Server
 on:
   push:
     branches:
-      - main  # main 브랜치에 푸시될 때 실행
+      - main
 
 jobs:
-  deploy:
+  build-push-deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Login to NCR
+    - name: Log in to NCR
       env:
         NCR_USERNAME: ${{ secrets.NCR_USERNAME }}
         NCR_PASSWORD: ${{ secrets.NCR_PASSWORD }}
       run: |
         echo $NCR_PASSWORD | docker login -u $NCR_USERNAME --password-stdin hear.kr.ncr.ntruss.com
 
-    - name: Build and Push Frontend
+    - name: Build and Push Docker images to NCR
       run: |
+        # Frontend
         docker build -t hear.kr.ncr.ntruss.com/hear-frontend:latest -f ./frontend/Dockerfile ./frontend
         docker push hear.kr.ncr.ntruss.com/hear-frontend:latest
-
-    - name: Build and Push Backend
-      run: |
+        # Backend
         docker build -t hear.kr.ncr.ntruss.com/hear-backend:latest -f ./backend/Dockerfile ./backend
         docker push hear.kr.ncr.ntruss.com/hear-backend:latest
+
+    - name: Install SSH client
+      run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+    - name: Add SSH key
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
 
     - name: Deploy to NCP Server
       env:
         NCP_USERNAME: ${{ secrets.NCP_USERNAME }}
         NCP_SERVER_IP: ${{ secrets.NCP_SERVER_IP }}
-        SSH_PRIVATE_KEY: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.NCP_SERVER_IP }}
-        username: ${{ secrets.NCP_USERNAME }}
-        key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
-        script: |
-          cd ~/hear-project
-          docker-compose down
-          docker-compose pull
-          docker-compose up -d
+      run: |
+        ssh -o StrictHostKeyChecking=no $NCP_USERNAME@$NCP_SERVER_IP << 'EOF'
+        cd ~/hear-project/   # hear-project 폴더로 경로 수정
+        docker-compose down
+        docker-compose pull
+        docker-compose up -d
+        EOF
