@@ -9,7 +9,7 @@ login_bp = Blueprint('login', __name__)
 
 @login_bp.route('/login', methods=['POST'])
 def login():
-    print('login!!')
+    print('운영 login!!')
     data = request.json  # Get JSON data from React
     userid = data.get('userid')
     userpw = data.get('userpw')

@@ -73,7 +73,7 @@ function Main() {
           sx={buttonStyle}
           aria-label="로그인 페이지로 이동"
         >
-          로그인
+          로그인(운영배포테스트)
         </Button>
         <Button
           variant="contained"
