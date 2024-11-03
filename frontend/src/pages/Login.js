@@ -26,7 +26,13 @@ function Login() {
       if (response) {
         setUserInfo(response.userInfo);
         setUserObject(response.userInfo); // 로그인 성공 시 AuthContext 업데이트
-        setDialogOpen(true);
+
+        // 관리자인 경우 바로 /admin으로 이동
+        if (response.userInfo.is_admin) {
+          navigate('/admin');          
+        } else {
+          setDialogOpen(true);
+        }
       } else {
         setMessage("아이디 혹은 비밀번호가 잘못되었습니다.");
       }
