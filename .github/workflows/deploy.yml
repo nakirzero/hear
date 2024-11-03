@@ -39,7 +39,7 @@ jobs:
     - name: Deploy to NCP Server
       env:
         NCP_USERNAME: ${{ secrets.NCP_USERNAME }}
-        NCP_SERVER_IP: ${{ secrets.NCP_SERVER_IP }}
+        NCP_SERVER_IP: ${{ secrets.NCP_WAS_SERVER_IP }}
       run: |
         ssh -o StrictHostKeyChecking=no $NCP_USERNAME@$NCP_SERVER_IP << 'EOF'
         cd /home/hear-project/   # hear-project 폴더로 경로 수정
