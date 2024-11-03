@@ -6,6 +6,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import theme from "./theme";
 
 import { AuthProvider } from "./context/AuthContext";
+import RequireAdmin from "./context/RequireAdmin";
 
 import Main from "./pages/Main";
 import Join from "./pages/Join";
@@ -36,6 +37,9 @@ import Suggest from "./pages/board/Suggest";
 import Write from "./pages/board/Write";
 
 import PredictPage from "./pages/PredictPage";
+
+// 관리자 페이지 컴포넌트 추가
+import AdminDashboard from "./pages/admin/Dashboard";
 
 function App() {
   return (
@@ -73,6 +77,11 @@ function App() {
             <Route path="/board/write" element={<Write />} />
 
             <Route path="/predict" element={<PredictPage />} />
+
+            {/* 관리자 전용 라우트 설정 */}
+            <Route element={<RequireAdmin />}>
+              <Route path="/admin" element={<AdminDashboard />} />
+            </Route>
           </Routes>
         </Router>
       </AuthProvider>

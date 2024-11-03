@@ -22,8 +22,12 @@ export const AuthProvider = ({ children }) => {
     }
   }, [userObject]);
 
+  // 관리자 여부 확인
+  const isAdmin = userObject?.is_admin || false;
+  console.log('isAdmin', isAdmin);
+
   return (
-    <AuthContext.Provider value={{ userObject, setUserObject }}>
+    <AuthContext.Provider value={{ userObject, setUserObject, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
