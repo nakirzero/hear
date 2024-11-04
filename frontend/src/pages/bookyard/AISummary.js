@@ -45,23 +45,13 @@ const AISummary = () => {
 
   
 
-  const handlePoem = () => {
-    navigate("/library?category=200");
-  };
 
-  const handleNovel = () => {
-    navigate("/library?category=100");
-  };
-
-  const handleEssay = () => {
-    navigate("/library?category=300");
-  };
 
   const menuItems = useMemo(() => [
     {  label: "1 시", path: "/library?category=200" },
     {  label: "2 소설", path: "/library?category=100" },
     {  label: "3 수필", path: "/library?category=300" },
-    {  label: "4 공유세상", path: "/board" }
+    {  label: "4 공유세상", path: "/library?category=400" }
   ], []);
 
   // 단축키 설정, 각 숫자에 대응하는 메뉴의 인덱스에 따라 이동
@@ -117,8 +107,10 @@ const AISummary = () => {
                 audioElement.duration
               );
 
-              const params = new URLSearchParams(location.search);
-              const bookSeq = params.get("BOOK_SEQ");
+            
+              const bookSeq = location.state.selected
+              console.log(bookSeq, "bookSeq");
+              
               const userSeq = userObject?.USER_SEQ;
               const time = audioElement ? audioElement.currentTime : 0;
 
@@ -162,13 +154,14 @@ const AISummary = () => {
       }
       clearInterval(intervalId); // 클린업 시 interval 정리
     };
-  }, [location.search, userObject?.USER_SEQ]);
+  }, [location.search, userObject?.USER_SEQ,location.state.selected]);
 
   useEffect(() => {
     // 책 정보 불러오기
     const fetchBookData = async () => {
-      const params = new URLSearchParams(location.search);
-      const bookSeq = params.get("BOOK_SEQ");
+      const bookSeq = location.state.selected
+
+      
       const elId = userObject?.EL_ID; // userObject에서 EL_ID를 가져옴
       const isSummary = true; // 요약 요청 여부 설정 (true로 설정 시 요약 요청)
 
@@ -176,7 +169,7 @@ const AISummary = () => {
         try {
           const response = await fetchLibrary(bookSeq, elId, isSummary);
           const bookData = response.find((b) => b.BOOK_SEQ === Number(bookSeq));
-
+          
           if (bookData) {
             setBook(bookData);
             setTest(bookData.test);
@@ -189,7 +182,7 @@ const AISummary = () => {
       }
     };
     fetchBookData();
-  }, [location.search, userObject?.EL_ID]);
+  }, [location.search, userObject?.EL_ID,location.state.selected]);
 
   useEffect(() => {
     const audioElement = audioRef.current;
@@ -359,36 +352,41 @@ const AISummary = () => {
         alignItems="center"
       >
         <Box sx={{ display: "flex", gap: 4 }}>
-          <Button
+        <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
-            onClick={handlePoem}
-            aria-label="카테고리 시로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "200" } })}
+            aria-label="시 카테고리로 이동"
           >
             1. 시
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
-            onClick={handleNovel}
-            aria-label="카테고리 소설로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "100" } })}
+            aria-label="소설 카테고리로 이동"
           >
             2. 소설
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
-            onClick={handleEssay}
-            aria-label="카테고리 수필로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "300" } })}
+            aria-label="수필 카테고리로 이동"
           >
             3. 수필
           </Button>
           <Button
             variant="contained"
+            color="secondary"
             sx={buttonStyle}
-            aria-label="카테고리 혜리언니로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "400" } })}
+            aria-label="공유세상 카테고리로 이동"
           >
-            4. 혜리언니
+            4. 공유세상
           </Button>
         </Box>
       </Box>
