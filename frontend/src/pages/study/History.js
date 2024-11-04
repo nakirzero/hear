@@ -62,7 +62,7 @@ const History = () => {
   const handleNavigate = (bookSeq, lastPosition) => {
     const positionInSeconds = timeToSeconds(lastPosition);
     lastPosition = positionInSeconds;
-    navigate(`/library/book/play?BOOK_SEQ=${bookSeq}`, { state: { lastPosition } });
+    navigate('/library/book/play', { state: { lastPosition, selected: bookSeq } });
   };
 
   const handleLibrary = () => {
