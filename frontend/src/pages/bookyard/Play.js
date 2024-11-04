@@ -427,11 +427,11 @@ const Play = () => {
                 {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <Slider
-                value={currentTime}
+                value={isNaN(currentTime) ? 0 : currentTime}
                 min={0}
-                max={duration}
+                max={isNaN(duration) ? 0 : duration}
                 step={1}
-                onChange={handleSliderChange}
+                onChange={(e, newValue) => handleSliderChange(newValue)}
                 sx={{ flexGrow: 1 }}
               />
               <Typography variant="h6">
@@ -453,7 +453,7 @@ const Play = () => {
                 min={0}
                 max={1}
                 step={0.01}
-                onChange={handleVolumeChange}
+                onChange={(event, newValue) => handleVolumeChange(newValue)} // newValue를 전달
                 sx={{ width: 100 }}
               />
             </Box>
