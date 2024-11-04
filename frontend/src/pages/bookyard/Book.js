@@ -18,34 +18,41 @@ const Book = () => {
   const { userObject } = useAuth();
   const [lastPosition, setLastPosition] = useState(0); // 마지막 위치 상태 추가
   const [hasHistory, setHasHistory] = useState(false); // 히스토리 존재 여부
+  const selected = location.state;
+  const selectedBook = selected.selected;
+
 
   useEffect(() => {
     const fetchBookData = async () => {
       // URL에서 BOOK_SEQ 쿼리 파라미터 가져오기
-      const params = new URLSearchParams(location.search);
-      const bookSeq = params.get("BOOK_SEQ");
-      console.log(bookSeq);
 
-      if (bookSeq) {
+      console.log(selectedBook, "selectedBook");
+
+      if (selectedBook) {
         try {
           // 전체 책 목록을 가져온 후 BOOK_SEQ에 해당하는 책을 찾습니다
           const response = await fetchLibrary(); // 전체 책 목록을 불러오는 API
-          const bookData = response.find((b) => b.BOOK_SEQ === Number(bookSeq));
+          const bookData = response.find(
+            (b) => b.BOOK_SEQ === Number(selectedBook.BOOK_SEQ)
+          );
 
-          console.log('bookData', bookData);
+          console.log("bookData", bookData);
 
           if (bookData) {
             setBook(bookData);
+
             // 마지막 재생 위치 조회
-            const position = await getLastPosition(bookSeq, userObject?.USER_SEQ);
-            
+            const position = await getLastPosition(
+              selectedBook.BOOK_SEQ,
+              userObject?.USER_SEQ
+            );
+
             if (position > 0) {
               setLastPosition(position); // 마지막 위치 설정
               setHasHistory(true); // 히스토리가 있는 경우
             } else {
               setHasHistory(false); // 히스토리가 있는 경우
             }
-            
           } else {
             console.error("해당 책을 찾을 수 없습니다.");
           }
@@ -56,15 +63,21 @@ const Book = () => {
     };
 
     fetchBookData();
-  }, [location.search, userObject]);
+  }, [selectedBook, userObject?.USER_SEQ]);
 
   const handleAISummary = async () => {
+
     if (userObject) {
-      console.log('userObject', userObject);
+      console.log("userObject", userObject);
+     
       try {
+
         const summary = await getSummary(book.INFORMATION);
         await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true); // 요약 플래그 추가
-        navigate(`/library/book/aisummary?BOOK_SEQ=${book.BOOK_SEQ}`);
+        console.log(book.BOOK_SEQ,"boooooook");
+    
+        
+        navigate('/library/book/aisummary', { state: { selected: book.BOOK_SEQ } });
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
       }
@@ -72,21 +85,37 @@ const Book = () => {
   };
 
   const handleListenFromStart = async () => {
+    console.log(userObject.EL_ID,book.INFORMATION,  book.BOOK_SEQ,"11111" );
+    
     if (userObject) {
       try {
-        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false); // TTS 파일 생성
-        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`, { state: { lastPosition: 0 } });
+        await saveTTSFile(
+          userObject.EL_ID,
+          book.INFORMATION,
+          book.BOOK_SEQ,
+          false
+        ); // TTS 파일 생성
+        navigate(`/library/book/play`, {
+          state: { lastPosition: 0, selected: book.BOOK_SEQ },
+        });
       } catch (error) {
         console.error("파일 생성 중 오류 발생:", error);
       }
     }
   };
-  
+
   const handleContinueListening = async () => {
     if (userObject) {
       try {
-        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false); // TTS 파일 생성
-        navigate(`/library/book/play?BOOK_SEQ=${book.BOOK_SEQ}`, { state: { lastPosition } });
+        await saveTTSFile(
+          userObject.EL_ID,
+          book.INFORMATION,
+          book.BOOK_SEQ,
+          false
+        ); // TTS 파일 생성
+        navigate(`/library/book/play`, {
+          state: { lastPosition, selected: book.BOOK_SEQ },
+        });
       } catch (error) {
         console.error("파일 생성 중 오류 발생:", error);
       }
@@ -98,18 +127,6 @@ const Book = () => {
     height: 160,
     borderRadius: 10,
     fontSize: "1.5rem",
-  };
-
-  const handlePoem = () => {
-    navigate("/library?category=200");
-  };
-
-  const handleNovel = () => {
-    navigate("/library?category=100");
-  };
-
-  const handleEssay = () => {
-    navigate("/library?category=300");
   };
 
   return (
@@ -129,8 +146,8 @@ const Book = () => {
             variant="contained"
             color="secondary"
             sx={buttonStyle}
-            onClick={handlePoem}
-            aria-label="카테고리 시로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "200" } })}
+            aria-label="시 카테고리로 이동"
           >
             1. 시
           </Button>
@@ -138,8 +155,8 @@ const Book = () => {
             variant="contained"
             color="secondary"
             sx={buttonStyle}
-            onClick={handleNovel}
-            aria-label="카테고리 소설로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "100" } })}
+            aria-label="소설 카테고리로 이동"
           >
             2. 소설
           </Button>
@@ -147,8 +164,8 @@ const Book = () => {
             variant="contained"
             color="secondary"
             sx={buttonStyle}
-            onClick={handleEssay}
-            aria-label="카테고리 수필로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "300" } })}
+            aria-label="수필 카테고리로 이동"
           >
             3. 수필
           </Button>
@@ -156,9 +173,10 @@ const Book = () => {
             variant="contained"
             color="secondary"
             sx={buttonStyle}
-            aria-label="카테고리 혜리언니로 이동"
+            onClick={() => navigate(`/library`, { state: { category: "400" } })}
+            aria-label="공유세상 카테고리로 이동"
           >
-            4. 혜리언니
+            4. 공유세상
           </Button>
         </Box>
       </Box>
@@ -197,16 +215,26 @@ const Book = () => {
             {book.INFORMATION}
           </Typography>
           <Stack spacing={1} mt={2}>
-            <Button variant="outlined" onClick={handleAISummary} disabled={summaryLoading}>
+            <Button
+              variant="outlined"
+              onClick={handleAISummary}
+              disabled={summaryLoading}
+            >
               {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
             </Button>
             {hasHistory ? (
-            <>
-                <Button variant="outlined" onClick={handleListenFromStart}>처음부터 듣기</Button>
-                <Button variant="outlined" onClick={handleContinueListening}>이어 듣기</Button>
+              <>
+                <Button variant="outlined" onClick={handleListenFromStart}>
+                  처음부터 듣기
+                </Button>
+                <Button variant="outlined" onClick={handleContinueListening}>
+                  이어 듣기
+                </Button>
               </>
             ) : (
-              <Button variant="outlined" onClick={handleListenFromStart}>전체 듣기</Button>
+              <Button variant="outlined" onClick={handleListenFromStart}>
+                전체 듣기
+              </Button>
             )}
           </Stack>
         </Stack>
