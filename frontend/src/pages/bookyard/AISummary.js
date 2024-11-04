@@ -456,7 +456,7 @@ const AISummary = () => {
                 min={0}
                 max={1}
                 step={0.01}
-                onChange={handleVolumeChange}
+                onChange={(event, newValue) => handleVolumeChange(newValue)} // newValue를 전달
                 sx={{ width: 100 }}
               />
             </Box>
