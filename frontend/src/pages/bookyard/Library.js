@@ -29,6 +29,7 @@ const Library = () => {
   const rowsPerPage = 5; // 페이지당 표시할 데이터 개수
   const { currentData, totalPages, page, handlePageChange } = usePagination(bookList, rowsPerPage);
   const [category, setCategory] = useState(location.state?.category || null);
+  const [book, setBook] = useState();
   // 데이터를 가져오는 함수
   useEffect(() => {
     const fetchData = async () => {
@@ -56,12 +57,13 @@ const Library = () => {
 
   // 책을 클릭했을 때 해당 책을 선택하는 함수
   const handleBook = (book) => {
-    console.log(book);  
-    navigate(`/library/book/`, { state: { selected: book} });
+    setBook(book.BOOK_SEQ)
+    navigate(`/library/book/`, { state: { selected: book.BOOK_SEQ} });
   };
 
   const handleKeyPress = (event, book) => {
     if (event.key === "Enter" || event.key === " ") {
+      setBook(book.BOOK_SEQ)
       handleBook(book);
     }
   };
@@ -76,7 +78,7 @@ const Library = () => {
   return (
     <div>
       <Header />
-      <Breadcrumb />
+      <Breadcrumb selected={book}/>
 
       {/* 시, 소설, 수필 */}
       <Box

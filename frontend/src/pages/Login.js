@@ -49,7 +49,7 @@ function Login() {
       setTimeout(() => {
         setAlertMessage(null);
         navigate("/menu");
-      }, 3000);
+      }, 1000);
     }
   };
 
@@ -62,7 +62,7 @@ function Login() {
       setTimeout(() => {
         setAlertMessage(null);
         navigate("/menu");
-      }, 3000);
+      }, 1000);
     }
   };
 
