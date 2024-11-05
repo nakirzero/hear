@@ -1,3 +1,4 @@
+// MyBookReport.js
 import React, { useEffect, useState } from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Pagination, Rating, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -8,12 +9,14 @@ import { fetchBookReports } from '../../api/studyAPI';
 import { useAuth } from '../../context/AuthContext';
 import usePagination from '../../hooks/usePagination';
 
+import './MyBookReport.css';
+
 const MyBookReport = () => {
   const { userObject } = useAuth();
   const navigate = useNavigate();
   const [bookReports, setBookReports] = useState([]);
-  const [selectedRow, setSelectedRow] = useState(null); // 선택된 행 상태
-  const [dialogOpen, setDialogOpen] = useState(false); // 다이얼로그 상태
+  const [selectedRow, setSelectedRow] = useState(null); 
+  const [dialogOpen, setDialogOpen] = useState(false); 
   const rowsPerPage = 5;
   const { currentData, totalPages, page, handlePageChange } = usePagination(bookReports, rowsPerPage);
 
@@ -21,7 +24,7 @@ const MyBookReport = () => {
     if (userObject) {
       const getBookReports = async () => {
         try {
-          const data = await fetchBookReports(userObject.USER_SEQ); // 사용자 ID 전달
+          const data = await fetchBookReports(userObject.USER_SEQ); 
           setBookReports(data);
         } catch (error) {
           console.error("Error fetching book reports:", error);
@@ -32,10 +35,7 @@ const MyBookReport = () => {
   }, [userObject]);
 
   const truncateText = (text, maxLength) => {
-    if (text.length > maxLength) {
-      return text.slice(0, maxLength) + '...';
-    }
-    return text;
+    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
   const handleDialogOpen = () => setDialogOpen(true);
@@ -51,28 +51,16 @@ const MyBookReport = () => {
     navigate('/mystudy/writereport', { state: { mode: 'voice' } });
   };
 
-  // 각 행을 클릭했을 때 상세 페이지로 이동
   const handleRowClick = (reportId) => {
     setSelectedRow(reportId);
     navigate(`/mystudy/mybookreport/${reportId}`, { state: { reportId } });
   };
 
   return (
-    <Box>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FFCF8B' }}>
       <Header />
       <Breadcrumb />
       <ProfileSection />
-
-      <Box sx={{ maxWidth: '80%', margin: 'auto', marginTop: 4, textAlign: 'center' }}>
-        <Typography variant="h5" gutterBottom>
-          독서노트
-        </Typography>
-      </Box>
-      <Box sx={{ maxWidth: '80%', textAlign: 'right' }}>
-        <Button variant="contained" color="primary" onClick={handleDialogOpen}>
-          글쓰기
-        </Button>
-      </Box>
 
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>입력 방식 선택</DialogTitle>
@@ -84,43 +72,53 @@ const MyBookReport = () => {
         </DialogActions>
       </Dialog>
 
-      <TableContainer component={Paper} sx={{ maxWidth: '70%', margin: 'auto', padding: 2, marginTop: 2 }}>
-        <Table sx={{ tableLayout: 'fixed' }}>
-          <TableHead>
-            <TableRow>
-              <TableCell sx={{ width: '5%' }}>번호</TableCell>
-              <TableCell sx={{ width: '20%' }}>책 제목</TableCell>
-              <TableCell sx={{ width: '40%' }}>요약</TableCell>
-              <TableCell sx={{ width: '20%' }}>평점</TableCell>
-              <TableCell sx={{ width: '15%' }}>작성 날짜</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {currentData.map((report, index) => (
-              <TableRow 
-                key={report.REPORT_SEQ} 
-                onClick={() => handleRowClick(report.REPORT_SEQ)} 
-                tabIndex={0} // 키보드 포커스를 위한 tabIndex 설정
-                sx={{ 
-                  backgroundColor: selectedRow === report.REPORT_SEQ ? '#e0f7fa' : 'inherit',
-                  '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' },
-                  '&:focus': { backgroundColor: '#FFC700' } // 키보드 포커스 시 색상 변경
-                }}
-              >
-                <TableCell>{index + 1 + (page - 1) * rowsPerPage}</TableCell>
-                <TableCell>{report.REPORT_TITLE}</TableCell>
-                <TableCell>{truncateText(report.REPORT_DETAIL, 45)}</TableCell>
-                <TableCell>
-                  <Rating value={report.RATING} readOnly />
-                </TableCell>
-                <TableCell>{new Date(report.REPORT_CrtDt).toLocaleDateString()}</TableCell>
+      <Box sx={{ maxWidth: '80%', margin: 'auto', padding: 2 }}>
+        {/* 글쓰기 버튼을 테이블 상단 오른쪽에 배치 */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="h6">독서노트 목록</Typography>
+          <Button variant="contained" color="primary" onClick={handleDialogOpen}>
+            글쓰기
+          </Button>
+        </Box>
+
+        <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2 }}>
+          <Table sx={{ tableLayout: 'fixed' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell align="center" sx={{ width: '5%' }}>번호</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>책 제목</TableCell>
+                <TableCell align="center" sx={{ width: '40%' }}>요약</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>평점</TableCell>
+                <TableCell align="center" sx={{ width: '15%' }}>작성 날짜</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-        <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
+            </TableHead>
+            <TableBody>
+              {currentData.map((report, index) => (
+                <TableRow 
+                  key={report.REPORT_SEQ} 
+                  onClick={() => handleRowClick(report.REPORT_SEQ)} 
+                  tabIndex={0} 
+                  sx={{ 
+                    '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' },
+                    backgroundColor: selectedRow === report.REPORT_SEQ ? '#e0f7fa' : 'inherit'
+                  }}
+                >
+                  <TableCell align="center">{index + 1 + (page - 1) * rowsPerPage}</TableCell>
+                  <TableCell align="center">{report.REPORT_TITLE}</TableCell>
+                  <TableCell align="center">{truncateText(report.REPORT_DETAIL, 45)}</TableCell>
+                  <TableCell align="center">
+                    <Rating value={report.RATING} readOnly />
+                  </TableCell>
+                  <TableCell align="center">{new Date(report.REPORT_CrtDt).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        
+        <Box display="flex" justifyContent="center" my={2}>
+          <Pagination count={totalPages} page={page} onChange={handlePageChange} variant="outlined" shape="rounded" />
+        </Box>
       </Box>
     </Box>
   );

@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React,{ useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Typography, Box, Breadcrumbs, Link } from "@mui/material";
 import HomeIcon from "@mui/icons-material/Home";
@@ -20,19 +20,17 @@ import LyricsIcon from '@mui/icons-material/Lyrics';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
+import './BreadCrumb.css'
+
 const Breadcrumb = ({selected}) => {
   const navigate = useNavigate();
   const location = useLocation();
-
-
 
   useEffect(() => {
     if (selected) {
       console.log(selected, "selected in useEffect");
     }
   }, [selected]);
-
- 
 
   const pathNameMap = {
     "setting": "설정",
@@ -46,13 +44,13 @@ const Breadcrumb = ({selected}) => {
     "write" : "건의사항 작성",
     "library" : "도서마당",
     "book" : "책 화면",
-    "play" : "전체듣기",
     "mywishbook" : "희망도서 신청조회",
     'mybookreport' : '독서노트',
     'writereport' : '독서노트 작성',
     'aisummary' : 'AI 요약듣기',
     'highlight':'하이라이트',
     'history':'최근읽은기록',
+    "play" : "전체듣기",
   };
 
   const iconMap = {
@@ -67,33 +65,27 @@ const Breadcrumb = ({selected}) => {
     "write": <CreateIcon sx={{ verticalAlign: "middle" }} />,
     "library": <LibraryMusicIcon sx={{ verticalAlign: "middle" }} />,
     "book": <AutoStoriesIcon sx={{ verticalAlign: "middle" }} />,
-    "play": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
     "mywishbook": <FaPrayingHands style={{ verticalAlign: "middle", fontSize: "20px" }} />,
     "mybookreport": <CommentIcon sx={{ verticalAlign: "middle" }} />,
     "writereport": <NoteAltIcon sx={{ verticalAlign: "middle" }} />,
     "aisummary": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
     "highlight": <FavoriteIcon sx={{ verticalAlign: "middle" }} />,
     "history": <TimelineIcon sx={{ verticalAlign: "middle" }} />,
+    "play": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <Box bgcolor="#000000" color="#fff" py={1} px={2} display="flex" alignItems="center">
-      <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ color: "#fff" }}>
+    <Box className="breadcrumb-container">
+      <Breadcrumbs aria-label="breadcrumb" separator=">">
         <Link
           color="inherit"
           onClick={() => navigate("/menu")}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            color: "#fff",
-            textDecoration: "none",
-          }}
+          className="breadcrumb-link"
         >
-          <HomeIcon sx={{ verticalAlign: "middle" }} />
-          <Typography variant="body2" ml={1}>
+          <HomeIcon className="breadcrumb-home-icon" />
+          <Typography variant="body2" className="breadcrumb-text">
             홈
           </Typography>
         </Link>
@@ -107,9 +99,9 @@ const Breadcrumb = ({selected}) => {
 
           return isLast && isId ? null : (
             isLast ? (
-              <Box key={to} display="flex" alignItems="center" sx={{ color: "#fff" }}>
+              <Box key={to} display="flex" alignItems="center" sx={{ color: "#000" }}>
                 {icon && <Box mr={0.5}>{icon}</Box>}
-                <Typography variant="body2">{displayName}</Typography>
+                <Typography variant="body2" className="breadcrumb-text">{displayName}</Typography>
               </Box>
             ) : (
               <Link
@@ -120,12 +112,12 @@ const Breadcrumb = ({selected}) => {
                   display: "flex",
                   alignItems: "center",
                   cursor: "pointer",
-                  color: "#fff",
+                  color: "#000",
                   textDecoration: "none",
                 }}
               >
                 {icon && <Box mr={0.5}>{icon}</Box>}
-                <Typography variant="body2">{displayName}</Typography>
+                <Typography variant="body2" className="breadcrumb-text">{displayName}</Typography>
               </Link>
             )
           );
