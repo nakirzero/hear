@@ -390,7 +390,7 @@ const Play = () => {
 
       <Box sx={{ margin: "0 auto", width: "70%", padding: 2 }}>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          요약재생
+       [ {book.BOOK_NAME} ] 전체재생
         </Typography>
         {/* Upper Section */}
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 4 }}>

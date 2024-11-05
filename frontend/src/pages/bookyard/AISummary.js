@@ -36,6 +36,9 @@ const AISummary = () => {
   const audioRef = useRef(null);
   const histDiv = 2;
 
+
+  
+
   const buttonStyle = {
     width: 300,
     height: 160,
@@ -91,8 +94,9 @@ const AISummary = () => {
 
 
   useEffect(() => {
+    console.log(location.state.selected,"location.state.selected");
     let intervalId;
-    const audioElement = audioRef.current; // audioRef.current를 내부 변수에 저장
+    const audioElement = audioRef.current; // audioRe1f.current를 내부 변수에 저장
     let isAudioPlaying = false; // 재생 상태 확인 변수
 
     const handlePlayPause = () => {
@@ -342,7 +346,7 @@ const AISummary = () => {
   return (
     <div>
       <Header />
-      <Breadcrumb />
+      <Breadcrumb  />
       {/* 시, 소설, 수필 */}
       <Box
         bgcolor="#FFD700"
@@ -393,7 +397,7 @@ const AISummary = () => {
 
       <Box sx={{ margin: "0 auto", width: "70%", padding: 2 }}>
         <Typography variant="h6" sx={{ flexGrow: 1 }}>
-          요약재생
+         [ {book.BOOK_NAME} ]  요약재생
         </Typography>
         {/* Upper Section */}
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
@@ -409,7 +413,7 @@ const AISummary = () => {
             {/* Placeholder for the image */}
           </Box>
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            {book.BOOK_NAME}
+         
           </Typography>
           <Box sx={{ width: "100%" }}>
             <audio

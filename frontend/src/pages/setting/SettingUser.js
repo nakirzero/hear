@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Container, Box, Button, TextField } from "@mui/material";
+import { Typography, Container, Box, Button, TextField,Alert } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { userModify, checkNickName } from "../../api/userAPI";
@@ -21,6 +21,7 @@ const SettingUser = () => {
     pwok: "",
     nickName: userObject?.NICKNAME || "",
   });
+  const [alertMessage, setAlertMessage]=useState("");
 
   const handleCheckNickName = async () => {
     try {
@@ -28,15 +29,21 @@ const SettingUser = () => {
         setMessage("닉네임을 입력해주세요");
         return;
       }
+  
       const isNicknameTaken = await checkNickName(formData.nickName);
-      setMessage(
-        isNicknameTaken ? "이미 사용 중인 닉네임입니다." : "사용 가능한 닉네임입니다."
-      );
+ 
+      
+      if (isNicknameTaken) {
+          setMessage("이미 사용 중인 닉네임입니다.");
+        
+      } else {
+        setMessage("사용 가능한 닉네임입니다.");
+      }
     } catch {
       setMessage("닉네임 확인 중 오류가 발생했습니다.");
     }
   };
-
+  
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormData((prevState) => ({
@@ -60,8 +67,11 @@ const SettingUser = () => {
       if (formData.pw !== formData.pwok) {
         setMessage("비밀번호가 일치하지 않습니다.");
         return;
+      }else if ( !formData.pw || !formData.pwok){
+        setPwMessage(!formData.pw || !formData.pwok ?  "패스워드 또는 패스워드 확인을 입력해주세요." : "");
+        return;
       }
-
+      if(message === "사용 가능한 닉네임입니다."){
       const response = await userModify(formData);
       if (response.success) {
         const updatedUserInfo = {
@@ -69,12 +79,22 @@ const SettingUser = () => {
           USER_PW: formData.pw,
           NICKNAME: formData.nickName,
         };
+   
         setUserObject(updatedUserInfo);
-        setMessage("사용자 정보가 성공적으로 수정되었습니다.");
-      } else {
-        setMessage(response.message || "수정에 실패하였습니다.");
+        setAlertMessage("회원정보 수정이 완료되었습니다.")
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 1000);
+      } 
       }
-    } catch (error) {
+     else if (message !== "사용 가능한 닉네임입니다."){
+   
+        setAlertMessage("다시 한 번 확인해주세요.")
+        setTimeout(() => {
+          setAlertMessage(null);
+        }, 1000);
+  
+  }}catch (error) {
       setMessage("사용자 정보 수정 중 오류가 발생했습니다.");
     }
   };
@@ -126,7 +146,18 @@ const SettingUser = () => {
           </Button>
         </Box>
       </Container>
-
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+      {alertMessage && (
+        <Alert variant="filled"  severity={(() => {
+          if (alertMessage.includes("완료")) return "success"; // 예: "회원정보 수정이 완료되었습니다."
+          if (alertMessage.includes("확인")) return "error"; // 예: "다시 한 번 확인해주세요."
+          if (alertMessage.includes("오류")) return "error"; // 예: "오류가 발생했습니다."
+          return "info"; // 기본 값
+        })()}  sx={{ mb: 4, width:'20%' }}>
+          {alertMessage} 
+        </Alert>
+      )}
+      </Box>
       <Footer />
     </div>
   );

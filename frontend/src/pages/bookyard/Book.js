@@ -18,8 +18,7 @@ const Book = () => {
   const { userObject } = useAuth();
   const [lastPosition, setLastPosition] = useState(0); // 마지막 위치 상태 추가
   const [hasHistory, setHasHistory] = useState(false); // 히스토리 존재 여부
-  const selected = location.state;
-  const selectedBook = selected.selected;
+  const selectedBook = location.state.selected;
 
 
   useEffect(() => {
@@ -33,7 +32,7 @@ const Book = () => {
           // 전체 책 목록을 가져온 후 BOOK_SEQ에 해당하는 책을 찾습니다
           const response = await fetchLibrary(); // 전체 책 목록을 불러오는 API
           const bookData = response.find(
-            (b) => b.BOOK_SEQ === Number(selectedBook.BOOK_SEQ)
+            (b) => b.BOOK_SEQ === Number(selectedBook)
           );
 
           console.log("bookData", bookData);
@@ -43,7 +42,7 @@ const Book = () => {
 
             // 마지막 재생 위치 조회
             const position = await getLastPosition(
-              selectedBook.BOOK_SEQ,
+              selectedBook,
               userObject?.USER_SEQ
             );
 
@@ -74,10 +73,10 @@ const Book = () => {
 
         const summary = await getSummary(book.INFORMATION);
         await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true); // 요약 플래그 추가
-        console.log(book.BOOK_SEQ,"boooooook");
+        console.log(book,"boooooook");
     
         
-        navigate('/library/book/aisummary', { state: { selected: book.BOOK_SEQ } });
+        navigate('/library/book/aisummary', { state: { selected: book.BOOK_SEQ} });
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
       }
