@@ -1,7 +1,46 @@
-import React from "react";
+// Dashboard.js
+import React, { useState } from 'react';
+import { ThemeProvider, CssBaseline, Box, Container, Grid, Paper, Toolbar } from '@mui/material';
+import CustomAppBar from './CustomAppBar';
+import Sidebar from './Sidebar';
+import Copyright from './Copyright';
+import theme from '../../theme';
 
-const AdminDashboard = () => {
-  return <h1>Admin Dashboard</h1>;
-};
+export default function Dashboard() {
+  const [open, setOpen] = useState(true);
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
 
-export default AdminDashboard;
+  return (
+    <ThemeProvider theme={theme}>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
+        <Sidebar open={open} toggleDrawer={toggleDrawer} />
+        <Box
+          component="main"
+          sx={{
+            backgroundColor: (theme) =>
+              theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
+            flexGrow: 1,
+            height: '100vh',
+            overflow: 'auto',
+          }}
+        >
+          <Toolbar />
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12}>
+                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240 }}>
+                  {/* 이곳에 필요한 콘텐츠를 추가하세요 */}
+                </Paper>
+              </Grid>
+            </Grid>
+            <Copyright sx={{ pt: 4 }} />
+          </Container>
+        </Box>
+      </Box>
+    </ThemeProvider>
+  );
+}
