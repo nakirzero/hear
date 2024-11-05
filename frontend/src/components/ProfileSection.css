@@ -1,0 +1,85 @@
+/* ProfileSection.css */
+.profile-section {
+    padding: 24px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: relative;
+    background-color: rgb(247, 247, 247);
+  }
+  
+  .profile-avatar {
+    width: 100px !important;
+    height: 100px !important;
+    background-color: #999999; /* 다크 그레이 */
+    margin-left: 250px;
+    z-index: 5;
+  }
+  
+  .profile-info {
+    z-index: 5;
+    margin-left: 20px;
+  }
+  
+  .profile-nickname {
+    color: #000000;
+    font-size: 1rem; /* body3 대체 */
+  }
+  
+  .profile-box {
+    color: #000000;
+  }
+  
+  .profile-status,
+  .profile-date {
+    color: #000000;
+    font-size: 0.875rem; /* body2 대체 */
+  }
+  
+  /* 화면 크기가 작아졌을 때 (예: 태블릿 이하) */
+  @media (max-width: 768px) {
+    .profile-section {
+      padding: 16px 8px; /* 패딩을 줄여 화면에 맞춤 */
+      flex-direction: column; /* 수직으로 정렬 */
+      align-items: center;
+    }
+  
+    .profile-avatar {
+      width: 80px; /* 아바타 크기 줄임 */
+      height: 80px;
+      margin-left: 0; /* 여백 제거 */
+      margin-bottom: 10px; /* 아래 여백 추가 */
+    }
+  
+    .profile-info {
+      text-align: center; /* 중앙 정렬 */
+      margin-left: 0;
+    }
+  
+    .profile-nickname {
+      font-size: 0.9rem; /* 닉네임 폰트 크기 줄임 */
+    }
+  
+    .profile-status,
+    .profile-date {
+      font-size: 0.8rem; /* 상태와 날짜 폰트 크기 줄임 */
+    }
+  }
+  
+  /* 화면 크기가 매우 작아졌을 때 (예: 모바일) */
+  @media (max-width: 480px) {
+    .profile-avatar {
+      width: 60px; /* 아바타 크기 더 줄임 */
+      height: 60px;
+    }
+  
+    .profile-nickname {
+      font-size: 0.8rem; /* 닉네임 폰트 크기 더 줄임 */
+    }
+  
+    .profile-status,
+    .profile-date {
+      font-size: 0.75rem; /* 상태와 날짜 폰트 크기 더 줄임 */
+    }
+  }
+  

@@ -1,0 +1,90 @@
+/* Header.css */
+.header-toolbar {
+    justify-content: space-between;
+  }
+  
+  .header-logo {
+    max-height: 60px;
+    margin-left: 250px;
+  }
+  
+  .welcome-text {
+    font-size: 22px;
+    margin-left: 40px;
+    margin-top: 10px;
+  }
+  
+  .nickname {
+    color: #4F2F33;
+  }
+  
+  .predict-button {
+    margin-right: 20px;
+  }
+  
+  .logout-button {
+    margin-left: 10px !important;
+    margin-right: 300px !important; /* 오른쪽 끝으로 밀어내기 위한 마진 */
+  }
+  
+  /* 태블릿 이하 크기 (768px 이하) */
+  @media (max-width: 768px) {
+    .header-toolbar {
+      flex-direction: row; /* 버튼과 텍스트가 한 줄에 유지되도록 설정 */
+      justify-content: space-between;
+    }
+  
+    .header-logo {
+      max-height: 50px;
+      margin-left: 20px;
+    }
+  
+    .welcome-text {
+      font-size: 18px;
+      margin-left: 20px;
+      margin-top: 5px;
+    }
+  
+    .predict-button {
+      margin-right: 10px;
+    }
+  
+    .logout-button {
+      margin-right: 20px; /* 너무 멀리 떨어지지 않도록 여백 조정 */
+    }
+  }
+  
+  /* 모바일 크기 (480px 이하) */
+  @media (max-width: 480px) {
+    .header-toolbar {
+      flex-direction: column; /* 작은 화면에서는 수직 정렬 */
+      align-items: center;
+    }
+  
+    .header-logo {
+      max-height: 40px;
+      margin-left: 0; /* 여백 최소화 */
+    }
+  
+    .welcome-text {
+      font-size: 16px;
+      margin-left: 0;
+      text-align: center; /* 중앙 정렬 */
+      margin-top: 8px;
+    }
+  
+    .predict-button,
+    .logout-button {
+      margin: 8px 0; /* 수직 간격 추가 */
+      font-size: 0.8rem; /* 텍스트 크기 줄임 */
+    }
+  
+    .predict-button {
+      margin-right: 0; /* 여백 초기화 */
+    }
+  
+    .logout-button {
+      margin-right: 0; /* 여백 초기화 */
+    }
+  }
+  

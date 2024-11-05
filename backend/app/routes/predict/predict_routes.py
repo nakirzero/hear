@@ -1,7 +1,7 @@
 import sys
 import csv
 import io
-from flask import Blueprint, request, jsonify, Response
+from flask import Blueprint, request, jsonify
 import pickle
 from datetime import datetime
 from kiwipiepy import Kiwi, basic_typos_with_continual
@@ -9,6 +9,7 @@ from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
 import time
 from threading import Thread
+from queue import Queue
 
 # Blueprint 정의 및 Kiwi 형태소 분석기 초기화
 predict_bp = Blueprint('predict', __name__)
@@ -43,6 +44,8 @@ def load_model():
     except Exception as e:
         print(f"모델 로드 중 오류 발생: {e}")  # 모델 로드 오류 로그
 
+# 예측 진행률 추적 Queue 추가
+progress_queue = Queue()
 
 # CSV 파일 업로드 및 예측 시작 처리
 @predict_bp.route('/upload_csv', methods=['POST'])
@@ -78,6 +81,9 @@ def upload_csv():
             })
         subtitles = subtitles[:100]  # 최대 100개로 제한
 
+        # 총 row 수 계산하여 예측 함수에 전달
+        total_rows = len(subtitles)
+
         # DB에 저장
         connection = get_db_connection()
         print("DB 연결 성공")  # DB 연결 성공 여부 확인
@@ -93,16 +99,17 @@ def upload_csv():
         finally:
             close_db_connection(connection)
 
-        # 예측 작업 비동기로 수행
+        # 새 Queue를 생성하여 전달
+        progress_queue = Queue()
         progress = 0  # 진행률 초기화
-        Thread(target=perform_predictions, args=(subtitles,)).start()  # 예측에 파싱한 데이터를 전달
+        Thread(target=perform_predictions, args=(subtitles, total_rows, progress_queue)).start()  # 예측에 파싱한 데이터를 전달
         return jsonify({"message": "파일 업로드 성공 및 예측 시작"}), 200
     except Exception as e:
         print(f"Error in /upload_csv: {e}")
         return jsonify({"error": "서버 내부 오류가 발생했습니다."}), 500
 
 # 예측 수행 비동기 함수
-def perform_predictions(subtitles):
+def perform_predictions(subtitles, total_rows, queue):
     global progress
     connection = get_db_connection()
     processed_count = 0
@@ -139,8 +146,12 @@ def perform_predictions(subtitles):
 
             # 진행률 업데이트
             processed_count += 1
-            progress = (processed_count / len(subtitles)) * 100
-            time.sleep(0.5)  # 처리 속도 지연 (테스트용)
+            progress = (processed_count / total_rows) * 100
+            queue.put(progress)  # 진행률을 큐에 넣음
+            time.sleep(0.5)  # 테스트용 지연
+
+        # 최종 완료 시 100% 전송
+        queue.put(100)
     except Exception as db_error:
         print(f"Database operation failed: {db_error}")
     finally:
@@ -149,15 +160,12 @@ def perform_predictions(subtitles):
 
 
 # 예측 진행률 스트리밍 엔드포인트
-@predict_bp.route('/predict_status', methods=['GET'])
-def predict_status():
-    def generate():
-        while progress < 100:
-            yield f"data:{progress}\n\n"
-            time.sleep(1)
-        yield "data:100\n\n"
+@predict_bp.route('/progress_status', methods=['GET'])
+def progress_status():
+    global progress  # 현재 진행률
+    return jsonify({"progress": progress})  # 진행률 반환
 
-    return Response(generate(), mimetype='text/event-stream')
+
 
 
 # 예측 결과 조회 엔드포인트

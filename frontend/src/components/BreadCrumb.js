@@ -20,6 +20,8 @@ import LyricsIcon from '@mui/icons-material/Lyrics';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
+import './BreadCrumb.css'
+
 const Breadcrumb = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -67,21 +69,15 @@ const Breadcrumb = () => {
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <Box bgcolor="#000000" color="#fff" py={1} px={2} display="flex" alignItems="center">
-      <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ color: "#fff" }}>
+    <Box className="breadcrumb-container">
+      <Breadcrumbs aria-label="breadcrumb" separator=">">
         <Link
           color="inherit"
           onClick={() => navigate("/menu")}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            cursor: "pointer",
-            color: "#fff",
-            textDecoration: "none",
-          }}
+          className="breadcrumb-link"
         >
-          <HomeIcon sx={{ verticalAlign: "middle" }} />
-          <Typography variant="body2" ml={1}>
+          <HomeIcon className="breadcrumb-home-icon" />
+          <Typography variant="body2" className="breadcrumb-text">
             홈
           </Typography>
         </Link>
@@ -95,9 +91,9 @@ const Breadcrumb = () => {
 
           return isLast && isId ? null : (
             isLast ? (
-              <Box key={to} display="flex" alignItems="center" sx={{ color: "#fff" }}>
+              <Box key={to} display="flex" alignItems="center" sx={{ color: "#000" }}>
                 {icon && <Box mr={0.5}>{icon}</Box>}
-                <Typography variant="body2">{displayName}</Typography>
+                <Typography variant="body2" className="breadcrumb-text">{displayName}</Typography>
               </Box>
             ) : (
               <Link
@@ -108,12 +104,12 @@ const Breadcrumb = () => {
                   display: "flex",
                   alignItems: "center",
                   cursor: "pointer",
-                  color: "#fff",
+                  color: "#000",
                   textDecoration: "none",
                 }}
               >
                 {icon && <Box mr={0.5}>{icon}</Box>}
-                <Typography variant="body2">{displayName}</Typography>
+                <Typography variant="body2" className="breadcrumb-text">{displayName}</Typography>
               </Link>
             )
           );

@@ -1,16 +1,18 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
+import './Footer.css'
+
 
 const Footer = () => {
   return (
-    <Box py={2} textAlign="right">
-      <Typography variant="body2">
-        주소: 61740 광주 남구 송암로 60 광주CGI센터 2층
+    <Box py={2} textAlign="center" className='footer-container'>
+      <Typography variant="body4">
+        {'주소: 61740 광주 남구 송암로 60 광주CGI센터 2층 \n'}
       </Typography>
-      <Typography variant="body2">
-        TEL: 062-655-3506 / FAX: 062-987-6543
+      <Typography variant="body4">
+        {'TEL: 062-655-3506 / FAX: 062-987-6543 \n'}
       </Typography>
-      <Typography variant="body2">
+      <Typography variant="body4">
         © Copyright 2024 Hear. All rights reserved.
       </Typography>
     </Box>

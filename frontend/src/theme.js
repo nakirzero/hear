@@ -3,7 +3,7 @@ import { createTheme } from '@mui/material/styles';
 // 색상 팔레트를 별도로 설정해 참조 가능하도록 만듭니다.
 const palette = {
     primary: {
-        main: '#FFC700',  // 메인 컬러 - 노란색
+        main: '#FFB74D',  // 메인 컬러 - 노란색
         contrastText: '#000000',  // 대비되는 텍스트 색상
     },
     secondary: {
@@ -28,10 +28,12 @@ const theme = createTheme({
         h3: { fontFamily: 'GoormSansBold' },
         h4: { fontFamily: 'GoormSansMedium' },
         h5: { fontFamily: 'GoormSansMedium' },
-        h6: { fontFamily: 'GoormSansMedium' },
-        body1: { fontFamily: 'GoormSansRegular' },
-        body2: { fontFamily: 'GoormSansRegular' },
-        button: { fontFamily: 'GoormSansMedium' },
+        h6: { fontFamily: 'Recipekorea' },
+        b_font: { fontFamily: 'Recipekorea', fontSize: '24px' },
+        body1: { fontFamily: 'GoormSansMedium' },
+        body2: { fontFamily: 'GoormSansMedium' },
+        body3: { fontFamily: 'Recipekorea' },
+        body4: { fontFamily: 'GoormSansRegular', color: '#FFFFFF', whiteSpace:'pre-wrap',  marginRight: '20px' },
     },
     palette,  // 설정한 팔레트를 테마에 적용
     components: {
@@ -82,5 +84,6 @@ const theme = createTheme({
         },
     },
 });
+
 
 export default theme;
