@@ -1,3 +1,4 @@
+// Suggest.js
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -9,18 +10,13 @@ import Footer from '../../components/Footer';
 import { fetchSuggests } from '../../api/boardAPI';
 import usePagination from '../../hooks/usePagination';
 
-// 날짜 포맷팅 함수
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 };
 
-// 분류를 "건의"로 변환하는 함수
 const formatSuggestDiv = (divValue) => {
-  if (divValue === 2) {
-    return '건의';
-  }
-  return divValue;
+  return divValue === 2 ? '건의' : divValue;
 };
 
 const Suggest = () => {
@@ -36,7 +32,6 @@ const Suggest = () => {
       try {
         const suggests = await fetchSuggests();
         const sortedSuggests = suggests.sort((a, b) => new Date(b.NOTICE_CrtDt) - new Date(a.NOTICE_CrtDt));
-        console.log('sorted Suggests', sortedSuggests);
         
         setData(sortedSuggests);
         setFilteredData(sortedSuggests);
@@ -59,16 +54,16 @@ const Suggest = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FFCF8B' }}>
       <Header />
       <Breadcrumb />
 
       {/* Main Content */}
-      <Box flexGrow={1} bgcolor="#FFD700" p={2}>
-        <Typography variant="h6">건의사항</Typography>
+      <Box sx={{ maxWidth: '80%', margin: 'auto', padding: 3, textAlign: 'center' }}>
+        <Typography variant="h5" gutterBottom>건의사항</Typography>
 
-        {/* Search and Filters */}
-        <Box display="flex" justifyContent="space-between" alignItems="center" my={2}>
+        {/* Search and "게시글 작성" Button */}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', width: 400 }}>
             <InputBase
               sx={{ ml: 1, flex: 1 }}
@@ -81,31 +76,31 @@ const Suggest = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Button variant="contained" color="secondary" onClick={() => navigate("/board/write")} >
+          <Button variant="contained" color="primary" onClick={() => navigate("/board/write")}>
             게시글 작성
           </Button>
         </Box>
 
         {/* Table */}
-        <TableContainer component={Paper}>
-          <Table>
+        <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2, mt: 2 }}>
+          <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell sx={{ textAlign: "center" }}>번호</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>분류</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>제목</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>작성일</TableCell>
-                <TableCell sx={{ textAlign: "center" }}>작성자</TableCell>
+                <TableCell align="center" sx={{ width: '5%' }}>번호</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>분류</TableCell>
+                <TableCell align="center" sx={{ width: '40%' }}>제목</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>작성일</TableCell>
+                <TableCell align="center" sx={{ width: '15%' }}>작성자</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentData.map((row, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_SEQ}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{formatSuggestDiv(row.NOTICE_DIV)}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_TITLE}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{formatDate(row.NOTICE_CrtDt)}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{row.NICKNAME}</TableCell>
+                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' } }}>
+                  <TableCell align="center">{row.NOTICE_SEQ}</TableCell>
+                  <TableCell align="center">{formatSuggestDiv(row.NOTICE_DIV)}</TableCell>
+                  <TableCell align="center">{row.NOTICE_TITLE}</TableCell>
+                  <TableCell align="center">{formatDate(row.NOTICE_CrtDt)}</TableCell>
+                  <TableCell align="center">{row.NICKNAME}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -124,7 +119,7 @@ const Suggest = () => {
         </Box>
       </Box>
       <Footer />
-    </div>
+    </Box>
   );
 };
 

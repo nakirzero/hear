@@ -10,7 +10,6 @@ import RequireAdmin from "./context/RequireAdmin";
 
 import Main from "./pages/Main";
 import Join from "./pages/Join";
-import Login from "./pages/Login";
 import Menu from "./pages/Menu";
 
 import Library from "./pages/bookyard/Library";
@@ -50,7 +49,6 @@ function App() {
           <Routes>
             <Route path="/" element={<Main />} />
             <Route path="/join" element={<Join />} />
-            <Route path="/login" element={<Login />} />
             <Route path="/menu" element={<Menu />} />
 
             <Route path="/library" element={<Library />} />
