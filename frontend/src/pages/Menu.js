@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
-import { Typography, Box, Grid, IconButton } from "@mui/material";
-import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
+import { Typography, Box, Grid, Card, CardContent, Container } from "@mui/material";
+import LibraryMusicIcon from "@mui/icons-material/LibraryMusic";
 import { IoLibrary } from "react-icons/io5";
 import SettingsIcon from "@mui/icons-material/Settings";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
@@ -8,53 +8,68 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-
 import useMenuShortcut from "../hooks/useMenuShortcut";
+
+import "./Menu.css";
 
 const Menu = () => {
   const navigate = useNavigate();
 
-  // useMemo를 사용해 menuItems 배열을 메모이제이션
-  const menuItems = useMemo(() => [
-    { icon: <LibraryMusicIcon fontSize="inherit" />, label: "1 도서마당", path: "/library" },
-    { icon: <IoLibrary fontSize="inherit" />, label: "2 내 서재", path: "/mystudy" },
-    { icon: <SettingsIcon fontSize="inherit" />, label: "3 설정", path: "/setting" },
-    { icon: <SupportAgentIcon fontSize="inherit" />, label: "4 고객게시판", path: "/board" }
-  ], []);
+  const menuItems = useMemo(  
+    () => [
+      {
+        icon: <LibraryMusicIcon className="icon-box icon-library" />,
+        label: "1. 도서마당",
+        path: "/library",
+      },
+      {
+        icon: <IoLibrary className="icon-box icon-mystudy" />,
+        label: "2. 내 서재",
+        path: "/mystudy",
+      },
+      {
+        icon: <SettingsIcon className="icon-box icon-settings" />,
+        label: "3. 설정",
+        path: "/setting",
+      },
+      {
+        icon: <SupportAgentIcon className="icon-box icon-support" />,
+        label: "4. 고객게시판",
+        path: "/board",
+      },
+    ],
+    []
+  );
 
-  // 단축키 설정, 각 숫자에 대응하는 메뉴의 인덱스에 따라 이동
   useMenuShortcut({
-    '1': () => navigate(menuItems[0].path),
-    '2': () => navigate(menuItems[1].path),
-    '3': () => navigate(menuItems[2].path),
-    '4': () => navigate(menuItems[3].path)
+    1: () => navigate(menuItems[0].path),
+    2: () => navigate(menuItems[1].path),
+    3: () => navigate(menuItems[2].path),
+    4: () => navigate(menuItems[3].path),
   });
 
   return (
-    <Box minHeight="100vh" display="flex" flexDirection="column">
+    <Box className="menu-container">
       <Header />
 
-      {/* Main Content */}
-      <Box
-        flexGrow={1}
-        display="flex"
-        alignItems="center"
-        justifyContent="center"
-      >
-        <Grid container spacing={4} justifyContent="center" alignItems="center">
-          {menuItems.map(({ icon, label, path }, index) => (
-            <Grid item xs={12} sm={6} md={3} key={index}>
-              <Box
-                textAlign="center"
-                onClick={() => navigate(path)}
-                sx={{ cursor: "pointer" }}
-              >
-                <IconButton sx={{ fontSize: 400 }}>{icon}</IconButton>
-                <Typography variant="h6">{label}</Typography>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+      <Box className="main-content">
+        <Container className="grid-container">
+          <Grid container spacing={6} justifyContent="center" alignItems="center">
+            {menuItems.map(({ icon, label, path }, index) => (
+              <Grid item xs={12} sm={6} md={6} key={index}>
+                <Card
+                  onClick={() => navigate(path)}
+                  className="menu-card"
+                >
+                  <CardContent className="card-content">
+                    <Box className="icon-box">{icon}</Box>
+                    <Typography  className="menu-label" variant="h6">{label}</Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
       </Box>
 
       <Footer />

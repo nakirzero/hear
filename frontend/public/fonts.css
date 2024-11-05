@@ -11,3 +11,10 @@
     font-family: 'GoormSansMedium';
     src: url('/fonts/goorm-sans-medium.woff2') format('woff2');
 }
+@font-face {
+    font-family: 'Recipekorea';
+    src: url('./fonts/Recipekorea_FONT.otf') format('woff2'), 
+         url('./fonts/Recipekorea_FONT.ttf') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
