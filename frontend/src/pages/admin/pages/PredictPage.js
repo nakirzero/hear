@@ -71,7 +71,7 @@ const PredictPage = () => {
     try {
       setIsLoading(true);
       const result = await addBookFromJson();
-      
+
       if (result) {
         console.log(result.message);
         setProgress(100);
@@ -113,7 +113,7 @@ const PredictPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Box sx={{ display: "flex", height: "100vh", overflowX: "hidden" }}>
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
 
@@ -122,13 +122,13 @@ const PredictPage = () => {
           sx={{
             flexGrow: 1,
             backgroundColor: (theme) =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-            overflow: "auto",
+              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+              height: "100vh",            
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <input
+          <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
+          <input
               type="file"
               accept=".csv"
               onChange={handleFileChange}
@@ -163,15 +163,15 @@ const PredictPage = () => {
               sx={{ marginTop: 2 }}
               onClick={handleAddBookFromJson}
             >
-              json에서 데이터 적재
+              예측된 데이터 업로드
             </Button>
 
             {isLoading && <LoadingIndicator />}
 
             {progress > 0 && (
-              <Box mt={2} width="80%">
-                <Typography variant="body1">진행률: {progress.toFixed(2)}%</Typography>
-                <LinearProgress variant="determinate" value={progress} />
+              <Box mt={2} sx={{ width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 } }}>
+              <Typography variant="body1" align="center">진행률: {progress}%</Typography>
+              <LinearProgress variant="determinate" value={progress} />
               </Box>
             )}
 
@@ -182,21 +182,32 @@ const PredictPage = () => {
             )}
 
             {results && (
-              <TableContainer component={Paper} sx={{ marginTop: 4, maxWidth: 800 }}>
-                <Table>
+              <TableContainer component={Paper} sx={{ marginTop: 4, width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 }, maxHeight: 400, overflow: "auto" }} elevation={3}>
+                <Table stickyHeader>
                   <TableHead>
                     <TableRow>
-                      <TableCell>문장</TableCell>
-                      <TableCell>예측된 카테고리</TableCell>
-                      <TableCell>신뢰도</TableCell>
+                      <TableCell align="center">NO.</TableCell>
+                      <TableCell align="center">문장</TableCell>
+                      <TableCell align="center" sx={{ whiteSpace: "nowrap" }}>키워드 분류</TableCell>
+                      <TableCell align="center">신뢰도</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {results.map((result, index) => (
-                      <TableRow key={index}>
+                    {results.slice(0, 100).map((result, index) => (
+                      <TableRow
+                        key={index}
+                        sx={{
+                          "&:nth-of-type(odd)": { backgroundColor: "action.hover" },
+                        }}
+                      >
+                        <TableCell align="center">{index + 1}</TableCell>
                         <TableCell>{result.JSON_DETAIL.slice(0, 100)}...</TableCell>
-                        <TableCell>{result.JSON_DIVISION}</TableCell>
-                        <TableCell>{result.confidence ? `${result.confidence.toFixed(2)}%` : `${(Math.random() * (97.70 - 88.50) + 85.50).toFixed(2)}%`}</TableCell>
+                        <TableCell align="center">{result.JSON_DIVISION}</TableCell>
+                        <TableCell align="center">
+                          {result.confidence
+                            ? `${result.confidence.toFixed(2)}%`
+                            : `${(Math.random() * (97.70 - 88.50) + 85.50).toFixed(2)}%`}
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
