@@ -31,12 +31,13 @@ const History = () => {
   const [history, setHistory] = useState([]);
   const [displayedItems, setDisplayedItems] = useState(5); // 처음에 보여줄 항목 수
   const itemsPerPage = 5; // 한 번에 더 보여줄 항목 수
-  const defaultImage = 'frontend/src/assets/defult-image.jpg'; // 기본 이미지 경로
 
   useEffect(() => {
     const getHistory = async () => {
       try {
         const fetchedHistory = await fetchHistory(userObject?.USER_SEQ || null);
+        console.log('fetchedHistory', fetchedHistory);
+        
         if (userObject?.USER_SEQ) {
           const userHistory = fetchedHistory.filter(item => item.USER_SEQ === userObject.USER_SEQ);
           const sortedHistory = userHistory.sort((a, b) => new Date(b.HIST_VwDt) - new Date(a.HIST_VwDt));
@@ -122,8 +123,9 @@ const History = () => {
                     <TimelineContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', p: 2, gap: 2 }}>
                       <Box
                         component="img"
-                        src={row.IMAGE_URL || defaultImage} // 이미지가 없으면 기본 이미지 사용
-                        alt={row.BOOK_NAME}
+                        src={`/static/image/bookcover/${row.IMG_PATH}`}
+                        alt={"책 커버 사진 없음"}
+                        style={{ width: 200, height: 300, objectFit: "cover" }}
                         sx={{
                           width: 60,
                           height: 60,
