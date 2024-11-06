@@ -210,9 +210,9 @@ const Highlight = () => {
                     <Box sx={{ display: "flex", alignItems: "center" }}>
                       <Box sx={{ mr: 2 }}>
                         <img
-                          src={`/static/bookcover/${cover}`}
+                          src={`/static/image/bookcover/${cover}`}
                           alt={bookName}
-                          style={{ width: 50, height: 50, objectFit: "cover" }}
+                          style={{ width: 100, height: 150, objectFit: "cover" }}
                         />
                       </Box>
                       <Box>
