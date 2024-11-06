@@ -1,7 +1,11 @@
-// CustomAppBar.js
 import React from 'react';
-import { AppBar as MuiAppBar, Toolbar, IconButton, Typography, Badge, styled } from '@mui/material';
-import { Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import { AppBar as MuiAppBar, Toolbar, IconButton, Badge, styled, Box } from '@mui/material';
+import { Menu as MenuIcon, Notifications as NotificationsIcon, Logout as LogoutIcon } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
+
+// 로고 이미지 가져오기
+import logo from '../assets/logo1.png'
 
 const drawerWidth = 240;
 
@@ -24,6 +28,16 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 export default function CustomAppBar({ open, toggleDrawer }) {
+  const navigate = useNavigate();
+  const { setUserObject } = useAuth();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    sessionStorage.clear();
+    setUserObject(null); // 전역 상태 초기화
+    navigate("/"); // 메인 페이지로 이동
+  };
+
   return (
     <AppBar position="absolute" open={open}>
       <Toolbar sx={{ pr: '24px' }}>
@@ -36,13 +50,17 @@ export default function CustomAppBar({ open, toggleDrawer }) {
         >
           <MenuIcon />
         </IconButton>
-        <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-          Dashboard
-        </Typography>
+        
+        {/* 로고 이미지 삽입 */}
+        <Box component="img" src={logo} alt="Logo" sx={{ height: 40, marginRight: 'auto' }} />
+
         <IconButton color="inherit">
           <Badge badgeContent={4} color="secondary">
             <NotificationsIcon />
           </Badge>
+        </IconButton>
+        <IconButton color="inherit" onClick={handleLogout} sx={{ marginLeft: '16px' }}>
+          <LogoutIcon />
         </IconButton>
       </Toolbar>
     </AppBar>

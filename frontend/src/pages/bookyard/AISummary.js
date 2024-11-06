@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef, useMemo } from "react";
 import Breadcrumb from "../../components/BreadCrumb";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
 import {
   Box,
   Button,
   Grid,
+  Card, 
+  CardContent, 
   Typography,
   IconButton,
   Slider,
@@ -17,6 +18,7 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import { useNavigate, useLocation } from "react-router-dom";
 import { fetchLibrary, fetchLibrarySave, highlight } from "../../api/libraryAPI";
 import { useAuth } from "../../context/AuthContext";
+import { ImportContacts, Article, Create, Share } from "@mui/icons-material";
 import useMenuShortcut from "../../hooks/useMenuShortcut";
 import usePlayShortcut from "../../hooks/usePlayShortcut";
 
@@ -36,20 +38,6 @@ const AISummary = () => {
   const audioRef = useRef(null);
   const histDiv = 2;
 
-
-  
-
-  const buttonStyle = {
-    width: 300,
-    height: 160,
-    borderRadius: 10,
-    fontSize: "1.5rem",
-  };
-
-  
-
-
-
   const menuItems = useMemo(() => [
     {  label: "1 시", path: "/library?category=200" },
     {  label: "2 소설", path: "/library?category=100" },
@@ -64,8 +52,6 @@ const AISummary = () => {
     '3': () => navigate(menuItems[2].path),
     '4': () => navigate(menuItems[3].path)
   });
-
-
 
   usePlayShortcut({
   'ArrowLeft':()=> ArrowLeft(),
@@ -90,8 +76,6 @@ const AISummary = () => {
     );
     setCurrentTime(audioRef.current.currentTime)
   }
-
-
 
   useEffect(() => {
     console.log(location.state.selected,"location.state.selected");
@@ -164,8 +148,6 @@ const AISummary = () => {
     // 책 정보 불러오기
     const fetchBookData = async () => {
       const bookSeq = location.state.selected
-
-      
       const elId = userObject?.EL_ID; // userObject에서 EL_ID를 가져옴
       const isSummary = true; // 요약 요청 여부 설정 (true로 설정 시 요약 요청)
 
@@ -286,13 +268,6 @@ const AISummary = () => {
     }
   };
 
-  const buttonStyles = {
-    padding: "16px",
-    fontSize: 20,
-    borderWidth: 2,
-    height: "200px",
-  };
-
   function formatTime(seconds) {
 
     if (isNaN(seconds) || seconds < 0) {
@@ -343,62 +318,75 @@ const AISummary = () => {
     }
   };
 
+  const cardStyle = {
+    width: 200,
+    height: 100,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    bgcolor: "#E9B6EA",
+    borderRadius: 10,
+    boxShadow: 3,
+    cursor: "pointer",
+    transition: "0.3s",
+    "&:hover": {
+      boxShadow: 6,
+    },
+  };
+
   return (
-    <div>
+    <Box bgcolor="#FFFEFE" sx={{ minHeight: "100vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <Header />
       <Breadcrumb  />
       {/* 시, 소설, 수필 */}
-      <Box
-        bgcolor="#FFD700"
-        py={4}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Box sx={{ display: "flex", gap: 4 }}>
-        <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "200" } })}
-            aria-label="시 카테고리로 이동"
-          >
-            1. 시
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "100" } })}
-            aria-label="소설 카테고리로 이동"
-          >
-            2. 소설
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "300" } })}
-            aria-label="수필 카테고리로 이동"
-          >
-            3. 수필
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "400" } })}
-            aria-label="공유세상 카테고리로 이동"
-          >
-            4. 공유세상
-          </Button>
-        </Box>
+      <Box bgcolor="#f7f7f7" py={4} display="flex" justifyContent="center" gap={10}>
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "200" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <ImportContacts fontSize="large" sx={{ marginTop: '5px', color: "#B833BA" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>시</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "100" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Article fontSize="large" sx={{ marginTop: '5px', color: "#B833BA" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>소설</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "300" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Create fontSize="large" sx={{ marginTop: '5px', color: "#B833BA" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>수필</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "400" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Share fontSize="large" sx={{ marginTop: '5px', color: "#B833BA" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>공유세상</Typography>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
 
-      <Box sx={{ margin: "0 auto", width: "70%", padding: 2 }}>
-        <Typography variant="h6" sx={{ flexGrow: 1 }}>
-         [ {book.BOOK_NAME} ]  요약재생
+       {/* 재생 컨텐츠 */}
+
+       <Card sx={{ width: "75%", margin: "auto", mt: 4, p: 12, borderRadius: 4, boxShadow: 3 }}>
+        <Typography variant="h6" sx={{ fontSize: "24px", flexGrow: 1, textAlign:"center" }}>
+       요 약 재 생
         </Typography>
+        <Typography variant="h6" sx={{ flexGrow: 1, textAlign:"center" }}>
+       [ {book.BOOK_NAME} ]
+        </Typography>
+
         {/* Upper Section */}
         <Box sx={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
           <Box
@@ -412,9 +400,7 @@ const AISummary = () => {
           
             {/* Placeholder for the image */}
           </Box>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-         
-          </Typography>
+          
           <Box sx={{ width: "100%" }}>
             <audio
               ref={audioRef}
@@ -426,11 +412,11 @@ const AISummary = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: 2,
+                gap: 1,
                 marginY: 2,
               }}
             >
-              <IconButton onClick={togglePlayPause} color="primary">
+              <IconButton onClick={togglePlayPause} sx={{color: "#B833BA"}}>
                 {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
               <Slider
@@ -439,9 +425,9 @@ const AISummary = () => {
                 max={isNaN(duration) ? 0 : duration}
                 step={1}
                 onChange={(e, newValue) => handleSliderChange(newValue)}
-                sx={{ flexGrow: 1 }}
+                sx={{ flexGrow: 1, color: "#B833BA" }}
               />
-              <Typography variant="h6">
+              <Typography variant="h6" fontSize="16px">
                 {formatTime(currentTime)} / {formatTime(duration)}
                 {""}
               </Typography>
@@ -449,90 +435,269 @@ const AISummary = () => {
             <Box
               sx={{
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: 1,
+    alignItems: "center",
+    justifyContent: "center", // 볼륨 조절 바와 아이콘을 중앙에 배치
+    marginRight: "150px",
+    gap: 1,
+    mt: 2
               }}
             >
-              <VolumeUpIcon />
+              <VolumeUpIcon sx={{ color: "#B833BA" }}/>
               <Slider
                 value={volume}
                 min={0}
                 max={1}
                 step={0.01}
                 onChange={(event, newValue) => handleVolumeChange(newValue)} // newValue를 전달
-                sx={{ width: 100 }}
+                sx={{ width: 150, color: "#B833BA",  alignSelf: "center" }} // 슬라이더의 너비를 줄여 중앙에 정렬되는 효과 강화
               />
             </Box>
           </Box>
         </Box>
 
         {/* Lower Section */}
-        <Grid container spacing={1} sx={{ justifyContent: "space-between" }}>
-          <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={buttonStyles}
-              onClick={togglePlayPause}
-            >
-              일시정지 <br /> [ SPACE + . ]
-            </Button>
-          </Grid>
-          <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={buttonStyles}
-              onClick={() => {
-                audioRef.current.currentTime = Math.max(
-                  0,
-                  audioRef.current.currentTime - 5
-                );
-                setCurrentTime(audioRef.current.currentTime);
-              }}
-            >
-              5초 뒤로 <br /> [ 방향키 왼쪽 + . ]
-            </Button>
-          </Grid>
-          <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={buttonStyles}
-              onClick={() => {
-                audioRef.current.currentTime = Math.max(
-                  0,
-                  audioRef.current.currentTime + 5
-                );
-                setCurrentTime(audioRef.current.currentTime);
-              }}
-            >
-              5초 앞으로 <br /> [ 방향키 오른쪽 + . ]
-            </Button>
-          </Grid>
-          <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={buttonStyles}
-              onClick={handleClick}
-            >
-              하이라이트 <br /> [ 방향키 위쪽  + . ]
-            </Button>
-          </Grid>
-          <Grid item xs={2.4} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={buttonStyles}
-              onClick={handleTime}
-            >
-              현재 재생시간 <br /> [ 방향키 아래쪽 + . ]
-            </Button>
-          </Grid>
+        <Grid container spacing={4} sx={{ justifyContent: "space-evenly" }}>
+        <Grid item xs={2} sx={{ padding: 1 }}>
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: "#B833BA",
+      borderColor: "#B833BA",
+      backgroundColor: "#E9B6EA",
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": { // hover 시 모든 텍스트 흰색으로 변경
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1.2,
+    }}
+    onClick={togglePlayPause}
+  >
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#000000", textAlign: "center" }}
+    >
+      일시정지
+    </Box>
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
+    >
+      <br /> [ SPACE + . ]
+    </Box>
+  </Button>
+</Grid>
+
+<Grid item xs={2} sx={{ padding: 1 }}>
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: "#B833BA",
+      borderColor: "#B833BA",
+      backgroundColor: "#E9B6EA",
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": { // hover 시 모든 텍스트 흰색으로 변경
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1.2,
+    }}
+    onClick={() => {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime - 5);
+      setCurrentTime(audioRef.current.currentTime);
+    }}
+  >
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#000000", textAlign: "center" }}
+    >
+      5초 뒤로
+    </Box>
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
+    >
+      <br /> [ 방향키 왼쪽 + . ]
+    </Box>
+  </Button>
+</Grid>
+
+
+<Grid item xs={2} sx={{ padding: 1 }}>
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: "#B833BA",
+      borderColor: "#B833BA",
+      backgroundColor: "#E9B6EA",
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": { // hover 시 모든 텍스트 흰색으로 변경
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1.2,
+    }}
+    onClick={() => {
+      audioRef.current.currentTime = Math.max(0, audioRef.current.currentTime + 5);
+      setCurrentTime(audioRef.current.currentTime);
+    }}
+  >
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#000000", textAlign: "center" }}
+    >
+      5초 앞으로
+    </Box>
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
+    >
+      <br /> [ 방향키 오른쪽 + . ]
+    </Box>
+  </Button>
+</Grid>
+
+
+<Grid item xs={2} sx={{ padding: 1 }}>
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: "#B833BA",
+      borderColor: "#B833BA",
+      backgroundColor: "#E9B6EA",
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": { // hover 시 모든 텍스트 흰색으로 변경
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1.2,
+    }}
+    onClick={handleClick}
+  >
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#000000", textAlign: "center" }}
+    >
+      하이라이트
+    </Box>
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
+    >
+      <br /> [ 방향키 위쪽 + . ]
+    </Box>
+  </Button>
+</Grid>
+
+<Grid item xs={2} sx={{ padding: 1 }}>
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: "#B833BA",
+      borderColor: "#B833BA",
+      backgroundColor: "#E9B6EA",
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": { // hover 시 모든 텍스트 흰색으로 변경
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      lineHeight: 1.2,
+    }}
+    onClick={handleTime}
+  >
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#000000", textAlign: "center" }}
+    >
+      현재 재생시간
+    </Box>
+    <Box
+      component="span"
+      className="hover-text" // hover 시 적용될 클래스
+      sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
+    >
+      <br /> [ 방향키 아래쪽 + . ]
+    </Box>
+  </Button>
+</Grid>
+
+
         </Grid>
-      </Box>
+      </Card>
             <Box sx={{ margin: "0 auto", width: "30%", padding: 2 }}>
           {alertMessage && (
            <Alert variant="filled" severity="success" sx={{ mb: 4 }}>
@@ -540,8 +705,7 @@ const AISummary = () => {
           </Alert>
            )} 
           </Box>
-      <Footer />
-    </div>
+    </Box>
   );
 };
 

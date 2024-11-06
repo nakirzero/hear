@@ -3,7 +3,6 @@ import csv
 import io
 from flask import Blueprint, request, jsonify
 import pickle
-from datetime import datetime
 from kiwipiepy import Kiwi, basic_typos_with_continual
 from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
@@ -20,7 +19,6 @@ progress = 0  # 예측 진행률 추적 변수
 tfidf = None
 logi = None
 category = None
-subtitles = []  # CSV에서 파싱한 데이터 저장
 
 # 사용자 정의 토크나이저 함수
 def myTokenizer(text):
@@ -68,20 +66,15 @@ def upload_csv():
         stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
         reader = csv.DictReader(stream)
 
-        print('datetime', datetime.now())
-
-        # JSON_DETAIL과 관련 정보를 100개까지 저장 및 DB 삽입
+        # JSON_DETAIL과 관련 정보를 저장 및 DB 삽입
         subtitles = []
         for row in reader:
             subtitles.append({
                 'PRO_NAME': row.get('program_name', 'unknown'),
                 'JSON_PUBLISHER': row.get('publisher', 'unknown'),
                 'JSON_DETAIL': row.get('subtitle', ''),
-                'JSON_DIVISION': row.get('category', ''),
-                'JSON_CrtDt': datetime.now(),
-                'JSON_MdfDt': datetime.now()                
+                'JSON_DIVISION': row.get('category', '')
             })
-        subtitles = subtitles[:100]  # 최대 100개로 제한
 
         # 총 row 수 계산하여 예측 함수에 전달
         total_rows = len(subtitles)
@@ -169,7 +162,6 @@ def progress_status():
 
 
 
-
 # 예측 결과 조회 엔드포인트
 @predict_bp.route('/get_results', methods=['GET'])
 def get_results():
@@ -216,21 +208,17 @@ def add_book_from_json():
                     PRO_NAME AS BOOK_NAME,
                     JSON_PUBLISHER AS PUBLISHER,
                     JSON_DETAIL AS INFORMATION,
-                    JSON_CrtDt AS BOOK_CrtDt
+                    JSON_MdfDt AS BOOK_CrtDt
                 FROM json
-                WHERE JSON_DIVISION IS NOT NULL
-                ORDER BY JSON_CrtDt DESC
-                LIMIT 100
+                WHERE JSON_DIVISION IS NOT NULL                
             """)
-            connection.execute(query)
-            connection.commit()
+            result = connection.execute(query)
+            connection.commit()           
             
-            # 성공 메시지 반환
             return jsonify({
                 "message": "Data inserted into book table",
-                "information": "Up to 100 rows of JSON_DETAIL added to INFORMATION column in book table."
+                "information": f"{result.rowcount} rows of JSON_DETAIL added to INFORMATION column in book table."
             }), 201
-            
         except Exception as db_error:
             print(f"Database operation failed: {db_error}")
             return jsonify({"error": "Failed to insert data into book table"}), 500
