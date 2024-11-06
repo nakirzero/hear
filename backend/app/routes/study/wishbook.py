@@ -67,3 +67,40 @@ def cancel_wishbook(wishbook_id):
             close_db_connection(connection)
 
     return jsonify({"error": "Database connection failed"}), 500
+
+# 희망 도서 신청 
+@wishbook_bp.route('/wishbook', methods=['PUT'])
+def application_wishbook():
+    wishbook = request.get_json()  # JSON 데이터를 받아옴
+    print("wishbook", wishbook)
+
+    user_seq = wishbook.get('user_seq')
+    wb_name = wishbook.get('wb_name')
+    wb_author = wishbook.get('wb_author')
+    wb_appoval = '1'
+    wb_reason = '0'
+
+    connection = get_db_connection()
+    if connection:
+        try:
+            query = text("""
+                INSERT INTO wishbook (USER_SEQ, WB_NAME, WB_AUTHOR, WB_AplDt, WB_APPROVAL, WB_REASON)
+                VALUES (:user_seq, :wb_name, :wb_author, NOW(), :wb_appoval, :wb_reason)
+            """)
+            connection.execute(query, {
+                "user_seq": user_seq,
+                "wb_name": wb_name,
+                "wb_author": wb_author,
+                "wb_appoval": wb_appoval,
+                "wb_reason": wb_reason
+            })
+            connection.commit()  # 변경 사항 적용
+
+            return jsonify({"success": True, "message": "Registration of the wish book was successful"}), 200
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Failed to register the wish book"}), 500
+        finally:
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500

@@ -3,6 +3,7 @@ import { Typography, Box, Grid, Card, CardContent, Container } from '@mui/materi
 import { useNavigate } from 'react-router-dom';
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import MailIcon from '@mui/icons-material/Mail';
+import { FaPrayingHands } from "react-icons/fa";
 
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
@@ -26,6 +27,11 @@ const Board = () => {
         label: "42. 건의사항",
         path: "/board/suggest",
       },
+      {
+        icon: <FaPrayingHands style={{ color: "#4CAF50" }} />,
+        label: "43. 희망도서신청",
+        path: "/board/wishbook",
+      },
     ],
     []
   );
@@ -33,6 +39,7 @@ const Board = () => {
   useMenuShortcut({
     1: () => navigate(menuItems[0].path),
     2: () => navigate(menuItems[1].path),
+    3: () => navigate(menuItems[2].path),
   });
 
 

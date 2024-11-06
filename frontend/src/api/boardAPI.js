@@ -36,3 +36,18 @@ export const writeSubmit = async (postData) => {
   }
 };
 
+export const fetchWishbook = async(event, wishbook) => {
+  event.preventDefault();
+  console.log("wishbook",wishbook);
+  
+  try {
+    // 서버로 formData를 비동기 요청으로 보냄
+    const response = await axios.put("/api/wishbook", wishbook);
+
+    // 서버에서 받은 응답에서 메시지를 반환
+    return response.data.message;
+  } catch (error) {
+    console.error("Error saving data:", error);
+    throw error;
+  }
+}

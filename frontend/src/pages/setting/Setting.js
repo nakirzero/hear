@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo }from 'react';
 import { Typography, Box, Grid, Card, CardContent, Container } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
@@ -12,7 +12,6 @@ import HeadsetIcon from '@mui/icons-material/Headset';
 import PersonIcon from '@mui/icons-material/Person';
 import MicIcon from '@mui/icons-material/Mic';
 
-import './Setting.css';
 
 const Setting = () => {
   const navigate = useNavigate();
@@ -20,17 +19,17 @@ const Setting = () => {
   const menuItems = useMemo(
     () => [
       {
-        icon: <HeadsetIcon className="icon-box icon-audio" />,
+        icon: <HeadsetIcon fontSize="inherit" sx={{ color: "#FF77D8" }} />,
         label: "31. 오디오북 설정",
-        path: "/setting/audio",
+        path: "/setting/audio" ,
       },
       {
-        icon: <PersonIcon className="icon-box icon-user" />,
+        icon: <PersonIcon fontSize="inherit" sx={{ color: "#FF7777" }} />,
         label: "32. 회원정보수정",
         path: "/setting/user",
       },
       {
-        icon: <MicIcon className="icon-box icon-voice" />,
+        icon: <MicIcon fontSize="inherit" sx={{ color: "#FF77A8" }} />,
         label: "33. 목소리 녹음",
         path: "/setting/voice",
       },
@@ -44,24 +43,56 @@ const Setting = () => {
     3: () => navigate(menuItems[2].path),
   });
 
+  
   return (
-    <Box className="setting-container">
+    <Box minHeight="100vh" display="flex" flexDirection="column">
       <Header />
       <Breadcrumb />
       <ProfileSection />
 
-      <Box className="main-content">
-        <Container className="grid-container">
-          <Grid container spacing={6} justifyContent="center" alignItems="center">
+      <Box
+        flexGrow={1}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          backgroundColor: "#FFFFFF",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <Container maxWidth="lg"> 
+          <Grid container spacing={6} justifyContent="center"   alignItems="center">
             {menuItems.map(({ icon, label, path }, index) => (
               <Grid item xs={6} sm={4} md={4} key={index}>
                 <Card
                   onClick={() => navigate(path)}
-                  className="menu-card"
+                  sx={{
+                    height: 300,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    backgroundColor: "#F7FAFF ",
+                    "&:hover": { boxShadow: 10 },
+                    padding: 3,
+                    borderRadius: 20
+                  }}
                 >
-                  <CardContent className="card-content">
-                    {icon}
-                    <Typography className="menu-label" variant='h6'>{label}</Typography>
+                  <CardContent
+                    sx={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box sx={{ fontSize: 150 }}>{icon}</Box>
+                    <Typography variant="h6" sx={{ mt:-8 }}>
+                      {label}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -71,7 +102,7 @@ const Setting = () => {
       </Box>
 
       <Footer />
-    </Box>
+      </Box>
   );
 };
 

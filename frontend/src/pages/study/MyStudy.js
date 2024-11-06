@@ -13,36 +13,35 @@ import { FaPrayingHands } from "react-icons/fa";
 import HistoryIcon from '@mui/icons-material/History';
 import StarOutlineIcon from '@mui/icons-material/StarOutline';
 
-import './MyStudy.css';
-
 const MyStudy = () => {
   const navigate = useNavigate();
 
   const menuItems = useMemo(
     () => [
       {
-        icon: <HistoryIcon className="icon-box icon-history" />,
+        icon: <HistoryIcon fontSize="inherit" sx={{ color: "#7779FF" }} />,
         label: "21. 최근 읽은 기록",
         path: "/mystudy/history",
       },
       {
-        icon: <StarOutlineIcon className="icon-box icon-highlight" />,
+        icon: <StarOutlineIcon fontSize="inherit" sx={{ color: "#77DAFF" }} />,
         label: "22. 하이라이트",
         path: "/",
       },
       {
-        icon: <CommentIcon className="icon-box icon-notes" />,
+        icon: <CommentIcon fontSize="inherit" sx={{ color: "#77AAFF" }} />,
         label: "23. 독서노트",
         path: "/mystudy/mybookreport",
       },
       {
-        icon: <FaPrayingHands className="icon-box icon-wishlist" />,
+        icon: <FaPrayingHands fontSize="inherit" color= "#77BAFF" />,
         label: "24. 희망도서신청조회",
         path: "/mystudy/mywishbook",
       },
     ],
     []
   );
+
   useMenuShortcut({
     1: () => navigate(menuItems[0].path),
     2: () => navigate(menuItems[1].path),
@@ -53,23 +52,54 @@ const MyStudy = () => {
 
   
   return (
-    <Box className="my-study-container">
+    <Box minHeight="100vh" display="flex" flexDirection="column">
       <Header />
       <Breadcrumb />
       <ProfileSection />
 
-      <Box className="main-content">
-        <Container className="grid-container">
+      <Box
+        flexGrow={1}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          backgroundColor: "#FFFFFF",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <Container maxWidth="lg">
           <Grid container spacing={4} justifyContent="center" alignItems="center">
             {menuItems.map(({ icon, label, path }, index) => (
               <Grid item xs={6} sm={4} md={5} key={index}>
                 <Card
                   onClick={() => navigate(path)}
-                  className="menu-card"
+                  sx={{
+                    height: 250,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    backgroundColor: "#F7FAFF ",
+                    "&:hover": { boxShadow: 10 },
+                    padding: 3,
+                    borderRadius: 20
+                  }}
                 >
-                  <CardContent>
-                    {icon}
-                    <Typography className="menu-label" variant='h6'>{label}</Typography>
+                  <CardContent
+                    sx={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box sx={{ fontSize: 150 }}>{icon}</Box>
+                    <Typography variant="h6" sx={{ mt:-8 }}>
+                      {label}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>
@@ -80,6 +110,7 @@ const MyStudy = () => {
 
       <Footer />
     </Box>
+    // </div>
   );
 };
 
