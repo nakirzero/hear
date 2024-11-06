@@ -61,6 +61,7 @@ export default function DrawerComponent({ open, toggleDrawer }) {
     { text: "Customers", icon: <PeopleIcon />, path: "/customers" },
     { text: "Reports", icon: <BarChartIcon />, path: "/reports" },
     { text: "Integrations", icon: <LayersIcon />, path: "/integrations" },
+    { text: "공지사항 글쓰기", icon: <LayersIcon />, path: "/admin/noticewrite" },
     { text: "공유마당", icon: <ShareIcon />, path: "/admin/predict" },
     { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
     { text: "Saved reports", isHeader: true },

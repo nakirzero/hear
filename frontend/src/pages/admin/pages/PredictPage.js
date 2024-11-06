@@ -86,18 +86,22 @@ const PredictPage = () => {
   };
 
   useEffect(() => {
-    if (!isPolling) return;
-
+    if (!isPolling || progress >= 100) return; // 조건을 추가하여 중복 실행 방지
+  
     const interval = setInterval(async () => {
       try {
         const currentProgress = await pollingProgress();
         setProgress(currentProgress);
-
+  
         if (currentProgress >= 100) {
           clearInterval(interval);
           setIsPolling(false);
           setIsLoading(false);
-          fetchPredictionResults();
+  
+          // fetchPredictionResults를 호출하기 전에 확인 조건 추가
+          if (progress < 100) {
+            fetchPredictionResults();
+          }
         }
       } catch (error) {
         setError(error.message);
@@ -106,9 +110,10 @@ const PredictPage = () => {
         setIsLoading(false);
       }
     }, 100);
-
+  
     return () => clearInterval(interval);
-  }, [isPolling, setIsLoading]);
+  }, [isPolling, progress, setIsLoading]); // progress를 의존성 배열에 추가하여 최신 상태 유지
+  
 
   return (
     <ThemeProvider theme={theme}>
@@ -170,7 +175,7 @@ const PredictPage = () => {
 
             {progress > 0 && (
               <Box mt={2} sx={{ width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 } }}>
-              <Typography variant="body1" align="center">진행률: {progress}%</Typography>
+              <Typography variant="body1" align="center">진행률: {progress.toFixed(2)}%</Typography>
               <LinearProgress variant="determinate" value={progress} />
               </Box>
             )}

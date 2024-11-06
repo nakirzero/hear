@@ -17,10 +17,6 @@ const Header = () => {
     navigate("/");
   };
 
-  const goPredict = () => {
-    navigate("/predict");
-  };
-
   return (
     <AppBar position="static" elevation={0}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
@@ -43,9 +39,6 @@ const Header = () => {
         )}
 
         <Box>
-          <Button variant="contained" color="secondary" onClick={goPredict} sx={{ marginRight: "250px", mr: 2 }}>
-            <Typography> 예측모델(임시) </Typography>
-          </Button>
           <Button variant="contained" color="secondary" onClick={handleLogout} sx={{ marginRight: "250px" }}>
             <Typography> 로그아웃 </Typography>
           </Button>
