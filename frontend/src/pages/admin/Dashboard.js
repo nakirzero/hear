@@ -1,9 +1,9 @@
 // Dashboard.js
 import React, { useState } from 'react';
 import { ThemeProvider, CssBaseline, Box, Container, Grid, Paper, Toolbar } from '@mui/material';
-import CustomAppBar from './CustomAppBar';
-import Sidebar from './Sidebar';
-import Copyright from './Copyright';
+import CustomAppBar from './context/CustomAppBar';
+import DrawerComponent from './context/DrawerComponent';
+import Copyright from './context/Copyright'
 import theme from '../../theme';
 
 export default function Dashboard() {
@@ -17,7 +17,7 @@ export default function Dashboard() {
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
-        <Sidebar open={open} toggleDrawer={toggleDrawer} />
+        <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
         <Box
           component="main"
           sx={{
