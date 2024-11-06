@@ -34,7 +34,9 @@ function Main() {
       const response = await UserLogin(userid, userpw);
       if (response) {
         setUserInfo(response.userInfo);
-        setUserObject(response.userInfo);
+
+        // `persist` 옵션을 추가하여 AuthContext에 전달
+        setUserObject({ ...response.userInfo, persist: "session" });
 
         if (response.userInfo.is_admin) {
           navigate('/admin');          
@@ -63,8 +65,9 @@ function Main() {
 
   const handleLocalStorage = () => {
     if (userInfo) {
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      sessionStorage.setItem("userInfo", JSON.stringify(userInfo));
+      // 로컬 저장소에 `persist` 설정을 포함하여 저장
+      setUserObject({ ...userInfo, persist: "local" });
+      
       setDialogOpen(false);
       setAlertMessage("자동 로그인이 설정되었습니다.");
       setTimeout(() => {

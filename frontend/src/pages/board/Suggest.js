@@ -15,10 +15,6 @@ const formatDate = (dateString) => {
   return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 };
 
-const formatSuggestDiv = (divValue) => {
-  return divValue === 2 ? '건의' : divValue;
-};
-
 const Suggest = () => {
   const navigate = useNavigate();
 
@@ -26,6 +22,7 @@ const Suggest = () => {
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const { currentData, totalPages, page, handlePageChange } = usePagination(filteredData, 10);
+  const [ notice, setNotice ] = useState();
 
   useEffect(() => {
     const getSuggests = async () => {
@@ -53,6 +50,23 @@ const Suggest = () => {
     setFilteredData(filtered);
   };
 
+  // 게시글을 클릭했을 때 해당 게시글을 선택하는 함수
+  const handleClick = (row) => {
+    console.log("row 확인", row.NOTICE_SEQ);
+    
+    setNotice(row)
+    navigate(`/board/suggest/suggestDetail`, { state: { selected: row.NOTICE_SEQ } });
+  };
+
+
+  const handleKeyPress = (event, row) => {
+    if (event.key === "Enter" || event.key === " ") {
+      setNotice(row)
+      handleClick(notice);
+    }
+  };
+  
+
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FFCF8B' }}>
       <Header />
@@ -76,7 +90,7 @@ const Suggest = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Button variant="contained" color="primary" onClick={() => navigate("/board/write")}>
+          <Button variant="contained" color="primary" onClick={() => navigate("/board/suggest/suggestWrite")}>
             게시글 작성
           </Button>
         </Box>
@@ -86,18 +100,18 @@ const Suggest = () => {
           <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell align="center" sx={{ width: '5%' }}>번호</TableCell>
-                <TableCell align="center" sx={{ width: '20%' }}>분류</TableCell>
-                <TableCell align="center" sx={{ width: '40%' }}>제목</TableCell>
-                <TableCell align="center" sx={{ width: '20%' }}>작성일</TableCell>
-                <TableCell align="center" sx={{ width: '15%' }}>작성자</TableCell>
+                <TableCell align="center" sx={{ width: '10%' }}>번호</TableCell>
+                <TableCell align="center" sx={{ width: '45%' }}>제목</TableCell>
+                <TableCell align="center" sx={{ width: '25%' }}>작성일</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>작성자</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentData.map((row, index) => (
-                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' } }}>
+                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' } }}  
+                onClick={() => handleClick(row)}
+                onKeyPress={(event) => handleKeyPress(event, row)}>
                   <TableCell align="center">{row.NOTICE_SEQ}</TableCell>
-                  <TableCell align="center">{formatSuggestDiv(row.NOTICE_DIV)}</TableCell>
                   <TableCell align="center">{row.NOTICE_TITLE}</TableCell>
                   <TableCell align="center">{formatDate(row.NOTICE_CrtDt)}</TableCell>
                   <TableCell align="center">{row.NICKNAME}</TableCell>

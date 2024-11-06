@@ -1,17 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { writeSubmit } from '../../api/boardAPI';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { fetchSuggestModify } from '../../api/boardAPI';
 
 import Header from '../../components/Header'
 import BreadCrumb from '../../components/BreadCrumb'
 
 const Write = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { userObject } = useAuth();
   const [title, setTitle] = useState('');          
-  const [detail, setDetail] = useState('');        
+  const [detail, setDetail] = useState('');      
+  const report = location.state?.selected
+  const [notice_seq, setNotice_seq] = useState();
+  
+    // useEffect로 초기 데이터 설정
+  useEffect(() => {
+      if (report) {
+        setTitle(report.NOTICE_TITLE);
+        setDetail(report.NOTICE_DETAIL);        
+        setNotice_seq(report.NOTICE_SEQ)
+      }
+    }, [report]);
+  
 
   const handlewriteSubmit = async (event) => {
     event.preventDefault();
@@ -23,9 +37,21 @@ const Write = () => {
       detail,
     };
 
+    if(report){  
+
+      try {
+      const message = await fetchSuggestModify(postData,notice_seq);
+      console.log("서버 응답:", message);
+
+      setTitle('');
+      setDetail('');
+      navigate('/board/suggest');
+    } catch (error) {
+      console.error("게시글 작성 실패:", error);
+    }
+  } else {
     try {
-      console.log('postData', postData);
-      
+          
       const message = await writeSubmit(postData);
       console.log("서버 응답:", message);
 
@@ -35,7 +61,9 @@ const Write = () => {
     } catch (error) {
       console.error("게시글 작성 실패:", error);
     }
-  };
+  }
+}
+
 
   return (
     <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
@@ -46,7 +74,7 @@ const Write = () => {
       <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <Paper elevation={3} sx={{ width: 600, p: 4 }}>
           <Typography variant="h4" gutterBottom>
-            건의사항 작성
+          {report ? '건의사항 수정' : '건의사항 작성'}
           </Typography>
 
           {/* 사용자 정보 표시 */}
@@ -81,7 +109,7 @@ const Write = () => {
 
             {/* 작성 완료 버튼 */}
             <Button type="submit" variant="contained" color="primary" fullWidth sx={{ mt: 3 }}>
-              작성 완료
+              {report ? '수정완료' :  '작성 완료'}
             </Button>
           </form>
         </Paper>

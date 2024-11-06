@@ -51,3 +51,34 @@ export const fetchWishbook = async(event, wishbook) => {
     throw error;
   }
 }
+
+// 특정 독서노트 항목의 상세 정보를 가져오는 API
+export const fetchSuggestDetail = async (notice_seq) => {
+  try {
+    const response = await axios.get(`/api/suggestDetail?notice_seq=${notice_seq}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book report detail:", error);
+    throw error;
+  }
+};
+
+export const fetchSuggestDelete = async (notice_seq) => {
+  try {
+    const response = await axios.get(`/api/suggestDelete?notice_seq=${notice_seq}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book report detail:", error);
+    throw error;
+  }
+};
+
+export const fetchSuggestModify = async (postData, notice_seq) => {
+  try {
+    const response = await axios.post(`/api/suggestModify?notice_seq=${notice_seq}`, postData, notice_seq);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book report detail:", error);
+    throw error;
+  }
+};

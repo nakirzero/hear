@@ -11,6 +11,7 @@ import MicIcon from '@mui/icons-material/Mic';
 import { IoLibrary } from "react-icons/io5";
 import MailIcon from '@mui/icons-material/Mail';
 import CreateIcon from '@mui/icons-material/Create';
+import NotesIcon from '@mui/icons-material/Notes';
 import LibraryMusicIcon from '@mui/icons-material/LibraryMusic';
 import AutoStoriesIcon from '@mui/icons-material/AutoStories';
 import { FaPrayingHands } from "react-icons/fa";
@@ -39,7 +40,8 @@ const Breadcrumb = ({selected}) => {
     "voice": "목소리 녹음",
     "mystudy" : "내 서재",
     "suggest" : "건의사항",
-    "write" : "건의사항 작성",
+    "suggestWrite" : "건의사항 작성",
+    "suggestDetail" : "상세보기",
     "library" : "도서마당",
     "book" : "책 화면",
     "mywishbook" : "희망도서 신청조회",
@@ -61,7 +63,8 @@ const Breadcrumb = ({selected}) => {
     "voice": <MicIcon sx={{ verticalAlign: "middle" }} />,
     "mystudy": <IoLibrary style={{ verticalAlign: "middle", fontSize: "20px" }} />,
     "suggest": <MailIcon sx={{ verticalAlign: "middle" }} />,
-    "write": <CreateIcon sx={{ verticalAlign: "middle" }} />,
+    "suggestWrite": <CreateIcon sx={{ verticalAlign: "middle" }} />,
+    "suggestDetail": <NotesIcon sx={{ verticalAlign: "middle" }} />,
     "library": <LibraryMusicIcon sx={{ verticalAlign: "middle" }} />,
     "book": <AutoStoriesIcon sx={{ verticalAlign: "middle" }} />,
     "mywishbook": <FaPrayingHands style={{ verticalAlign: "middle", fontSize: "20px" }} />,
