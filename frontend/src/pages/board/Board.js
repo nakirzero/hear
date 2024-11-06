@@ -28,7 +28,7 @@ const Board = () => {
         path: "/board/suggest",
       },
       {
-        icon: <FaPrayingHands style={{ color: "#4CAF50" }} />,
+        icon: <FaPrayingHands style={{ color: "#ffcf8e" }} />,
         label: "43. 희망도서신청",
         path: "/board/wishbook",
       },
@@ -62,9 +62,9 @@ const Board = () => {
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={10} justifyContent="center" alignItems="center">
+          <Grid container spacing={6} justifyContent="center" alignItems="center">
             {menuItems.map(({ icon, label, path }, index) => (
-              <Grid item xs={12} sm={6} md={6} key={index}>
+              <Grid item xs={6} sm={4} md={4} key={index}>
                 <Card
                   onClick={() => navigate(path)}
                   sx={{
@@ -88,8 +88,8 @@ const Board = () => {
                       alignItems: "center",
                     }}
                   >
-                    <Box sx={{ fontSize: 200 }}>{icon}</Box>
-                    <Typography variant="h6" sx={{ mt:-10 }}>
+                    <Box sx={{ fontSize: 150 }}>{icon}</Box>
+                    <Typography variant="h6" sx={{ mt:-8 }}>
                       {label}
                     </Typography>
                   </CardContent>
