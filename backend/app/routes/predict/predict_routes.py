@@ -68,6 +68,8 @@ def upload_csv():
         stream = io.StringIO(file.stream.read().decode("UTF8"), newline=None)
         reader = csv.DictReader(stream)
 
+        print('datetime', datetime.now())
+
         # JSON_DETAIL과 관련 정보를 100개까지 저장 및 DB 삽입
         subtitles = []
         for row in reader:
@@ -91,7 +93,7 @@ def upload_csv():
             for item in subtitles:
                 insert_query = text("""
                     INSERT INTO json (PRO_NAME, JSON_PUBLISHER, JSON_DETAIL, JSON_DIVISION, JSON_CrtDt) 
-                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :JSON_DETAIL, :JSON_DIVISION, :JSON_CrtDt)
+                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :JSON_DETAIL, :JSON_DIVISION, NOW())
                 """)
                 connection.execute(insert_query, item)
             connection.commit()
