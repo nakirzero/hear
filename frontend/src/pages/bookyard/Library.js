@@ -172,8 +172,8 @@ const Library = () => {
                     {book.BOOK_NAME}
                   </TableCell>
                   <TableCell align="center">{book.AUTHOR}</TableCell> {/* 오른쪽 정렬 */}
-                  <TableCell align="center">{book.FULL_PATH}</TableCell>
-                  <TableCell align="center">{book.SUM_PATH}</TableCell>
+                  <TableCell align="center">{book.RUN_TIME}</TableCell>
+                  <TableCell align="center">{book.SUM_TIME}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
