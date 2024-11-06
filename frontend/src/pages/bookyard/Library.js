@@ -150,7 +150,7 @@ const Library = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center" sx={{  width: '40%' }}>책 제목</TableCell>
-                <TableCell align="center" sx={{ width: '20%' }}>작가</TableCell> {/* 오른쪽 정렬 및 패딩 조정 */}
+                <TableCell align="center" sx={{ width: '20%' }}>작가</TableCell>
                 <TableCell align="center" sx={{ width: '20%' }}>전체 재생 시간</TableCell>
                 <TableCell align="center" sx={{ width: '20%' }}>요약 재생 시간</TableCell>
               </TableRow>
@@ -168,10 +168,10 @@ const Library = () => {
                   onKeyPress={(event) => handleKeyPress(event, book)}
                   tabIndex={0}
                 >
-                  <TableCell component="th" scope="row" align="center" >
+                  <TableCell component="th" scope="row" align="center">
                     {book.BOOK_NAME}
                   </TableCell>
-                  <TableCell align="center">{book.AUTHOR}</TableCell> {/* 오른쪽 정렬 */}
+                  <TableCell align="center">{book.AUTHOR}</TableCell>
                   <TableCell align="center">{book.RUN_TIME}</TableCell>
                   <TableCell align="center">{book.SUM_TIME}</TableCell>
                 </TableRow>
