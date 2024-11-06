@@ -33,6 +33,7 @@ import SettingVoice from "./pages/setting/SettingVoice";
 import Board from "./pages/board/Board";
 import Notice from "./pages/board/Notice";
 import Suggest from "./pages/board/Suggest";
+import SuggestDetail from "./pages/board/SuggestDetail";
 import Write from "./pages/board/Write";
 import Wishbook from "./pages/board/Wishbook";
 
@@ -73,7 +74,8 @@ function App() {
             <Route path="/board" element={<Board />} />
             <Route path="/board/notice" element={<Notice />} />
             <Route path="/board/suggest" element={<Suggest />} />
-            <Route path="/board/write" element={<Write />} />
+            <Route path="/board/suggest/suggestDetail" element={<SuggestDetail />} />
+            <Route path="/board/suggest/suggestWrite" element={<Write />} />
             <Route path="/board/wishbook" element={<Wishbook />} />
 
             {/* 관리자 전용 라우트 설정 */}
