@@ -16,8 +16,8 @@ import {
   CssBaseline,
   ThemeProvider,
 } from "@mui/material";
-import CustomAppBar from "../context/CustomAppBar.js";
-import DrawerComponent from "../context/DrawerComponent.js";
+import CustomAppBar from "../components/CustomAppBar.js";
+import DrawerComponent from "../components/DrawerComponent.js";
 import theme from "../../../theme";
 import useLoading from "../../../hooks/useLoading.js";
 

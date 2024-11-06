@@ -5,6 +5,7 @@ from app.routes.board import board_blueprints  # 추가
 from app.routes.study import wishbook_blueprint
 from app.routes.STT import stt_blueprint
 from app.routes.TTS import tts_blueprint
+from app.routes.admin import admin_blueprints
 
 def register_blueprints(app):
     # 인증 관련 블루프린트 등록
@@ -31,5 +32,9 @@ def register_blueprints(app):
         app.register_blueprint(bp, url_prefix='/api')
 
     for bp in tts_blueprint:
+        app.register_blueprint(bp, url_prefix='/api')
+
+    # 관리자 화면 블루프린트 등록
+    for bp in admin_blueprints:
         app.register_blueprint(bp, url_prefix='/api')
 
