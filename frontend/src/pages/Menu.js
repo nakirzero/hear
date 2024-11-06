@@ -8,32 +8,31 @@ import { useNavigate } from "react-router-dom";
 
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import useMenuShortcut from "../hooks/useMenuShortcut";
 
-import "./Menu.css";
+import useMenuShortcut from "../hooks/useMenuShortcut";
 
 const Menu = () => {
   const navigate = useNavigate();
 
-  const menuItems = useMemo(  
+  const menuItems = useMemo(
     () => [
       {
-        icon: <LibraryMusicIcon className="icon-box icon-library" />,
+        icon: <LibraryMusicIcon fontSize="inherit" sx={{ color: "#90EE90" }} />,
         label: "1. 도서마당",
         path: "/library",
       },
       {
-        icon: <IoLibrary className="icon-box icon-mystudy" />,
+        icon: <IoLibrary fontSize="inherit" color="#77AAFF" />,
         label: "2. 내 서재",
         path: "/mystudy",
       },
       {
-        icon: <SettingsIcon className="icon-box icon-settings" />,
+        icon: <SettingsIcon fontSize="inherit" sx={{ color: "#FF77A8" }} />,
         label: "3. 설정",
         path: "/setting",
       },
       {
-        icon: <SupportAgentIcon className="icon-box icon-support" />,
+        icon: <SupportAgentIcon fontSize="inherit" sx={{ color: "#FFCF8B" }} />,
         label: "4. 고객게시판",
         path: "/board",
       },
@@ -49,21 +48,52 @@ const Menu = () => {
   });
 
   return (
-    <Box className="menu-container">
+    <Box minHeight="100vh" display="flex" flexDirection="column">
       <Header />
 
-      <Box className="main-content">
-        <Container className="grid-container">
+      <Box
+        flexGrow={1}
+        display="flex"
+        alignItems="center"
+        justifyContent="center"
+        sx={{
+          backgroundColor: "#FFFFFF",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
+        <Container maxWidth="lg">
           <Grid container spacing={6} justifyContent="center" alignItems="center">
             {menuItems.map(({ icon, label, path }, index) => (
               <Grid item xs={12} sm={6} md={6} key={index}>
                 <Card
                   onClick={() => navigate(path)}
-                  className="menu-card"
+                  sx={{
+                    height: 300,
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    cursor: "pointer",
+                    backgroundColor: "#F7FAFF ",
+                    "&:hover": { boxShadow: 10 },
+                    padding: 3,
+                    borderRadius: 20
+                  }}
                 >
-                  <CardContent className="card-content">
-                    <Box className="icon-box">{icon}</Box>
-                    <Typography  className="menu-label" variant="h6">{label}</Typography>
+                  <CardContent
+                    sx={{
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Box sx={{ fontSize: 200 }}>{icon}</Box>
+                    <Typography variant="h6" sx={{ mt:-10 }}>
+                      {label}
+                    </Typography>
                   </CardContent>
                 </Card>
               </Grid>

@@ -20,8 +20,6 @@ import LyricsIcon from '@mui/icons-material/Lyrics';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import TimelineIcon from '@mui/icons-material/Timeline';
 
-import './BreadCrumb.css'
-
 const Breadcrumb = ({selected}) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,6 +49,7 @@ const Breadcrumb = ({selected}) => {
     'highlight':'하이라이트',
     'history':'최근읽은기록',
     "play" : "전체듣기",
+    "wishbook" : "희망도서신청",
   };
 
   const iconMap = {
@@ -72,6 +71,7 @@ const Breadcrumb = ({selected}) => {
     "highlight": <FavoriteIcon sx={{ verticalAlign: "middle" }} />,
     "history": <TimelineIcon sx={{ verticalAlign: "middle" }} />,
     "play": <LyricsIcon sx={{ verticalAlign: "middle" }} />,
+    "wishbook": <FaPrayingHands style={{ verticalAlign: "middle", fontSize: "20px" }}  />,
   };
 
   const pathnames = location.pathname.split("/").filter((x) => x);

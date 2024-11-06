@@ -1,7 +1,6 @@
 import React from "react";
 import { Typography, Box, Avatar } from "@mui/material";
-import { useAuth } from "../context/AuthContext";
-import './ProfileSection.css';
+import { useAuth } from "../context/AuthContext"; // AuthContext 사용
 
 
 const ProfileSection = () => {
@@ -22,15 +21,21 @@ const ProfileSection = () => {
   const dayDifference = Math.ceil((todayUTC - userDateUTC) / (1000 * 60 * 60 * 24)) + 1;
 
   return (
-    <Box className="profile-section">
-       <Avatar className="profile-avatar" alt="Profile" />
-       <Box className="profile-info">
-        <Typography variant="body3" className="profile-nickname">{nickName}</Typography> 
-        <Box component="span" variant="body2" className="profile-suffix">
-  님
-</Box>
-        <Typography variant="body2" className="profile-status">인증 완료</Typography> {/* 인증 상태 */}
-        <Typography variant="body2" className="profile-date">
+    <Box
+      py={2} px={2} display="flex" alignItems="center" justifyContent="left" position="relative"
+      bgcolor="rgb(247, 247, 247)"
+    >
+      <Avatar
+        sx={{ width: 80, height: 80, bgcolor: '#999999', mr: 2, marginLeft: 33, zIndex: 2 }} // 다크 그레이
+        alt="Profile"
+      />
+      <Box sx={{ zIndex: 2 }}>
+        <Typography variant="body3" color="#000000">{nickName}</Typography> 
+        <Box component="span" sx={{ variant: "body2", color: "#000000" }}>
+          {'님'}
+        </Box>
+        <Typography variant="body2" color="#000000">인증 완료</Typography> {/* 인증 상태 */}
+        <Typography variant="body2" color="#000000">
           {formattedDate}부터 {dayDifference}일간 함께 듣는 중
         </Typography>
       </Box>

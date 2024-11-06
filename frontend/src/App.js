@@ -34,6 +34,7 @@ import Board from "./pages/board/Board";
 import Notice from "./pages/board/Notice";
 import Suggest from "./pages/board/Suggest";
 import Write from "./pages/board/Write";
+import Wishbook from "./pages/board/Wishbook";
 
 import PredictPage from "./pages/PredictPage";
 
@@ -73,6 +74,7 @@ function App() {
             <Route path="/board/notice" element={<Notice />} />
             <Route path="/board/suggest" element={<Suggest />} />
             <Route path="/board/write" element={<Write />} />
+            <Route path="/board/wishbook" element={<Wishbook />} />
 
             <Route path="/predict" element={<PredictPage />} />
 
