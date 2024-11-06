@@ -52,6 +52,10 @@ jobs:
         NCP_USERNAME: ${{ secrets.NCP_USERNAME }}
         NCP_WAS_SERVER_IP: ${{ secrets.NCP_WAS_SERVER_IP }}
       run: |
+        # 먼저 static 파일 전송
+        scp -o StrictHostKeyChecking=no -r ./backend/static/* $NCP_USERNAME@$NCP_WAS_SERVER_IP:/home/hear-project/static/
+
+        # 그 다음 백엔드 배포
         ssh -o StrictHostKeyChecking=no $NCP_USERNAME@$NCP_WAS_SERVER_IP << 'EOF'
         cd /home/hear-project/
         docker-compose -f docker-compose.was.yml down
