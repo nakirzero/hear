@@ -7,24 +7,22 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // 세션과 로컬 저장소 구분하여 불러오기
     const storedSessionUserInfo = sessionStorage.getItem('userInfo');
     const storedLocalUserInfo = localStorage.getItem('userInfo');
 
     if (storedSessionUserInfo) {
-      setUserObject(JSON.parse(storedSessionUserInfo).userInfo);
+      setUserObject(JSON.parse(storedSessionUserInfo));
     } else if (storedLocalUserInfo) {
-      setUserObject(JSON.parse(storedLocalUserInfo).userInfo);
+      setUserObject(JSON.parse(storedLocalUserInfo));
     }
 
     setIsLoading(false); // 로딩 상태 해제
   }, []);
 
-  // 저장 시 세션과 로컬 구분하여 저장
   useEffect(() => {
     if (userObject) {
       const storageType = userObject.persist === 'session' ? sessionStorage : localStorage;
-      storageType.setItem('userInfo', JSON.stringify({ userInfo: userObject }));
+      storageType.setItem('userInfo', JSON.stringify(userObject));
     }
   }, [userObject]);
 
@@ -32,7 +30,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={{ userObject, setUserObject, isAdmin, isLoading }}>
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 };
