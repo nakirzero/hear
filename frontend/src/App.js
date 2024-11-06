@@ -36,7 +36,7 @@ import Suggest from "./pages/board/Suggest";
 import Write from "./pages/board/Write";
 import Wishbook from "./pages/board/Wishbook";
 
-import PredictPage from "./pages/PredictPage";
+import PredictPage from "./pages/admin/pages/PredictPage";
 
 // 관리자 페이지 컴포넌트 추가
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -76,11 +76,10 @@ function App() {
             <Route path="/board/write" element={<Write />} />
             <Route path="/board/wishbook" element={<Wishbook />} />
 
-            <Route path="/predict" element={<PredictPage />} />
-
             {/* 관리자 전용 라우트 설정 */}
             <Route element={<RequireAdmin />}>
               <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/predict" element={<PredictPage />} />
             </Route>
           </Routes>
         </Router>
