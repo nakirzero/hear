@@ -20,6 +20,7 @@ import {
   Layers as LayersIcon,
   Assignment as AssignmentIcon,
   Share as ShareIcon,
+  Rule as RuleIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -61,6 +62,7 @@ export default function DrawerComponent({ open, toggleDrawer }) {
     { text: "Reports", icon: <BarChartIcon />, path: "/reports" },
     { text: "Integrations", icon: <LayersIcon />, path: "/integrations" },
     { text: "공유마당", icon: <ShareIcon />, path: "/admin/predict" },
+    { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
     { text: "Saved reports", isHeader: true },
     { text: "Current month", icon: <AssignmentIcon />, path: "/current-month" },
     { text: "Last quarter", icon: <AssignmentIcon />, path: "/last-quarter" },

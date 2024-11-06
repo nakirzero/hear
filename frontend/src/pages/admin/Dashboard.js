@@ -1,9 +1,9 @@
 // Dashboard.js
 import React, { useState } from 'react';
 import { ThemeProvider, CssBaseline, Box, Container, Grid, Paper, Toolbar } from '@mui/material';
-import CustomAppBar from './context/CustomAppBar';
-import DrawerComponent from './context/DrawerComponent';
-import Copyright from './context/Copyright'
+import CustomAppBar from './components/CustomAppBar';
+import DrawerComponent from './components/DrawerComponent';
+import Copyright from './components/Copyright'
 import theme from '../../theme';
 
 export default function Dashboard() {

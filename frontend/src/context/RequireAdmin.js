@@ -3,11 +3,14 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 const RequireAdmin = () => {
-  const { isAdmin } = useAuth();
-  console.log("RequireAdmin - isAdmin:", isAdmin); // 확인용 로그
+  const { isAdmin, isLoading } = useAuth();
+  console.log("RequireAdmin - isAdmin:", isAdmin);
+
+  if (isLoading) {
+    return null; // 로딩 중일 때는 아무것도 렌더링하지 않음
+  }
 
   if (!isAdmin) {
-    // 관리자가 아닐 경우, 홈 페이지나 로그인 페이지로 리디렉션
     return <Navigate to="/" replace />;
   }
 
