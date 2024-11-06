@@ -26,7 +26,7 @@ const MyStudy = () => {
       {
         icon: <StarOutlineIcon fontSize="inherit" sx={{ color: "#77DAFF" }} />,
         label: "22. 하이라이트",
-        path: "/",
+        path: "/mystudy/highlight",
       },
       {
         icon: <CommentIcon fontSize="inherit" sx={{ color: "#77AAFF" }} />,
