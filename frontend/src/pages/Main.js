@@ -39,7 +39,7 @@ function Main() {
         setUserObject({ ...response.userInfo, persist: "session" });
 
         if (response.userInfo.is_admin) {
-          navigate('/admin');          
+          navigate('/dashboard');          
         } else {
           setDialogOpen(true);
         }

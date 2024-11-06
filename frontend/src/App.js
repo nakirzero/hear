@@ -80,7 +80,7 @@ function App() {
 
             {/* 관리자 전용 라우트 설정 */}
             <Route element={<RequireAdmin />}>
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/predict" element={<PredictPage />} />
               <Route path="/admin/approval" element={<BookApprovalPage />} />
             </Route>
