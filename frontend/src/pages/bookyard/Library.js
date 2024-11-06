@@ -1,36 +1,35 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../../components/BreadCrumb";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-
 import {
   Box,
-  Button,
+  Card,
+  CardContent,
   Paper,
   TableContainer,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  Typography,
   TableRow,
-  Stack,
   Pagination,
+  PaginationItem,
 } from "@mui/material";
 import { fetchLibrary } from "../../api/libraryAPI";
-
-import usePagination from "../../hooks/usePagination"; // usePagination 훅 가져오기
-import { useNavigate, useLocation  } from "react-router-dom";
-
+import usePagination from "../../hooks/usePagination";
+import { useNavigate, useLocation } from "react-router-dom";
+import { ImportContacts, Article, Create, Share } from "@mui/icons-material";
 
 const Library = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookList, setBookList] = useState([]);
-  const rowsPerPage = 5; // 페이지당 표시할 데이터 개수
+  const rowsPerPage = 6;
   const { currentData, totalPages, page, handlePageChange } = usePagination(bookList, rowsPerPage);
   const [category, setCategory] = useState(location.state?.category || null);
   const [book, setBook] = useState();
-  // 데이터를 가져오는 함수
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,100 +54,105 @@ const Library = () => {
     fetchData();
   }, [category]);
 
-  // 책을 클릭했을 때 해당 책을 선택하는 함수
   const handleBook = (book) => {
-    setBook(book.BOOK_SEQ)
-    navigate(`/library/book/`, { state: { selected: book.BOOK_SEQ} });
+    setBook(book.BOOK_SEQ);
+    navigate(`/library/book/`, { state: { selected: book.BOOK_SEQ } });
   };
 
   const handleKeyPress = (event, book) => {
     if (event.key === "Enter" || event.key === " ") {
-      setBook(book.BOOK_SEQ)
+      setBook(book.BOOK_SEQ);
       handleBook(book);
     }
   };
 
-  const buttonStyle = {
-    width: 300,
-    height: 160,
+  const cardStyle = {
+    width: 200,
+    height: 100,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    bgcolor: "#DCEEDC",
     borderRadius: 10,
-    fontSize: "1.5rem",
+    boxShadow: 3,
+    cursor: "pointer",
+    transition: "0.3s",
+    "&:hover": {
+      boxShadow: 6,
+    },
   };
 
   return (
-    <div>
+    <Box bgcolor="#FFFEFE"
+    sx={{ 
+      minHeight: '100vh', 
+      overflow: 'hidden', 
+      display: 'flex', 
+      flexDirection: 'column' 
+    }}>
       <Header />
-      <Breadcrumb selected={book}/>
+      <Breadcrumb selected={book} />
 
-      {/* 시, 소설, 수필 */}
       <Box
-        bgcolor="#FFD700"
+        bgcolor="#f7f7f7"
         py={4}
         display="flex"
-        flexDirection="column"
-        alignItems="center"
+        justifyContent="center"
+        gap={10}
       >
-        <Box sx={{ display: "flex", gap: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => setCategory("200")}
-            aria-label="시 카테고리로 이동"
-          >
-            1. 시
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => setCategory("100")}
-            aria-label="소설 카테고리로 이동"
-          >
-            2. 소설
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => setCategory("300")}
-            aria-label="수필 카테고리로 이동"
-          >
-            3. 수필
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => setCategory("400")}
-            aria-label="공유세상 카테고리로 이동"
-          >
-            4. 공유세상
-          </Button>
-        </Box>
+
+         {/* 카테고리 카드 */}
+
+        <Card sx={cardStyle} onClick={() => setCategory("200")}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <ImportContacts fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>시</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => setCategory("100")}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Article fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>소설</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => setCategory("300")}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Create fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>수필</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+        
+        <Card sx={cardStyle} onClick={() => setCategory("400")}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Share fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>공유세상</Typography>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
 
-     
-      
-        <TableContainer
-          component={Paper}
-          sx={{ marginTop: 4, width: "70%", marginX: "auto" }}
-        >
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      {/* 도서 테이블을 카드 안에 배치 */}
+      <Card sx={{ maxWidth: '75%', margin: 'auto', mt: 4, p: 4, borderRadius: 2, boxShadow: 3 }}>
+        <Typography variant="h6" gutterBottom textAlign="center">
+          도서마당
+        </Typography>
+        <TableContainer component={Paper} sx={{ maxWidth: '100%', overflow: 'auto' }}>
+          <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                  책 제목
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                  작가
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                  전체 재생 시간
-                </TableCell>
-                <TableCell align="center" sx={{ fontSize: "2rem" }}>
-                  요약 재생 시간
-                </TableCell>
+                <TableCell align="center" sx={{  width: '40%' }}>책 제목</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>작가</TableCell> {/* 오른쪽 정렬 및 패딩 조정 */}
+                <TableCell align="center" sx={{ width: '20%' }}>전체 재생 시간</TableCell>
+                <TableCell align="center" sx={{ width: '20%' }}>요약 재생 시간</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -156,48 +160,49 @@ const Library = () => {
                 <TableRow
                   key={index}
                   sx={{
-                    "&:last-child td, &:last-child th": { border: 0 },
-                    cursor: "pointer",
+                    backgroundColor: setBook === book.index ? '#e0f7fa' : 'inherit',
+                    '&:hover': { backgroundColor: '#DCEEDC', cursor: 'pointer' },
+                    '&:focus': { backgroundColor: '#DCEEDC' }
                   }}
                   onClick={() => handleBook(book)}
                   onKeyPress={(event) => handleKeyPress(event, book)}
                   tabIndex={0}
                 >
-                  <TableCell
-                    align="center"
-                    component="th"
-                    scope="row"
-                    sx={{ fontSize: "1.6rem" }}
-                  >
+                  <TableCell component="th" scope="row" align="center" >
                     {book.BOOK_NAME}
                   </TableCell>
-                  <TableCell align="center" sx={{ textAlign: "center" }}>
-                    {book.AUTHOR}
-                  </TableCell>
-                  <TableCell align="center" sx={{ textAlign: "center" }}>
-                    {book.FULL_PATH}
-                  </TableCell>
-                  <TableCell align="center" sx={{ textAlign: "center" }}>
-                    {book.SUM_PATH}
-                  </TableCell>
+                  <TableCell align="center">{book.AUTHOR}</TableCell> {/* 오른쪽 정렬 */}
+                  <TableCell align="center">{book.FULL_PATH}</TableCell>
+                  <TableCell align="center">{book.SUM_PATH}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
-          <Stack spacing={2} alignItems="center" sx={{ mb: 4 }}>
-            <Pagination
-              count={totalPages}
-              page={page}
-              onChange={handlePageChange}
-              variant="outlined"
-              shape="rounded"
-            />
-          </Stack>
         </TableContainer>
-      
-
-      <Footer />
-    </div>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                sx={{
+                  "&.Mui-selected": {
+                    bgcolor: "#246624",
+                    color: "#ffffff",
+                  },
+                  "&:hover": {
+                    bgcolor: "#246624",
+                    color: "#ffffff",
+                  },
+                }}
+              />
+            )}
+          />
+        </Box>
+      </Card>
+    </Box>
   );
 };
 

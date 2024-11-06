@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Breadcrumb from "../../components/BreadCrumb";
 import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import { Box, Button, Typography, Stack, Paper } from "@mui/material";
+import { Box, Card, CardContent, Typography, Stack, Button, Paper } from "@mui/material";
 import { fetchLibrary, getLastPosition } from "../../api/libraryAPI";
 import { useNavigate, useLocation } from "react-router-dom";
 import useOpenAISummary from "../../hooks/useOpenAISummary";
 import useElevenLabsTTS from "../../hooks/useElevenLabsTTS";
+import { ImportContacts, Article, Create, Share } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
 
 const Book = () => {
@@ -16,41 +16,24 @@ const Book = () => {
   const { saveTTSFile } = useElevenLabsTTS();
   const { getSummary, isLoading: summaryLoading } = useOpenAISummary();
   const { userObject } = useAuth();
-  const [lastPosition, setLastPosition] = useState(0); // 마지막 위치 상태 추가
-  const [hasHistory, setHasHistory] = useState(false); // 히스토리 존재 여부
+  const [lastPosition, setLastPosition] = useState(0);
+  const [hasHistory, setHasHistory] = useState(false);
   const selectedBook = location.state.selected;
-
 
   useEffect(() => {
     const fetchBookData = async () => {
-      // URL에서 BOOK_SEQ 쿼리 파라미터 가져오기
-
-      console.log(selectedBook, "selectedBook");
-
       if (selectedBook) {
         try {
-          // 전체 책 목록을 가져온 후 BOOK_SEQ에 해당하는 책을 찾습니다
-          const response = await fetchLibrary(); // 전체 책 목록을 불러오는 API
-          const bookData = response.find(
-            (b) => b.BOOK_SEQ === Number(selectedBook)
-          );
-
-          console.log("bookData", bookData);
-
+          const response = await fetchLibrary();
+          const bookData = response.find((b) => b.BOOK_SEQ === Number(selectedBook));
           if (bookData) {
             setBook(bookData);
-
-            // 마지막 재생 위치 조회
-            const position = await getLastPosition(
-              selectedBook,
-              userObject?.USER_SEQ
-            );
-
+            const position = await getLastPosition(selectedBook, userObject?.USER_SEQ);
             if (position > 0) {
-              setLastPosition(position); // 마지막 위치 설정
-              setHasHistory(true); // 히스토리가 있는 경우
+              setLastPosition(position);
+              setHasHistory(true);
             } else {
-              setHasHistory(false); // 히스토리가 있는 경우
+              setHasHistory(false);
             }
           } else {
             console.error("해당 책을 찾을 수 없습니다.");
@@ -60,23 +43,15 @@ const Book = () => {
         }
       }
     };
-
     fetchBookData();
   }, [selectedBook, userObject?.USER_SEQ]);
 
   const handleAISummary = async () => {
-
     if (userObject) {
-      console.log("userObject", userObject);
-     
       try {
-
         const summary = await getSummary(book.INFORMATION);
-        await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true); // 요약 플래그 추가
-        console.log(book,"boooooook");
-    
-        
-        navigate('/library/book/aisummary', { state: { selected: book.BOOK_SEQ} });
+        await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true);
+        navigate('/library/book/aisummary', { state: { selected: book.BOOK_SEQ } });
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
       }
@@ -84,16 +59,9 @@ const Book = () => {
   };
 
   const handleListenFromStart = async () => {
-    console.log(userObject.EL_ID,book.INFORMATION,  book.BOOK_SEQ,"11111" );
-    
     if (userObject) {
       try {
-        await saveTTSFile(
-          userObject.EL_ID,
-          book.INFORMATION,
-          book.BOOK_SEQ,
-          false
-        ); // TTS 파일 생성
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false);
         navigate(`/library/book/play`, {
           state: { lastPosition: 0, selected: book.BOOK_SEQ },
         });
@@ -106,12 +74,7 @@ const Book = () => {
   const handleContinueListening = async () => {
     if (userObject) {
       try {
-        await saveTTSFile(
-          userObject.EL_ID,
-          book.INFORMATION,
-          book.BOOK_SEQ,
-          false
-        ); // TTS 파일 생성
+        await saveTTSFile(userObject.EL_ID, book.INFORMATION, book.BOOK_SEQ, false);
         navigate(`/library/book/play`, {
           state: { lastPosition, selected: book.BOOK_SEQ },
         });
@@ -121,126 +84,219 @@ const Book = () => {
     }
   };
 
-  const buttonStyle = {
-    width: 300,
-    height: 160,
+  const cardStyle = {
+    width: 200,
+    height: 100,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    bgcolor: "#DCEEDC",
     borderRadius: 10,
-    fontSize: "1.5rem",
+    boxShadow: 3,
+    cursor: "pointer",
+    transition: "0.3s",
+    "&:hover": {
+      boxShadow: 6,
+    },
   };
 
   return (
-    <div>
+    <Box bgcolor="#FFFEFE" sx={{ minHeight: "100vh", overflow: "hidden", display: "flex", flexDirection: "column" }}>
       <Header />
       <Breadcrumb />
-      {/* 시, 소설, 수필 */}
-      <Box
-        bgcolor="#FFD700"
-        py={4}
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-      >
-        <Box sx={{ display: "flex", gap: 4 }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "200" } })}
-            aria-label="시 카테고리로 이동"
-          >
-            1. 시
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "100" } })}
-            aria-label="소설 카테고리로 이동"
-          >
-            2. 소설
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "300" } })}
-            aria-label="수필 카테고리로 이동"
-          >
-            3. 수필
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            sx={buttonStyle}
-            onClick={() => navigate(`/library`, { state: { category: "400" } })}
-            aria-label="공유세상 카테고리로 이동"
-          >
-            4. 공유세상
-          </Button>
-        </Box>
-      </Box>
-      <Box
-        display="flex"
-        padding="20px"
-        bgcolor="#f0f0f0"
-        borderRadius="10px"
-        sx={{ marginTop: 4, width: "70%", marginX: "auto" }}
-      >
-        <Paper
-          sx={{
-            width: "300px",
-            height: "400px",
-            backgroundColor: "#d3d3d3",
-            borderRadius: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {/* 이미지 아이콘 */}
-          <Typography variant="h6" color="textSecondary">
-            🖼
-          </Typography>
-        </Paper>
-        <Stack spacing={2} ml={2} flex={1}>
-          <Typography variant="body2">{book.BOOK_NAME}</Typography>
-          <Typography variant="h4" fontWeight="bold">
-            {book.BOOK_NAME}
-          </Typography>
-          <Typography variant="subtitle2" color="textSecondary">
-            {book.FULL_PATH}
-          </Typography>
-          <Typography variant="body1" color="textSecondary">
-            {book.INFORMATION}
-          </Typography>
-          <Stack spacing={1} mt={2}>
-            <Button
-              variant="outlined"
-              onClick={handleAISummary}
-              disabled={summaryLoading}
-            >
-              {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
-            </Button>
-            {hasHistory ? (
-              <>
-                <Button variant="outlined" onClick={handleListenFromStart}>
-                  처음부터 듣기
-                </Button>
-                <Button variant="outlined" onClick={handleContinueListening}>
-                  이어 듣기
-                </Button>
-              </>
-            ) : (
-              <Button variant="outlined" onClick={handleListenFromStart}>
-                전체 듣기
-              </Button>
-            )}
-          </Stack>
-        </Stack>
+
+      {/* 카테고리 카드 */}
+      <Box bgcolor="#f7f7f7" py={4} display="flex" justifyContent="center" gap={10}>
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "200" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <ImportContacts fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>시</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "100" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Article fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>소설</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "300" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Create fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>수필</Typography>
+            </Box>
+          </CardContent>
+        </Card>
+
+        <Card sx={cardStyle} onClick={() => navigate(`/library`, { state: { category: "400" } })}>
+          <CardContent sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <Box display="flex" alignItems="center" gap={1}>
+              <Share fontSize="large" sx={{ marginTop: '5px', color: "#246624" }} />
+              <Typography variant="h6" sx={{ marginTop: '10px' }}>공유세상</Typography>
+            </Box>
+          </CardContent>
+        </Card>
       </Box>
 
-      <Footer />
-    </div>
+      {/* 도서 정보 카드 */}
+      <Card
+  sx={{
+    width: 1100,
+    maxWidth: "90vw",
+    margin: "auto",
+    mt: 4,
+    p: 4,
+    borderRadius: 2,
+    boxShadow: 3,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  }}
+>
+  <Box display="flex" gap={2} alignItems="center" sx={{ width: "100%", pl: 7 }}>
+    <Paper
+      sx={{
+        width: "450px",
+        height: "450px",
+        backgroundColor: "#d3d3d3",
+        borderRadius: "10px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Typography variant="h6" color="textSecondary">
+        🖼 
+        {/* 사진 들어갈 자리 */}
+      </Typography>
+    </Paper>
+
+    {/* 도서 정보와 버튼들 */}
+    <Stack
+      spacing={2}
+      sx={{
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      <Typography variant="h6">
+        {book.BOOK_NAME}
+      </Typography>
+      
+      <Box
+        sx={{
+          width: "50%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+        }}
+      >
+        <Typography variant="subtitle1" color="textSecondary" sx={{ mb: 2 }}>
+          {book.FULL_PATH}
+        </Typography>
+        <Typography variant="body1" color="textSecondary" sx={{ mb: 2 }}>
+          {book.INFORMATION}
+        </Typography>
+        
+       {/* 버튼 그룹 */}
+<Stack spacing={2} mt={3} sx={{ width: "100%", alignItems: "center" }}>
+  <Button
+    variant="outlined"
+    onClick={handleAISummary}
+    disabled={summaryLoading}
+    sx={{
+      width: "400px",
+      fontWeight: "Bold",
+      color: "#B833BA", // 기본 글자 색상
+      borderColor: "#B833BA", // 기본 테두리 색상
+      backgroundColor: "#E9B6EA", // 기본 배경색
+      "&:hover": {
+        color: "#FFFFFF", // 호버 시 글자 색상
+        borderColor: "#FFFFFF", // 호버 시 테두리 색상
+        backgroundColor: "#B833BA", // 호버 시 배경색
+      },
+    }}
+  >
+    {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
+  </Button>
+  {hasHistory ? (
+    <>
+      <Button
+        variant="outlined"
+        onClick={handleListenFromStart}
+        sx={{
+          width: "400px",
+          fontWeight: "Bold",
+          color: "#246624",
+          borderColor: "#246624",
+          backgroundColor: "#DCEEDC",
+          "&:hover": {
+            color: "#FFFFFF",
+            borderColor: "#FFFFFF",
+            backgroundColor: "#246624",
+          },
+        }}
+      >
+        처음부터 듣기
+      </Button>
+      <Button
+        variant="outlined"
+        onClick={handleContinueListening}
+        sx={{
+          width: "400px",
+          fontWeight: "Bold",
+          color: "#246624",
+          borderColor: "#246624",
+          backgroundColor: "#DCEEDC",
+          "&:hover": {
+            color: "#FFFFFF",
+            borderColor: "#FFFFFF",
+            backgroundColor: "#246624",
+          },
+        }}
+      >
+        이어 듣기
+      </Button>
+    </>
+  ) : (
+    <Button
+      variant="outlined"
+      onClick={handleListenFromStart}
+      sx={{
+        width: "400px",
+        fontWeight: "Bold",
+        color: "#246624",
+        borderColor: "#246624",
+        backgroundColor: "#DCEEDC",
+        "&:hover": {
+          color: "#FFFFFF",
+          borderColor: "#FFFFFF",
+          backgroundColor: "#246624",
+        },
+      }}
+    >
+      전체 듣기
+    </Button>
+  )}
+</Stack>
+
+      </Box>
+    </Stack>
+  </Box>
+</Card>
+
+
+    </Box>
   );
 };
 

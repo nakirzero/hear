@@ -80,15 +80,21 @@ const Breadcrumb = ({selected}) => {
   const pathnames = location.pathname.split("/").filter((x) => x);
 
   return (
-    <Box className="breadcrumb-container">
-      <Breadcrumbs aria-label="breadcrumb" separator=">">
+    <Box bgcolor="rgb(237, 237, 237)" color="#000" py={1} px={2} display="flex" alignItems="center">
+      <Breadcrumbs aria-label="breadcrumb" separator=">" sx={{ color: "#000" }}>
         <Link
           color="inherit"
           onClick={() => navigate("/menu")}
-          className="breadcrumb-link"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            cursor: "pointer",
+            color: "#000",
+            textDecoration: "none",
+          }}
         >
-          <HomeIcon className="breadcrumb-home-icon" />
-          <Typography variant="body2" className="breadcrumb-text">
+          <HomeIcon sx={{ verticalAlign: "middle", marginLeft: '270px'}} />
+          <Typography variant="body2" ml={0.5}>
             홈
           </Typography>
         </Link>
