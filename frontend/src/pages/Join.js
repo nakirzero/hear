@@ -75,13 +75,19 @@ function Join() {
 
   const handleJoin = async (e) => {
     e.preventDefault();
+
+    if (!isVerified) {
+      setMessage('장애등록코드 인증이 필요합니다.');
+      return;
+    }
+    
     try {
       const message = await joinSubmit(e, formData);
       console.log(
         message ? "회원가입을 완료하였습니다." : "회원가입에 실패하였습니다."
       );
       if (message) {
-        navigate('/login');
+        navigate('/');
       }
     } catch {
       console.log("회원가입 중 오류가 발생했습니다.");
@@ -118,6 +124,7 @@ function Join() {
                 name="userId"
                 onChange={handleJoinInput}
                 value={formData.userId}
+                required
               />
             </Grid>
             <Grid item xs={2} sx={{ textAlign: "right" }}>
@@ -157,6 +164,7 @@ function Join() {
                 name="pw"
                 onChange={handleJoinInput}
                 value={formData.pw}
+                required
               />
             </Grid>
 
@@ -171,6 +179,7 @@ function Join() {
                 name="pwok"
                 onChange={handleJoinInput}
                 value={formData.pwok}
+                required
               />
             </Grid>
 
@@ -200,6 +209,7 @@ function Join() {
                 onChange={handleJoinInput}
                 value={formData.disabled}
                 disabled={isVerified}  // 인증 완료 시 인풋 비활성화
+                required
               />
             </Grid>
             <Grid item xs={2} sx={{ textAlign: "right" }}>
