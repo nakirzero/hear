@@ -24,14 +24,14 @@ const Setting = () => {
         path: "/setting/audio" ,
       },
       {
-        icon: <PersonIcon fontSize="inherit" sx={{ color: "#FF7777" }} />,
-        label: "32. 회원정보수정",
-        path: "/setting/user",
+       icon: <MicIcon fontSize="inherit" sx={{ color: "#FF7777" }} />,
+        label: "32. 목소리 녹음",
+        path: "/setting/voice",
       },
       {
-        icon: <MicIcon fontSize="inherit" sx={{ color: "#FF77A8" }} />,
-        label: "33. 목소리 녹음",
-        path: "/setting/voice",
+        icon: <PersonIcon fontSize="inherit" sx={{ color: "#FF77A8" }} />,
+        label: "33. 회원정보수정",
+        path: "/setting/user",
       },
     ],
     []
