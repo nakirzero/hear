@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { TextField, Button, Box, Typography, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { checkUserId, joinSubmit } from "../api/userAPI";
+import { verifyDisabilityCode } from '../api/authAPI';
 
 function Join() {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ function Join() {
     pwok: "",
     disabled: "",
   });
+  const [isVerified, setIsVerified] = useState(false); // 인증 상태 관리
 
   const handleJoinInput = ({ target: { name, value } }) => {
     setFormData((prevState) => ({
@@ -51,6 +53,25 @@ function Join() {
       setpwMessage("패스워드가 일치하지 않습니다.");
     }
   }, [formData.pw, formData.pwok]); // pw나 pwok가 변경될 때마다 실행
+
+  const handleVerifyDisabledCode = async () => {
+    if (!formData.disabled) {
+      setMessage('장애등록코드를 입력해주세요.');
+      return;
+    }
+    
+    try {
+      const result = await verifyDisabilityCode(formData.disabled);
+      if (result.success) {
+        setMessage('장애등록 코드가 인증되었습니다.');
+        setIsVerified(true); // 인증 완료 상태로 변경
+      } else {
+        setMessage('유효하지 않은 코드입니다.');
+      }
+    } catch {
+      setMessage('인증 중 오류가 발생했습니다.');
+    }
+  };
 
   const handleJoin = async (e) => {
     e.preventDefault();
@@ -178,10 +199,22 @@ function Join() {
                 name="disabled"
                 onChange={handleJoinInput}
                 value={formData.disabled}
+                disabled={isVerified}  // 인증 완료 시 인풋 비활성화
               />
             </Grid>
-          </Grid>
-
+            <Grid item xs={2} sx={{ textAlign: "right" }}>
+              <Button
+              onClick={handleVerifyDisabledCode}
+              variant="contained"
+              size="small"
+              sx={{ minWidth: 80, backgroundColor: isVerified ? 'success.main' : undefined }} // 인증 시 버튼 색상 변경
+              disabled={isVerified} // 인증 완료 시 버튼 비활성화
+              >
+              인증확인
+              </Button>
+            </Grid>
+          </Grid> 
+          
           {/* 가입 완료, 취소 버튼 */}
           <Grid container spacing={2}>
             <Grid item xs={6}>
