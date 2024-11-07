@@ -25,7 +25,8 @@ export const AuthProvider = ({ children }) => {
           NICKNAME: decodedUser.NICKNAME,
           EL_ID: decodedUser.EL_ID,
           SPEED: decodedUser.SPEED,
-          is_admin: decodedUser.is_admin
+          is_admin: decodedUser.is_admin,
+          USER_CrtDt : decodedUser.USER_CrtDt
         });
       } catch (error) {
         console.error("Invalid token:", error);
