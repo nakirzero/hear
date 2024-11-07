@@ -33,6 +33,10 @@ def login():
                 userInfo = dict(zip(result.keys(), userInfo))
                 print("userInfo", userInfo)
 
+                # USER_CrtDt 필드가 존재하면 문자열 형식으로 변환
+                if 'USER_CrtDt' in userInfo and userInfo['USER_CrtDt'] is not None:
+                    userInfo['USER_CrtDt'] = userInfo['USER_CrtDt'].isoformat()  # ISO 8601 형식으로 변환
+
                 # utils에 분리된 JWT 생성 함수 호출
                 token = create_jwt_token({
                     "USER_SEQ": userInfo['USER_SEQ'],
@@ -40,7 +44,8 @@ def login():
                     "NICKNAME": userInfo['NICKNAME'],
                     "EL_ID": userInfo.get('EL_ID'),  # 해당 필드가 없을 경우 None 반환
                     "SPEED": userInfo.get('SPEED'),
-                    "is_admin": userInfo.get('is_admin', False)
+                    "is_admin": userInfo.get('is_admin', False),
+                    "USER_CrtDt": userInfo.get('USER_CrtDt')
                 })
 
                 return jsonify({"token": token})
