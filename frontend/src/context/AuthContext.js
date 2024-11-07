@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -6,25 +7,33 @@ export const AuthProvider = ({ children }) => {
   const [userObject, setUserObject] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const storedSessionUserInfo = sessionStorage.getItem('userInfo');
-    const storedLocalUserInfo = localStorage.getItem('userInfo');
+  console.log('AuthProvider 호출');
+  
 
-    if (storedSessionUserInfo) {
-      setUserObject(JSON.parse(storedSessionUserInfo));
-    } else if (storedLocalUserInfo) {
-      setUserObject(JSON.parse(storedLocalUserInfo));
+  useEffect(() => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+
+    if (token) {
+      try {
+        const decodedUser = jwtDecode(token);
+        console.log('Decoded User:', decodedUser); // 디코딩 결과 확인
+
+        // 기존 코드 호환을 위해 userObject 형태 유지
+        setUserObject({
+          USER_SEQ: decodedUser.USER_SEQ,
+          USER_ID: decodedUser.USER_ID,
+          NICKNAME: decodedUser.NICKNAME,
+          EL_ID: decodedUser.EL_ID,
+          SPEED: decodedUser.SPEED,
+          is_admin: decodedUser.is_admin
+        });
+      } catch (error) {
+        console.error("Invalid token:", error);
+      }
     }
 
     setIsLoading(false); // 로딩 상태 해제
   }, []);
-
-  useEffect(() => {
-    if (userObject) {
-      const storageType = userObject.persist === 'session' ? sessionStorage : localStorage;
-      storageType.setItem('userInfo', JSON.stringify(userObject));
-    }
-  }, [userObject]);
 
   const isAdmin = userObject?.is_admin ?? false;
 

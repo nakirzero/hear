@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, Blueprint
 from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
+from app.utils.jwt_utils import create_jwt_token  # JWT 생성 함수 가져오기
 
 app = Flask(__name__)
 
@@ -31,7 +32,18 @@ def login():
              if userInfo:
                 userInfo = dict(zip(result.keys(), userInfo))
                 print("userInfo", userInfo)
-                return jsonify({"exists": True, "userInfo": userInfo})
+
+                # utils에 분리된 JWT 생성 함수 호출
+                token = create_jwt_token({
+                    "USER_SEQ": userInfo['USER_SEQ'],
+                    "USER_ID": userInfo['USER_ID'],
+                    "NICKNAME": userInfo['NICKNAME'],
+                    "EL_ID": userInfo.get('EL_ID'),  # 해당 필드가 없을 경우 None 반환
+                    "SPEED": userInfo.get('SPEED'),
+                    "is_admin": userInfo.get('is_admin', False)
+                })
+
+                return jsonify({"token": token})
              else:
                 return jsonify({"exists": False})
         except Exception as db_error:
