@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { TextField, Button, Box, Typography, Grid } from "@mui/material";
+import { TextField, Button, Box, Typography, Grid, Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { checkUserId, joinSubmit } from "../api/userAPI";
-import { verifyDisabilityCode } from '../api/authAPI';
+import { verifyDisabilityCode } from "../api/authAPI";
+import logo1 from "../assets/logo1.png";
 
 function Join() {
   const navigate = useNavigate();
@@ -56,20 +57,20 @@ function Join() {
 
   const handleVerifyDisabledCode = async () => {
     if (!formData.disabled) {
-      setMessage('장애등록코드를 입력해주세요.');
+      setMessage("장애등록코드를 입력해주세요.");
       return;
     }
-    
+
     try {
       const result = await verifyDisabilityCode(formData.disabled);
       if (result.success) {
-        setMessage('장애등록 코드가 인증되었습니다.');
+        setMessage("장애등록 코드가 인증되었습니다.");
         setIsVerified(true); // 인증 완료 상태로 변경
       } else {
-        setMessage('유효하지 않은 코드입니다.');
+        setMessage("유효하지 않은 코드입니다.");
       }
     } catch {
-      setMessage('인증 중 오류가 발생했습니다.');
+      setMessage("인증 중 오류가 발생했습니다.");
     }
   };
 
@@ -77,17 +78,17 @@ function Join() {
     e.preventDefault();
 
     if (!isVerified) {
-      setMessage('장애등록코드 인증이 필요합니다.');
+      setMessage("장애등록코드 인증이 필요합니다.");
       return;
     }
-    
+
     try {
       const message = await joinSubmit(e, formData);
       console.log(
         message ? "회원가입을 완료하였습니다." : "회원가입에 실패하였습니다."
       );
       if (message) {
-        navigate('/');
+        navigate("/");
       }
     } catch {
       console.log("회원가입 중 오류가 발생했습니다.");
@@ -105,149 +106,249 @@ function Join() {
         padding: 2,
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{ mb: 4, fontWeight: "bold", textAlign: "center" }}
+      <Card
+        sx={{
+          backgroundColor: "#ffe0b2",
+          width: "100%",
+          maxWidth: 1000,
+          padding: 4,
+          boxShadow: 10,
+          borderRadius: 2,
+        }}
       >
-        H-ear 회원가입
-      </Typography>
-      <form onSubmit={handleJoin}>
-        <Box sx={{ width: "100%", maxWidth: 600, padding: 3 }}>
-          <Grid container spacing={2} alignItems="center">
-            {/* 아이디 */}
-            <Grid item xs={3}>
-              <Typography sx={{ textAlign: "right" }}>아이디</Typography>
-            </Grid>
-            <Grid item xs={7}>
-              <TextField
-                fullWidth
-                name="userId"
-                onChange={handleJoinInput}
-                value={formData.userId}
-                required
-              />
-            </Grid>
-            <Grid item xs={2} sx={{ textAlign: "right" }}>
-              <Button
-                onClick={handleCheckUserId}
-                variant="contained"
-                size="small"
-                sx={{ minWidth: 80 }} // 최소 너비 지정
-              >
-                중복확인
-              </Button>
-            </Grid>
-
-            {/* 중복 확인 결과 메시지 */}
-            {message && (
-              <Grid item xs={12}>
-                <Typography
-                  sx={{
-                    color: message.includes("가능") ? "green" : "red",
-                    mt: 1,
-                    textAlign: "center",
-                  }}
-                >
-                  {message}
+        <Box
+          component="img"
+          src={logo1}
+          alt="Logo"
+          sx={{
+            position: "absolute",
+            marginTop: "10px",
+            marginLeft: "18%",
+            height: 80,
+            width: "auto",
+          }}
+        />
+        <Typography
+          variant="h6"
+          sx={{
+            fontSize: "36px",
+            mb: 4,
+            textAlign: "center",
+            marginTop: "100px",
+          }}
+        >
+          회원가입
+        </Typography>
+        <form onSubmit={handleJoin}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              width: "100%",
+              padding: 3,
+            }}
+          >
+            <Grid
+              container
+              spacing={3}
+              alignItems="center"
+              sx={{ maxWidth: 800, marginLeft: "-100px" }}
+            >
+              {" "}
+              {/* 최대 너비 설정하여 가운데 정렬 유지 */}
+              <Grid item xs={3}>
+                <Typography sx={{ textAlign: "right", fontWeight: "bold" }}>
+                  아이디
                 </Typography>
               </Grid>
-            )}
-
-            {/* 비밀번호 */}
-            <Grid item xs={3}>
-              <Typography sx={{ textAlign: "right" }}>비밀번호</Typography>
-            </Grid>
-            <Grid item xs={7}>
-              <TextField
-                fullWidth
-                type="password"
-                name="pw"
-                onChange={handleJoinInput}
-                value={formData.pw}
-                required
-              />
-            </Grid>
-
-            {/* 비밀번호 확인 */}
-            <Grid item xs={3}>
-              <Typography sx={{ textAlign: "right" }}>비밀번호 확인</Typography>
-            </Grid>
-            <Grid item xs={7}>
-              <TextField
-                fullWidth
-                type="password"
-                name="pwok"
-                onChange={handleJoinInput}
-                value={formData.pwok}
-                required
-              />
-            </Grid>
-
-            {/* 비밀번호 일치 확인 */}
-            {pwMessage && (
-              <Grid item xs={12}>
-                <Typography
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  name="userId"
+                  onChange={handleJoinInput}
+                  value={formData.userId}
+                  sx={{ bgcolor: "#FFFFFF", borderRadius: 1 }} // 배경색 변경
+                />
+              </Grid>
+              <Grid item xs={2} sx={{ textAlign: "right" }}>
+                <Button
+                  onClick={handleCheckUserId}
+                  variant="contained"
+                  size="medium" // 버튼 크기 키우기
                   sx={{
-                    color: pwMessage.includes("일치합니다") ? "green" : "red",
-                    mt: 1,
-                    textAlign: "center",
+                    minWidth: 100,
+                    bgcolor: "#FFB74D",
+                    color: "#000000",
+                    "&:hover": {
+                      bgcolor: "#FFFFFF",
+                      color: "#FFB74D",
+                      border: "1px solid #FFB74D",
+                    },
                   }}
                 >
-                  {pwMessage}
+                  <Typography variant="body1" fontWeight="bold">
+                    중복확인
+                  </Typography>
+                </Button>
+              </Grid>
+              {message && (
+                <Grid item xs={12}>
+                  <Typography
+                    sx={{
+                      color: message.includes("가능") ? "green" : "red",
+                      mt: 1,
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {message}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={3}>
+                <Typography sx={{ textAlign: "right", fontWeight: "bold" }}>
+                  비밀번호
                 </Typography>
               </Grid>
-            )}
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  type="password"
+                  name="pw"
+                  onChange={handleJoinInput}
+                  value={formData.pw}
+                  sx={{ bgcolor: "#FFFFFF", borderRadius: 1 }} // 배경색 변경
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <Typography sx={{ textAlign: "right", fontWeight: "bold" }}>
+                  비밀번호 확인
+                </Typography>
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  type="password"
+                  name="pwok"
+                  onChange={handleJoinInput}
+                  value={formData.pwok}
+                  sx={{ bgcolor: "#FFFFFF", borderRadius: 1 }} // 배경색 변경
+                />
+              </Grid>
+              {pwMessage && (
+                <Grid item xs={12}>
+                  <Typography
+                    sx={{
+                      color: pwMessage.includes("일치합니다") ? "green" : "red",
+                      mt: 1,
+                      textAlign: "center",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {pwMessage}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={3}>
+                <Typography sx={{ textAlign: "right", fontWeight: "bold" }}>
+                  장애등록코드
+                </Typography>
+              </Grid>
+              <Grid item xs={7}>
+                <TextField
+                  fullWidth
+                  name="disabled"
+                  onChange={handleJoinInput}
+                  value={formData.disabled}
+                  disabled={isVerified}
+                  sx={{ bgcolor: "#FFFFFF", borderRadius: 1 }} // 배경색 변경
+                />
+              </Grid>
+              <Grid item xs={2} sx={{ textAlign: "right" }}>
+                <Button
+                  onClick={handleVerifyDisabledCode}
+                  variant="contained"
+                  size="medium" // 버튼 크기 키우기
+                  sx={{
+                    minWidth: 100,
+                    bgcolor: isVerified ? "success.main" : "#FFB74D",
+                    color: "#000000",
+                    "&:hover": {
+                      bgcolor: "#FFFFFF",
+                      color: isVerified ? "success.main" : "#FFB74D",
+                      border: `1px solid ${
+                        isVerified ? "success.main" : "#FFB74D"
+                      }`,
+                    },
+                  }}
+                  disabled={isVerified}
+                >
+                  <Typography variant="body1" fontWeight="bold">
+                    인증확인
+                  </Typography>
+                </Button>
+              </Grid>
+            </Grid>
+          </Box>
 
-            {/* 장애등록코드 */}
-            <Grid item xs={3}>
-              <Typography sx={{ textAlign: "right" }}>장애등록코드</Typography>
+          <Box
+            sx={{
+              width: "100%", // Box 너비를 화면 전체로 설정
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              mt: 5,
+            }}
+          >
+            <Grid container spacing={5} sx={{ width: "100%", maxWidth: 700 }}>
+              {" "}
+              {/* Grid를 중앙 정렬하고 너비를 제한 */}
+              <Grid item xs={6}>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  sx={{
+                    width: "100%",
+                    bgcolor: "#FFB74D",
+                    color: "#000000",
+                    border: "1px solid #FFB74D",
+                    "&:hover": {
+                      bgcolor: "#FFFFFF",
+                      color: "#FFB74D",
+                      border: "1px solid #FFB74D",
+                    },
+                  }}
+                >
+                  <Typography variant="h6" sx={{ marginTop: "5px" }}>
+                    가입완료
+                  </Typography>
+                </Button>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  variant="contained"
+                  onClick={() => navigate("/")}
+                  sx={{
+                    width: "100%",
+                    bgcolor: "#FFFFFF",
+                    color: "#000000",
+                    border: "1px solid #FFB74D",
+                    "&:hover": {
+                      bgcolor: "#FFB74D",
+                      color: "#FFFFFF",
+                    },
+                  }}
+                >
+                  <Typography variant="h6" sx={{ marginTop: "5px" }}>
+                    취소
+                  </Typography>
+                </Button>
+              </Grid>
             </Grid>
-            <Grid item xs={7}>
-              <TextField
-                fullWidth
-                name="disabled"
-                onChange={handleJoinInput}
-                value={formData.disabled}
-                disabled={isVerified}  // 인증 완료 시 인풋 비활성화
-                required
-              />
-            </Grid>
-            <Grid item xs={2} sx={{ textAlign: "right" }}>
-              <Button
-              onClick={handleVerifyDisabledCode}
-              variant="contained"
-              size="small"
-              sx={{ minWidth: 80, backgroundColor: isVerified ? 'success.main' : undefined }} // 인증 시 버튼 색상 변경
-              disabled={isVerified} // 인증 완료 시 버튼 비활성화
-              >
-              인증확인
-              </Button>
-            </Grid>
-          </Grid> 
-          
-          {/* 가입 완료, 취소 버튼 */}
-          <Grid container spacing={2}>
-            <Grid item xs={6}>
-              <Button
-                type="submit"
-                variant="contained"
-                sx={{ mt: 3, width: "100%" }}
-              >
-                가입완료
-              </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                onClick={() => navigate("/")}
-                sx={{ mt: 3, width: "100%" }}
-              >
-                취소
-              </Button>
-            </Grid>
-          </Grid>
-        </Box>
-      </form>
+          </Box>
+        </form>
+      </Card>
     </Box>
   );
 }
