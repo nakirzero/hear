@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
-import { Typography, Box, Button, Container, TextField } from '@mui/material';
+import { Typography, Box, Button, Container, Card, TextField } from '@mui/material';
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
-import Footer from '../../components/Footer';
+import ProfileSection from "../../components/ProfileSection";
 import { uploadAndAddVoice } from '../../api/voiceAPI';
 import useLoading from '../../hooks/useLoading';
 import useSnackbar from '../../hooks/useSnackbar'; // useSnackbar 훅 가져오기
@@ -85,18 +85,38 @@ const SettingVoice = () => {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+<Box
+      bgcolor="#FFFEFE"
+      sx={{
+        minHeight: "100vh",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Header />
       <Breadcrumb />
+      <ProfileSection />
 
-      <Box flexGrow={1} display="flex" justifyContent="center" py={6} bgcolor="#fff">
+      <Card
+         sx={{ width: 1100, margin: 'auto', mt: 4, p: 12, borderRadius: 5, boxShadow: 10, display: "flex", alignItems: "center", bgcolor: '#FFF2ED', marginTop: '50px',
+          justifyContent: "center"}}
+        >
+      <Box flexGrow={1} display="flex" justifyContent="center" py={8} bgcolor="#FFF2ED"
+      
+      >
         <Container maxWidth="sm" >
-          <Typography variant="h4" gutterBottom>
+          <Typography variant="h6" gutterBottom align="center" sx={{fontSize: "36px", marginTop: '-100px'}}>
             목소리 녹음하기
           </Typography>
-          <Typography variant="body1" gutterBottom>
-            본인의 목소리를 녹음해서 TTS로 사용할 수 있습니다. 녹음 버튼을 누르고 최소 10초에서 1분 정도 녹음해주세요.
+          <Typography variant="body1" align="center" gutterBottom >
+            본인의 목소리를 녹음해서 TTS로 사용할 수 있습니다.
+            </Typography>
+            <Typography variant="body1" align="center" marginTop='10px'
+            gutterBottom >
+            [녹음 버튼을 누르고 '최소 10초에서 1분 정도' 녹음해주세요.]
           </Typography>
+          <Box  marginTop='30px'></Box>
           <TextField
             fullWidth
             label="목소리 이름"
@@ -104,18 +124,37 @@ const SettingVoice = () => {
             onChange={(e) => setVoiceName(e.target.value)}
             variant="outlined"
             margin="normal"
+            sx={{bgcolor: '#FFFFFF'}}
           />
           {isLoading ? (
             <LoadingIndicator /> // 로딩 중에는 LoadingIndicator 표시
           ) : (
-            <Box display="flex" justifyContent="space-around" mt={4}>
+            <Box display="flex"
+             gap={5}
+             marginTop='10px'
+            marginBottom = '-80px'
+            justifyContent="space-around" mt={4}>
               <Button
                 variant={isRecording ? "outlined" : "contained"}
                 color={isRecording ? "error" : "primary"}
                 onClick={handleRecording}
-                sx={{ padding: 2 }}
+                sx={{                   
+                  padding: 1,
+                   marginTop: '20px',
+                  borderRadius: '50%',
+                  width: '120px',
+                  height: '120px',
+                  bgcolor: isRecording ? 'transparent' : '#FF4C4C',
+                  color: isRecording ? 'error.main' : '#FFFFFF',
+                  '&:hover': {
+                    bgcolor: '#FFFFFF',
+                    color: '#FF4C4C',
+                  }
+                 }}
               >
+                <Typography variant="subtitle1" gutterBottom align="center" sx={{fontWeight: 'bold', fontSize: "18px", marginTop: '15px'}}>
                 {isRecording ? "녹음 중지" : "녹음 시작"}
+                </Typography>
               </Button>
               
               <Button
@@ -123,9 +162,21 @@ const SettingVoice = () => {
                 color="secondary"
                 onClick={handlePlayback}
                 disabled={!audioURL}
-                sx={{ padding: 2 }}
+                sx={{ padding: 1,
+                  bgcolor: '#FFA324',
+                  marginTop: '20px',
+                  borderRadius: '50%',
+                  width: '120px',
+                  height: '120px',
+                '&:hover': {
+                    bgcolor: '#FFFFFF',
+                    color: '#FFA324',
+                  }
+                 }}
               >
+                <Typography variant="subtitle1" gutterBottom align="center" sx={{fontWeight: 'bold', fontSize: "18px", marginTop: '15px'}}>
                 들어보기
+                </Typography>
               </Button>
               
               <Button
@@ -133,18 +184,30 @@ const SettingVoice = () => {
                 color="success"
                 onClick={handleSave}
                 disabled={!audioBlob}
-                sx={{ padding: 2 }}
+                sx={{ padding: 1,
+                  bgcolor: '#00AB53',
+                  marginTop: '20px',
+                  borderRadius: '50%',
+                  width: '120px',
+                  height: '120px',
+                '&:hover': {
+                    bgcolor: '#FFFFFF',
+                    color: '#00AB53',
+                  }
+                }}
               >
+                <Typography variant="subtitle1" gutterBottom align="center" sx={{fontWeight: 'bold', fontSize: "18px", marginTop: '15px'}}>
                 목소리 저장
+                </Typography>
               </Button>
             </Box>
           )}
         </Container>
       </Box>
 
-      <Footer />
       <SnackbarComponent />
-    </div>
+      </Card>
+    </Box>
   );
 };
 
