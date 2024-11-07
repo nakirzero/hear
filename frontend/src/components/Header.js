@@ -25,7 +25,7 @@ const Header = () => {
         </Box>
 
         {!isLoading && userObject ? ( // 로딩이 끝났고, userObject가 있는 경우
-          <Typography variant="body3" fontSize="22px" sx={{ marginLeft: "40px", marginTop: "10px" }}>
+          <Typography variant="body3" fontSize="22px" sx={{ marginLeft: "-60px", marginTop: "10px" }}>
             {'[ '}
             <Box component="span" sx={{ color: "#4F2F33" }}>
               {userObject.NICKNAME}
@@ -39,7 +39,7 @@ const Header = () => {
         )}
 
         <Box>
-          <Button variant="contained" color="secondary" onClick={handleLogout} sx={{ marginRight: "250px" }}>
+          <Button variant="contained" color="secondary" onClick={handleLogout} sx={{ marginRight: "300px" }}>
             <Typography> 로그아웃 </Typography>
           </Button>
         </Box>
