@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
+  Tabs,
+  Tab,
   Typography,
   Box,
   Button,
@@ -27,15 +30,25 @@ import theme from "../../../theme";
 import { fetchBookRequests, updateBookRequestStatus } from "../api/wishbookAPI.js";
 
 const BookApprovalPage = () => {
+  const [selectedTab, setSelectedTab] = useState(0);
   const [bookRequests, setBookRequests] = useState([]);
   const [error, setError] = useState(null);
   const [open, setOpen] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [actionType, setActionType] = useState("");
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleTabChange = (newValue) => {
+    setSelectedTab(newValue);
+    if (newValue === 1) {
+      // 두 번째 탭 클릭 시 새 페이지로 이동
+      navigate("/admin/bookapprovalhistory");
+    }
   };
 
   const loadBookRequests = async () => {
@@ -86,7 +99,7 @@ const BookApprovalPage = () => {
       <Box sx={{ display: "flex", minHeight: "100vh" }}>
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
-
+        
         <Box
           component="main"
           sx={{
@@ -96,11 +109,13 @@ const BookApprovalPage = () => {
             overflow: "auto",
           }}
         >
+
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Typography variant="h4" gutterBottom>
-              희망 도서 신청 승인
-            </Typography>
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
+            <Tab label={<Typography variant="h4" noWrap>희망 도서 신청 승인</Typography>} />
+            <Tab label={<Typography variant="h4" noWrap>희망 도서 승인 이력</Typography>} />
+          </Tabs>
             <TableContainer component={Paper} sx={{ marginTop: 4 }}>
               <Table>
                 <TableHead>

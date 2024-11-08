@@ -41,6 +41,7 @@ import Wishbook from "./pages/board/Wishbook";
 import AdminDashboard from "./pages/admin/Dashboard";
 import PredictPage from "./pages/admin/pages/PredictPage";
 import BookApprovalPage from "./pages/admin/pages/BookApprovalPage";
+import BookApprovalHistoryPage from "./pages/admin/pages/BookApprovalHistoryPage";
 import NoticeWrite from "./pages/admin/pages/NoticeWrite";
 
 function App() {
@@ -84,6 +85,7 @@ function App() {
               <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/predict" element={<PredictPage />} />
               <Route path="/admin/approval" element={<BookApprovalPage />} />
+              <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
               <Route path="/admin/noticewrite" element={<NoticeWrite />} />
             </Route>
           </Routes>

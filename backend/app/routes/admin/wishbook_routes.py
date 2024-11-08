@@ -68,3 +68,34 @@ def update_wishbook_status(wishbook_id):
             close_db_connection(connection)
 
     return jsonify({"error": "Database connection failed"}), 500
+
+# 3. 승인된 희망 도서 이력 조회 (관리자용)
+@wishbook_bp.route('/admin/book-approval-history', methods=['GET'])
+def get_book_approval_history():
+    # MySQL 데이터베이스 연결
+    connection = get_db_connection()
+
+    if connection:
+        try:
+            # 승인된 희망 도서 이력 조회 쿼리
+            query = text("""
+                SELECT w.WB_SEQ, w.WB_NAME, u.NICKNAME, w.WB_APPROVAL, w.WB_AplDt, w.WB_COMENT
+                FROM wishbook w
+                JOIN user u ON w.USER_SEQ = u.USER_SEQ
+                WHERE w.WB_APPROVAL IN (2, 3)
+                ORDER BY w.WB_AplDt DESC
+            """)
+            result = connection.execute(query)
+
+            # 결과를 딕셔너리 형태로 변환
+            keys = result.keys()
+            approval_history = [dict(zip(keys, row)) for row in result.fetchall()]
+
+            return jsonify(approval_history)
+        except Exception as db_error:
+            print(f"Database operation failed: {db_error}")
+            return jsonify({"error": "Failed to fetch book approval history"}), 500
+        finally:
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500
