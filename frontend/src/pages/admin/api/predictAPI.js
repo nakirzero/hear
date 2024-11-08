@@ -49,3 +49,14 @@ export const pollingProgress = async () => {
     throw new Error("진행률 조회 중 오류가 발생했습니다.");
   }
 };
+
+// 업로드 이력 가져오기 API 함수 추가
+export const fetchUploadHistory = async () => {
+  try {
+    const response = await axios.get("/api/admin/upload-history");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching upload history:", error);
+    throw new Error("업로드 이력을 가져오는 중 오류가 발생했습니다.");
+  }
+};

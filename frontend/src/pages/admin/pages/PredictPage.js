@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Typography,
   Box,
@@ -15,6 +16,8 @@ import {
   Paper,
   CssBaseline,
   ThemeProvider,
+  Tabs,
+  Tab,
 } from "@mui/material";
 import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
@@ -25,15 +28,25 @@ import useLoading from "../../../hooks/useLoading.js";
 import { fetchResults, uploadFile, addBookFromJson, pollingProgress } from "../api/predictAPI.js";
 
 const PredictPage = () => {
+  const [selectedTab, setSelectedTab] = useState(0);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const [isPolling, setIsPolling] = useState(false);
   const [open, setOpen] = useState(true);
+  const navigate = useNavigate();
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const handleTabChange = (newValue) => {
+    setSelectedTab(newValue);
+    if (newValue === 1) {
+      // 두 번째 탭 클릭 시 업로드 이력 페이지로 이동
+      navigate("/admin/uploadhistory");
+    }
   };
 
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading("AI 예측을 진행 중입니다...");
@@ -133,6 +146,11 @@ const PredictPage = () => {
         >
           <Toolbar />
           <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
+
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
+            <Tab label={<Typography variant="h4" noWrap>공유 마당 데이터 업로드</Typography>} />
+            <Tab label={<Typography variant="h4" noWrap>공유 마당 업로드 이력</Typography>} />
+          </Tabs>
           <input
               type="file"
               accept=".csv"

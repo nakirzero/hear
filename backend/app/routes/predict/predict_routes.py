@@ -14,6 +14,7 @@ from queue import Queue
 predict_bp = Blueprint('predict', __name__)
 kiwi = Kiwi(typos=basic_typos_with_continual)
 progress = 0  # 예측 진행률 추적 변수
+upload_total_rows = 0  # 업로드된 처리 건수를 저장하는 전역 변수
 
 # 모델 및 벡터라이저를 전역 변수로 선언
 tfidf = None
@@ -49,7 +50,7 @@ progress_queue = Queue()
 @predict_bp.route('/upload_csv', methods=['POST'])
 def upload_csv():
     print("upload_csv 엔드포인트에 도달했습니다.")  # 로그 추가
-    global progress
+    global progress, upload_total_rows
     load_model()  # 모델 로드
     
     try:
@@ -75,6 +76,9 @@ def upload_csv():
                 'JSON_DETAIL': row.get('subtitle', ''),
                 'JSON_DIVISION': row.get('category', '')
             })
+
+        upload_total_rows = len(subtitles)  # 업로드된 행 수를 전역 변수에 저장
+        print(f"Uploaded row count set to: {upload_total_rows}")  # 디버깅용 로그
 
         # 총 row 수 계산하여 예측 함수에 전달
         total_rows = len(subtitles)
@@ -167,8 +171,14 @@ def progress_status():
 def get_results():
     connection = get_db_connection()
     try:
-        query = text("SELECT JSON_DETAIL, JSON_DIVISION, JSON_MdfDt FROM json ORDER BY JSON_MdfDt DESC LIMIT 100")
-        result = connection.execute(query)
+        # 업로드된 건수만큼만 조회
+        query = text("""
+            SELECT JSON_DETAIL, JSON_DIVISION, JSON_MdfDt 
+            FROM json 
+            ORDER BY JSON_CrtDt DESC 
+            LIMIT :upload_total_rows
+        """)
+        result = connection.execute(query, {'upload_total_rows': upload_total_rows})
         
         # 각 행을 딕셔너리 형태로 변환
         results = [
@@ -190,6 +200,7 @@ def get_results():
 # json 테이블의 데이터를 book 테이블로 삽입하는 API
 @predict_bp.route('/add-book-from-json', methods=['POST'])
 def add_book_from_json():
+    global upload_total_rows
     connection = get_db_connection()
     if connection:
         try:
@@ -211,8 +222,10 @@ def add_book_from_json():
                     JSON_MdfDt AS BOOK_CrtDt
                 FROM json
                 WHERE JSON_DIVISION IS NOT NULL                
+                ORDER BY JSON_CrtDt DESC
+                LIMIT :upload_total_rows
             """)
-            result = connection.execute(query)
+            result = connection.execute(query, {'upload_total_rows': upload_total_rows})
             connection.commit()           
             
             return jsonify({

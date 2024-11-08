@@ -20,3 +20,14 @@ export const updateBookRequestStatus = async (bookId, status, comment) => {
     throw error;
   }
 };
+
+// 도서 승인 이력 데이터 가져오기
+export const fetchApprovalHistory = async () => {
+  try {
+    const response = await axios.get('/api/admin/book-approval-history');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching approval history:', error);
+    throw error;
+  }
+};

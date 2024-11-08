@@ -134,11 +134,11 @@ const History = () => {
                           cursor: 'pointer',
                           mb: 1,
                         }}
-                        onClick={() => handleNavigate(row.BOOK_SEQ)}
+                        onClick={() => handleNavigate(row.BOOK_SEQ, row.HIST_EdPt)}
                       />
                       <Typography 
                         variant="subtitle1" 
-                        onClick={() => handleNavigate(row.BOOK_SEQ)}
+                        onClick={() => handleNavigate(row.BOOK_SEQ, row.HIST_EdPt)}
                         sx={{ cursor: 'pointer', textAlign: 'center' }}
                       >
                         {row.BOOK_NAME}
