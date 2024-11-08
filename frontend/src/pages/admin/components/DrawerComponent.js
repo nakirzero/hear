@@ -14,13 +14,10 @@ import {
 import {
   ChevronLeft as ChevronLeftIcon,
   Dashboard as DashboardIcon,
-  ShoppingCart as ShoppingCartIcon,
-  People as PeopleIcon,
-  BarChart as BarChartIcon,
-  Layers as LayersIcon,
   Assignment as AssignmentIcon,
   Rule as RuleIcon,
   Upload as PublishIcon,
+  EditNotifications as EditNotificationsIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -56,12 +53,8 @@ export default function DrawerComponent({ open, toggleDrawer }) {
   const navigate = useNavigate();
 
   const menuItems = [
-    { text: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "Orders", icon: <ShoppingCartIcon />, path: "/orders" },
-    { text: "Customers", icon: <PeopleIcon />, path: "/customers" },
-    { text: "Reports", icon: <BarChartIcon />, path: "/reports" },
-    { text: "Integrations", icon: <LayersIcon />, path: "/integrations" },
-    { text: "공지사항 글쓰기", icon: <LayersIcon />, path: "/admin/noticewrite" },
+    { text: "대시보드", icon: <DashboardIcon />, path: "/dashboard" },
+    { text: "공지사항 관리", icon: <EditNotificationsIcon />, path: "/admin/noticelist" },
     { text: "공유마당", icon: <PublishIcon />, path: "/admin/predict" },
     { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
     { text: "Saved reports", isHeader: true },

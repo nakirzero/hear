@@ -60,3 +60,25 @@ export const fetchUploadHistory = async () => {
     throw new Error("업로드 이력을 가져오는 중 오류가 발생했습니다.");
   }
 };
+
+// 공유마당 데이터 분류별 건수를 가져오는 API 함수 추가
+export const fetchCategoryCounts = async () => {
+  try {
+    const response = await axios.get("/api/admin/category-counts");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching category counts:", error);
+    throw new Error("데이터 분류별 건수를 가져오는 중 오류가 발생했습니다.");
+  }
+};
+
+// 공유 마당 업로드 이력 가져오는 API
+export const fetchRecentUploads = async () => {
+  try {
+    const response = await axios.get('/api/admin/recent-uploads'); // 백엔드 엔드포인트 경로
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching recent uploads:', error);
+    throw error;
+  }
+};

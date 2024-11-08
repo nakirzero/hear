@@ -6,11 +6,11 @@ import Copyright from './components/Copyright';
 import theme from '../../theme';
 
 // 차트 컴포넌트 및 표 컴포넌트 임포트
-import Chart1 from './pages/Dashboard/Chart1';
-import Chart2 from './pages/Dashboard/Chart2';
-import Table1 from './pages/Dashboard/Table1';
-import Table2 from './pages/Dashboard/Table2';
-import Table3 from './pages/Dashboard/Table3';
+import CategoryChart from './pages/Dashboard/CategoryChart';
+import DailySignUpChart from './pages/Dashboard/DailySignUpChart';
+import RecentNotices from './pages/Dashboard/RecentNotices';
+import RecentUploadHistory from './pages/Dashboard/RecentUploadHistory';
+import UserReadingRank from './pages/Dashboard/UserReadingRank';
 
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
@@ -40,23 +40,23 @@ export default function Dashboard() {
               {/* 상단 차트 */}
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
-                  <Chart1 />
+                  <CategoryChart />
                 </Grid>
                 <Grid item xs={12} md={6}>
-                  <Chart2 />
+                  <DailySignUpChart />
                 </Grid>
               </Grid>
 
               {/* 하단 표 3개 */}
               <Grid container spacing={3} sx={{ mt: 3 }}>
                 <Grid item xs={12} md={4}>
-                  <Table1 />
+                  <RecentNotices />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Table2 />
+                  <RecentUploadHistory />
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Table3 />
+                  <UserReadingRank />
                 </Grid>
               </Grid>
             </Paper>

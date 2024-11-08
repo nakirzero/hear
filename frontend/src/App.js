@@ -44,7 +44,7 @@ import PredictPage from "./pages/admin/pages/PredictPage";
 import UploadHistoryPage from "./pages/admin/pages/UploadHistoryPage";
 import BookApprovalPage from "./pages/admin/pages/BookApprovalPage";
 import BookApprovalHistoryPage from "./pages/admin/pages/BookApprovalHistoryPage";
-import NoticeWrite from "./pages/admin/pages/NoticeWrite";
+import NoticeList from "./pages/admin/pages/Notice/NoticeList";
 
 function App() {
   return (
@@ -90,7 +90,7 @@ function App() {
               <Route path="/admin/uploadhistory" element={<UploadHistoryPage />} />
               <Route path="/admin/approval" element={<BookApprovalPage />} />
               <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
-              <Route path="/admin/noticewrite" element={<NoticeWrite />} />
+              <Route path="/admin/noticelist" element={<NoticeList />} />
             </Route>
           </Routes>
         </Router>
