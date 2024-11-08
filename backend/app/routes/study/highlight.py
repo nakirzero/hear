@@ -42,17 +42,14 @@ def get_all_highlights():
                 WHERE h.USER_SEQ = :user_seq
             """)
             result = connection.execute(query, {"user_seq": user_seq})
-
             # 결과를 딕셔너리 형태로 변환
             keys = result.keys()
             highlights = [
                 dict(zip(keys, row))
                 for row in result.fetchall()
             ]
-
             # timedelta 및 time 객체를 문자열로 변환
             highlights = convert_special_types_to_str(highlights)
-
             return jsonify(highlights)
         except Exception as db_error:
             print(f"Database operation failed: {db_error}")

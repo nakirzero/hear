@@ -19,14 +19,14 @@ const Setting = () => {
   const menuItems = useMemo(
     () => [
       {
-        icon: <HeadsetIcon fontSize="inherit" sx={{ color: "#FF77D8" }} />,
-        label: "31. 오디오북 설정",
-        path: "/setting/audio" ,
+        icon: <MicIcon fontSize="inherit" sx={{ color: "#FF77D8" }} />,
+        label: "31. 목소리 녹음",
+        path: "/setting/voice" ,
       },
       {
-       icon: <MicIcon fontSize="inherit" sx={{ color: "#FF7777" }} />,
-        label: "32. 목소리 녹음",
-        path: "/setting/voice",
+        icon: <HeadsetIcon fontSize="inherit" sx={{ color: "#FF7777" }} />,
+        label: "32. 오디오북 설정",
+        path: "/setting/audio",
       },
       {
         icon: <PersonIcon fontSize="inherit" sx={{ color: "#FF77A8" }} />,
