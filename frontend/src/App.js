@@ -40,6 +40,7 @@ import Wishbook from "./pages/board/Wishbook";
 // 관리자 페이지 컴포넌트 추가
 import AdminDashboard from "./pages/admin/Dashboard";
 import PredictPage from "./pages/admin/pages/PredictPage";
+import UploadHistoryPage from "./pages/admin/pages/UploadHistoryPage";
 import BookApprovalPage from "./pages/admin/pages/BookApprovalPage";
 import BookApprovalHistoryPage from "./pages/admin/pages/BookApprovalHistoryPage";
 import NoticeWrite from "./pages/admin/pages/NoticeWrite";
@@ -84,6 +85,7 @@ function App() {
             <Route element={<RequireAdmin />}>
               <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/predict" element={<PredictPage />} />
+              <Route path="/admin/uploadhistory" element={<UploadHistoryPage />} />
               <Route path="/admin/approval" element={<BookApprovalPage />} />
               <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
               <Route path="/admin/noticewrite" element={<NoticeWrite />} />
