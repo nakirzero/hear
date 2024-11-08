@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Typography, Box, Table, TableBody, Card, CardContent, Container, TableCell, PaginationItem,TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
@@ -15,10 +16,12 @@ const formatDate = (dateString) => {
 };
 
 const Notice = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const { currentData, totalPages, page, handlePageChange } = usePagination(filteredData, 6);
+  const [ notice, setNotice ] = useState();
 
   useEffect(() => {
     const getNotices = async () => {
@@ -46,6 +49,23 @@ const Notice = () => {
     
     setFilteredData(filtered);
   };
+
+  // 게시글을 클릭했을 때 해당 게시글을 선택하는 함수
+  const handleClick = (row) => {
+    console.log("row 확인", row.NOTICE_SEQ);
+    
+    setNotice(row)
+    navigate(`/board/notice/noticeDetail`, { state: { selected: row.NOTICE_SEQ } });
+  };
+
+
+  const handleKeyPress = (event, row) => {
+    if (event.key === "Enter" || event.key === " ") {
+      setNotice(row)
+      handleClick(notice);
+    }
+  };
+  
 
   return (
     <Box
@@ -100,7 +120,9 @@ const Notice = () => {
             </TableHead>
             <TableBody>
               {currentData.map((row, index) => (
-                <TableRow key={index}>
+                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFB74D', cursor: 'pointer' } }}  
+                onClick={() => handleClick(row)}
+                onKeyPress={(event) => handleKeyPress(event, row)}>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_SEQ}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_TITLE}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{formatDate(row.NOTICE_CrtDt)}</TableCell>

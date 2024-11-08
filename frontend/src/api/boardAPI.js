@@ -10,6 +10,17 @@ export const fetchNotices = async () => {
   }
 };
 
+// 특정 공지사항 항목의 상세 정보를 가져오는 API
+export const fetchNoticeDetail = async (notice_seq) => {
+  try {
+    const response = await axios.get(`/api/noticeDetail?notice_seq=${notice_seq}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching book report detail:", error);
+    throw error;
+  }
+};
+
 
 export const fetchSuggests = async () => {
   try {

@@ -19,8 +19,8 @@ import {
   BarChart as BarChartIcon,
   Layers as LayersIcon,
   Assignment as AssignmentIcon,
-  Share as ShareIcon,
   Rule as RuleIcon,
+  Upload as PublishIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -62,7 +62,7 @@ export default function DrawerComponent({ open, toggleDrawer }) {
     { text: "Reports", icon: <BarChartIcon />, path: "/reports" },
     { text: "Integrations", icon: <LayersIcon />, path: "/integrations" },
     { text: "공지사항 글쓰기", icon: <LayersIcon />, path: "/admin/noticewrite" },
-    { text: "공유마당", icon: <ShareIcon />, path: "/admin/predict" },
+    { text: "공유마당", icon: <PublishIcon />, path: "/admin/predict" },
     { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
     { text: "Saved reports", isHeader: true },
     { text: "Current month", icon: <AssignmentIcon />, path: "/current-month" },

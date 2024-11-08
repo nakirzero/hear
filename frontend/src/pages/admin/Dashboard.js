@@ -1,10 +1,16 @@
-// Dashboard.js
 import React, { useState } from 'react';
 import { ThemeProvider, CssBaseline, Box, Container, Grid, Paper, Toolbar } from '@mui/material';
 import CustomAppBar from './components/CustomAppBar';
 import DrawerComponent from './components/DrawerComponent';
-import Copyright from './components/Copyright'
+import Copyright from './components/Copyright';
 import theme from '../../theme';
+
+// 차트 컴포넌트 및 표 컴포넌트 임포트
+import Chart1 from './pages/Dashboard/Chart1';
+import Chart2 from './pages/Dashboard/Chart2';
+import Table1 from './pages/Dashboard/Table1';
+import Table2 from './pages/Dashboard/Table2';
+import Table3 from './pages/Dashboard/Table3';
 
 export default function Dashboard() {
   const [open, setOpen] = useState(true);
@@ -29,15 +35,33 @@ export default function Dashboard() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12}>
-                <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: 240 }}>
-                  {/* 이곳에 필요한 콘텐츠를 추가하세요 */}
-                </Paper>
+          <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
+            <Paper sx={{ p: 3 }}>
+              {/* 상단 차트 */}
+              <Grid container spacing={3}>
+                <Grid item xs={12} md={6}>
+                  <Chart1 />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Chart2 />
+                </Grid>
               </Grid>
-            </Grid>
-            <Copyright sx={{ pt: 4 }} />
+
+              {/* 하단 표 3개 */}
+              <Grid container spacing={3} sx={{ mt: 3 }}>
+                <Grid item xs={12} md={4}>
+                  <Table1 />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Table2 />
+                </Grid>
+                <Grid item xs={12} md={4}>
+                  <Table3 />
+                </Grid>
+              </Grid>
+            </Paper>
+
+            <Copyright sx={{ pt: 2 }} />
           </Container>
         </Box>
       </Box>

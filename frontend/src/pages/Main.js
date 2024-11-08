@@ -53,13 +53,13 @@ function Main() {
     try {
       const response = await UserLogin(userid, userpw);
       if (response && response.token) {
-        const storageType = localStorage; // 예시로 로컬 스토리지 사용
-        storageType.setItem("token", response.token);
-
+        // token을 sessionStorage에 기본 저장
+        sessionStorage.setItem("token", response.token);
+  
         // JWT 토큰 디코딩 및 전역 상태 업데이트
         const decodedUser = jwtDecode(response.token);
         setUserObject(decodedUser);
-
+  
         if (decodedUser.is_admin) {
           navigate("/dashboard");
         } else {
@@ -75,25 +75,16 @@ function Main() {
   };
 
   const handlePersistChoice = (persist) => {
-    const token = sessionStorage.getItem("token");
-    if (token) {
-      const storageType = persist ? localStorage : sessionStorage;
-      storageType.setItem("token", token);
-      sessionStorage.removeItem("token"); // sessionStorage에서 삭제
-
-      // 다이얼로그 닫기
-      setDialogOpen(false);
-
-      setAlertMessage("로그인에 성공하였습니다.");
-      setTimeout(() => {
-        setAlertMessage(null);
-        navigate("/menu");
-      }, 1000);
+    if (persist) {
+      const token = sessionStorage.getItem("token");
+      if (token) {
+        localStorage.setItem("token", token);
+        sessionStorage.removeItem("token"); // sessionStorage에서 삭제
+      }
     }
-  };
-
-  const handleCloseDialog = () => {
-    setDialogOpen(false); // 다이얼로그 닫기
+  
+    // 다이얼로그 닫기 및 페이지 이동
+    setDialogOpen(false);
     setAlertMessage("로그인에 성공하였습니다.");
     setTimeout(() => {
       setAlertMessage(null);
@@ -282,13 +273,13 @@ function Main() {
           </Card>
         </Grid>
       </Grid>
-      <Dialog open={dialogOpen} onClose={handleCloseDialog}>
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
         <DialogContent>
           <DialogContentText>자동 로그인을 설정하시겠습니까?</DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handlePersistChoice(true)}>네</Button>
-          <Button onClick={handleCloseDialog}>아니오</Button>
+          <Button onClick={() => handlePersistChoice(false)}>아니오</Button>
         </DialogActions>
       </Dialog>
     </Container>
