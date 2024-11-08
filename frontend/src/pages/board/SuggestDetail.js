@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, Typography, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Container, CardContent, Card  } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
+import ProfileSection from "../../components/ProfileSection";
 import { useAuth } from '../../context/AuthContext';
 import { fetchSuggestDetail,fetchSuggestDelete } from "../../api/boardAPI";
 
@@ -71,51 +72,100 @@ const SuggestDetail = () => {
 
 if(report){
     return (
-        <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      <Box
+      bgcolor="#FFFEFE"
+      sx={{
+        minHeight: "100vh",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
       <Header />
       <Breadcrumb />
+      <ProfileSection />
       
-      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Paper sx={{ padding: 4, boxShadow: 3, borderRadius: 2, width:'35%' }}>
-          <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
-            건의사항 상세
+      <Container maxWidth="xl" sx={{ mt: 3, marginTop: '0px' }} >
+        <Card
+         sx={{ width: 1200, margin: 'auto', mt: 4, p: 10, borderRadius: 5, boxShadow: 10,  bgcolor: '#ffe0b2', mb: 10
+        }}
+        >
+           <CardContent>
+            <Box  sx={{ mb: 4, marginTop: '-50px', padding: 2, bgcolor: "#FFFAF3", borderRadius: 3}}>
+          <Typography variant="h6" gutterBottom align="center" sx={{fontSize: "24px", mb: -1 }}>
+          {report.NOTICE_TITLE}
           </Typography>
-          <Typography variant="subtitle1" align="right" gutterBottom>
+          </Box>
+          <Typography variant="subtitle1" fontWeight="bold" align="right" gutterBottom>
             작성일: { report.NOTICE_MdfDt  ? new Date(report.NOTICE_MdfDt).toLocaleDateString().replace(/\.$/, "") : new Date(report.NOTICE_CrtDt).toLocaleDateString().replace(/\.$/, "") }<br></br>
             작성자: { report.NICKNAME }
           </Typography>
 
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" sx={{ mb: 1 }}>
+            {/* <Typography variant="h6" sx={{ mb: 1 , ml: 2}}>
               제목
             </Typography>
             <Typography variant="body1" sx={{ padding: 1, bgcolor: "#f5f5f5", borderRadius: 1 }}>
               {report.NOTICE_TITLE}
-            </Typography>
+            </Typography> */}
 
-            <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
+            {/* <Typography variant="h6" sx={{ ml: 2, mt: 4, mb: 1 }}>
               내용
-            </Typography>
-            <Typography variant="body1" sx={{ padding: 1, bgcolor: "#f5f5f5", borderRadius: 1 }} style={{ whiteSpace: 'pre-line' }}>
+            </Typography> */}
+            <Typography variant="body1" sx={{ padding: 1, bgcolor: "#FFFAF3", borderRadius: 3 }} style={{ whiteSpace: 'pre-line' }}>
               {report.NOTICE_DETAIL}
             </Typography>
 
 
           </Box>
         
-                {report.USER_SEQ === userObject.USER_SEQ && (
-                    <Box sx={{ display: "flex", justifyContent: "space-between", mt: 6 }}>
-                    <Button variant="contained" color="primary" onClick={handleModify} sx={{ width: "48%", fontSize: 16 }}>
-                        수정
-                    </Button>
-                    <Button variant="outlined" color="error" onClick={openDeleteDialog} sx={{ width: "48%", fontSize: 16 }}>
-                        삭제
-                    </Button>
-                    </Box>
-                )}
+          {report.USER_SEQ === userObject.USER_SEQ && (
+  <Box sx={{ display: "flex", justifyContent: "center", gap: 10, mt: 6, mb: -8 }}>
+    <Button
+      variant="outlined"
+      onClick={handleModify}
+      sx={{
+        maxWidth: 400,
+        fontWeight: 'bold',
+        width: "48%",
+        fontSize: '20px',
+        color: "#FFB74D",
+        bgcolor:"#FFFFFF",
+        borderColor: '#FFB74D',
+        "&:hover": {
+          backgroundColor: "#FFB74D", // hover 시 배경색 변경
+          color: "#ffffff", // hover 시 글자색 변경
+        }
+      }}
+    >
+      수정
+    </Button>
+    <Button
+      variant="outlined"
+      color="error"
+      onClick={openDeleteDialog}
+      sx={{
+        maxWidth: 400,
+        width: "48%",
+        fontSize: '20px',
+        fontWeight: 'bold',
+        bgcolor: '#FFFFFF',
+        borderColor: "#d32f2f", // 초기 테두리 색상
+        "&:hover": {
+          backgroundColor: "#d32f2f", // hover 시 배경색 변경
+          color: "#ffffff", // hover 시 글자색 변경
+          borderColor: "#b71c1c", // hover 시 테두리 색상 변경
+        }
+      }}
+    >
+      삭제
+    </Button>
+  </Box>
+)}
 
-        </Paper>
-      </Box>
+ </CardContent>
+        </Card>
+      </Container>
 
       {/* 삭제 확인 다이얼로그 */}
       <Dialog open={isDeleteDialogOpen} onClose={closeDeleteDialog}>

@@ -1,12 +1,12 @@
 // Suggest.js
 import React, { useEffect, useState } from 'react';
-import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase } from '@mui/material';
+import { Typography, Box, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Pagination, IconButton, InputBase, Card, CardContent, Container, PaginationItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from 'react-router-dom';
 
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
-import Footer from '../../components/Footer';
+import ProfileSection from '../../components/ProfileSection';
 import { fetchSuggests } from '../../api/boardAPI';
 import usePagination from '../../hooks/usePagination';
 
@@ -68,16 +68,29 @@ const Suggest = () => {
   
 
   return (
-    <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: '#FFCF8B' }}>
+    <Box
+    bgcolor="#FFFEFE"
+    sx={{
+      minHeight: "100vh",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
       <Header />
       <Breadcrumb />
+      <ProfileSection />
 
       {/* Main Content */}
-      <Box sx={{ maxWidth: '80%', margin: 'auto', padding: 3, textAlign: 'center' }}>
-        <Typography variant="h5" gutterBottom>건의사항</Typography>
+      <Container maxWidth="xl" sx={{ mt: 3, marginTop: '0px' }} >
+      <Card sx={{ width: 1200, margin: 'auto', mt: 5, p: 12, mb: 10, borderRadius: 5, boxShadow: 10, display: "flex", alignItems: "center", bgcolor: '#ffe0b2',
+          justifyContent: "center"}}
+        >
+          <CardContent>
+        <Typography variant="h6" align="center" sx={{fontSize: "36px", marginTop: '-70px'}} gutterBottom>건의사항</Typography>
 
         {/* Search and "게시글 작성" Button */}
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 6, mb: 2 }}>
           <Paper component="form" onSubmit={handleSearch} sx={{ display: 'flex', alignItems: 'center', width: 400 }}>
             <InputBase
               sx={{ ml: 1, flex: 1 }}
@@ -90,25 +103,25 @@ const Suggest = () => {
               <SearchIcon />
             </IconButton>
           </Paper>
-          <Button variant="contained" color="primary" onClick={() => navigate("/board/suggest/suggestWrite")}>
+          <Button variant="contained" color="primary" sx={{fontSize: "18px", fontWeight: 'bold',}} onClick={() => navigate("/board/suggest/suggestWrite")}>
             게시글 작성
           </Button>
         </Box>
 
         {/* Table */}
-        <TableContainer component={Paper} sx={{ boxShadow: 3, borderRadius: 2, mt: 2 }}>
+        <TableContainer component={Paper} sx={{ maxWidth: '100%', overflow: 'auto', mt: 3 }}>
           <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell align="center" sx={{ width: '10%' }}>번호</TableCell>
-                <TableCell align="center" sx={{ width: '45%' }}>제목</TableCell>
-                <TableCell align="center" sx={{ width: '25%' }}>작성일</TableCell>
-                <TableCell align="center" sx={{ width: '20%' }}>작성자</TableCell>
+              <TableCell align="center" sx={{  fontSize: "18px", fontWeight: 'bold',width: '10%' }}>번호</TableCell>
+                <TableCell align="center" sx={{ fontSize: "18px", fontWeight: 'bold',width: '50%' }}>제목</TableCell>
+                <TableCell align="center" sx={{ fontSize: "18px", fontWeight: 'bold',width: '20%' }}>작성일</TableCell>
+                <TableCell align="center" sx={{ fontSize: "18px", fontWeight: 'bold',width: '20%' }}>작성자</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentData.map((row, index) => (
-                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' } }}  
+                <TableRow key={index} sx={{ '&:hover': { backgroundColor: '#FFB74D', cursor: 'pointer' } }}  
                 onClick={() => handleClick(row)}
                 onKeyPress={(event) => handleKeyPress(event, row)}>
                   <TableCell align="center">{row.NOTICE_SEQ}</TableCell>
@@ -122,17 +135,31 @@ const Suggest = () => {
         </TableContainer>
 
         {/* Pagination */}
-        <Box display="flex" justifyContent="center" my={2}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: -10 }}>
           <Pagination
             count={totalPages}
             page={page}
             onChange={handlePageChange}
-            variant="outlined"
-            shape="rounded"
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                sx={{
+                  "&.Mui-selected": {
+                    bgcolor: "#FFB74D",
+                    color: "#ffffff",
+                  },
+                  "&:hover": {
+                    bgcolor: "#FFB74D",
+                    color: "#ffffff",
+                  },
+                }}
+              />
+            )}
           />
         </Box>
-      </Box>
-      <Footer />
+        </CardContent>
+      </Card>
+      </Container>
     </Box>
   );
 };
