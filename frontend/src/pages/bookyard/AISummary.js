@@ -41,6 +41,7 @@ const AISummary = () => {
   const [alertMessage, setAlertMessage] = useState();
   const audioRef = useRef(null);
   const histDiv = 2;
+  const [isHighlighting, setIsHighlighting] = useState(false);
 
   const menuItems = useMemo(
     () => [
@@ -334,6 +335,12 @@ const AISummary = () => {
     },
   };
 
+  const handleHighlightClick = () => {
+    setIsHighlighting((prev) => !prev); // 하이라이트 중 상태를 토글
+    handleClick(); // 기존 하이라이트 기능
+  };
+  
+
   return (
     <Box
       bgcolor="#FFFEFE"
@@ -455,6 +462,7 @@ const AISummary = () => {
           margin: "auto",
           mt: 4,
           p: 12,
+          bgcolor: '#FAF1FB',
           borderRadius: 4,
           boxShadow: 3,
         }}
@@ -690,51 +698,60 @@ const AISummary = () => {
           </Grid>
 
           <Grid item xs={2} sx={{ padding: 1 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              sx={{
-                padding: "8px",
-                fontSize: 20,
-                width: 200,
-                height: 150,
-                fontWeight: "bold",
-                borderRadius: 8,
-                color: "#B833BA",
-                borderColor: "#B833BA",
-                backgroundColor: "#E9B6EA",
-                "&:hover": {
-                  backgroundColor: "#B833BA",
-                  color: "#FFFFFF",
-                  "& .hover-text": {
-                    // hover 시 모든 텍스트 흰색으로 변경
-                    color: "#FFFFFF",
-                  },
-                },
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                lineHeight: 1.2,
-              }}
-              onClick={handleClick}
-            >
-              <Box
-                component="span"
-                className="hover-text" // hover 시 적용될 클래스
-                sx={{ color: "#000000", textAlign: "center" }}
-              >
-                하이라이트
-              </Box>
-              <Box
+  <Button
+    fullWidth
+    variant="outlined"
+    sx={{
+      padding: "8px",
+      fontSize: 20,
+      width: 200,
+      height: 150,
+      fontWeight: "bold",
+      borderRadius: 8,
+      color: isHighlighting ? "#FFFFFF" : "#B833BA", // 녹음 중일 때 색상 변경
+      borderColor: "#B833BA",
+      backgroundColor: isHighlighting ? "#B833BA" : "#E9B6EA", // 녹음 중일 때 배경 변경
+      lineHeight: 1.2,
+      "&:hover": {
+        backgroundColor: "#B833BA",
+        color: "#FFFFFF",
+        "& .hover-text": {
+          color: "#FFFFFF",
+        },
+      },
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+    onClick={handleHighlightClick} // 상태 토글 핸들러로 변경
+  >
+    <Box
+      component="span"
+      className="hover-text"
+      sx={{ color: isHighlighting ? "#FFFFFF" : "#000000", textAlign: "center" }}
+    >
+      {isHighlighting ?
+      <Box>
+      <Box>하이라이트</Box>
+      <Box> <br/> [ 녹음 중 ]</Box>
+      </Box> : "하이라이트"}
+    </Box>
+    <Box
+      component="span"
+      className="hover-text"
+      sx={{ color: isHighlighting ? "#FFFFFF" : "#246624", textAlign: "center", mb: -0.5 }}
+    >
+      {isHighlighting ? "" : <Box
                 component="span"
                 className="hover-text" // hover 시 적용될 클래스
                 sx={{ color: "#B833BA", textAlign: "center", mt: 0.5 }}
               >
                 <br /> [ 방향키 위쪽 + . ]
-              </Box>
-            </Button>
-          </Grid>
+              </Box>}
+    </Box>
+  </Button>
+</Grid>
 
           <Grid item xs={2} sx={{ padding: 1 }}>
             <Button

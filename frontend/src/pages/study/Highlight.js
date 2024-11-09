@@ -216,100 +216,115 @@ const Highlight = () => {
        
        
        <Box
-          sx={{
-            p: 2,
-            maxWidth: 1000,
-            margin: "0 auto",
-            display: "flex",
-            flexWrap: "wrap",
-            gap: 2,
-          }}
-        >
-          
-          {Object.keys(groupedHighlights).map((bookName, index, arr) => {
-            const { cover, author, highlights } = groupedHighlights[bookName];
-            const isSingleItem = arr.length === 1;
-            return (
-              <Box key={bookName} sx={{ width: isSingleItem ? "100%" : "calc(50% - 8px)" }}>
-                <Accordion sx={{ mb: 3 , bgcolor: '#A5DCFF' }}>
-                   <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${bookName}-content`} id={`${bookName}-header`}>
-                   <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", width: "100%" }}>
-                      <Box sx={{ mr: 2 }}>
-                        <img
-                          src={`/static/image/bookcover/${cover}`}
-                          alt={bookName}
-                          style={{ width: 100, height: 150, objectFit: "cover" }}
-                        />
-                      </Box>
-                      <Box >
-                        <Typography variant="h6">{bookName}</Typography>
-                        <Typography variant="subtitle2" color="text.secondary">{author || "Unknown Author"}</Typography>
-                      </Box>
-                    </Box>
-                  </AccordionSummary>
-                  <AccordionDetails>
-  <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 5, justifyContent: "center", textAlign: "center" }}> {/* 카드가 넓어지도록 1열로 설정 */}
-    {highlights.map((highlight) => (
-      <Card key={highlight.HL_SEQ} sx={{ display: "flex", maxWidth: 500, width: "90%", margin: "0 auto", gap: 2 }}> {/* 카드 너비 조정 */}
-        <Box sx={{ display: "flex", flexDirection: "column", flex: "1 0 auto" }}>
-          <CardContent>
-            {editingCommentId === highlight.HL_SEQ ? (
-              <input
-                type="text"
-                value={editedComment}
-                onChange={handleCommentChange}
-                onBlur={() => handleCommentSave(highlight.HL_SEQ)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    handleCommentSave(highlight.HL_SEQ);
-                  }
-                }}
-                autoFocus
-                style={{ fontSize: "1rem", width: "100%" }}
-              />
-            ) : (
-              <Typography
-                component="div"
-                variant="body1"
-                onClick={() => handleEditClick(highlight.HL_SEQ, highlight.HL_COMMENT || "No Comment")}
-              >
-                {highlight.HL_COMMENT || "No Comment"}
-              </Typography>
-            )}
-            <Typography variant="body2" color="text.secondary" component="div">
-              {audioStates[highlight.HL_SEQ]?.currentDisplayTime !== undefined
-                ? formatTime(audioStates[highlight.HL_SEQ].currentDisplayTime)
-                : highlight.HL_Duration}
-            </Typography>
-          </CardContent>
-          <Box sx={{ display: "flex", alignItems: "center",  justifyContent: 'center', pl: 1, pb: 1, mt: -1 }}>
-            <IconButton aria-label="play/pause" onClick={() => handlePlayPause(highlight.HL_SEQ, highlight.HL_Duration)}>
-              {audioStates[highlight.HL_SEQ]?.isPlaying ? <PauseIcon sx={{ height: 32, width: 32 }} /> : <PlayArrowIcon sx={{ height: 32, width: 32 }} />}
-            </IconButton>
-            <IconButton aria-label="edit" onClick={() => handleEditClick(highlight.HL_SEQ, highlight.HL_COMMENT || "No Comment")}>
-              <EditIcon sx={{ height: 32, width: 32 }} />
-            </IconButton>
-            <IconButton aria-label="delete" onClick={() => handleOpenDialog(highlight.HL_SEQ)}>
-              <DeleteIcon sx={{ height: 32, width: 32 }} />
-            </IconButton>
-          </Box>
-        </Box>
-      </Card>
-    ))}
-  </Box>
-</AccordionDetails>
-
-                </Accordion>
-              </Box>
-            );
-          })}
-        </Box>
+       sx={{
+         p: 2,
+         maxWidth: 1000,
+         margin: "0 auto",
+         display: "flex",
+         flexWrap: "wrap",
+         gap: 2,
+         justifyContent: "flex-start"
+       }}
+     >
+       {Object.keys(groupedHighlights).map((bookName, index, arr) => {
+         const { cover, author, highlights } = groupedHighlights[bookName];
+         return (
+           <Box key={bookName} sx={{ width: "calc(50% - 8px)" }}> {/* 항상 동일한 너비 설정 */}
+             <Accordion sx={{ mb: 3, bgcolor: '#A5DCFF' }}>
+               <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${bookName}-content`} id={`${bookName}-header`}>
+                 <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", width: "100%" }}>
+                   <Box sx={{ mr: 2 }}>
+                     <img
+                       src={`/static/image/bookcover/${cover}`}
+                       alt={bookName}
+                       style={{ width: 100, height: 150, objectFit: "cover" }}
+                     />
+                   </Box>
+                   <Box>
+                     <Typography variant="h6">{bookName}</Typography>
+                     <Typography variant="subtitle2" color="text.secondary">{author || "Unknown Author"}</Typography>
+                   </Box>
+                 </Box>
+               </AccordionSummary>
+               <AccordionDetails>
+                 <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 5, justifyContent: "center", textAlign: "center" }}>
+                   {highlights.map((highlight) => (
+                     <Card key={highlight.HL_SEQ} sx={{ display: "flex", maxWidth: 500, width: "90%", margin: "0 auto", gap: 2 }}>
+                       <Box sx={{ display: "flex", flexDirection: "column", flex: "1 0 auto" }}>
+                         <CardContent>
+                           {editingCommentId === highlight.HL_SEQ ? (
+                             <input
+                               type="text"
+                               value={editedComment}
+                               onChange={handleCommentChange}
+                               onBlur={() => handleCommentSave(highlight.HL_SEQ)}
+                               onKeyDown={(e) => {
+                                 if (e.key === "Enter") {
+                                   handleCommentSave(highlight.HL_SEQ);
+                                 }
+                               }}
+                               autoFocus
+                               style={{ fontSize: "1rem", width: "100%" }}
+                             />
+                           ) : (
+                             <Typography
+                               component="div"
+                               variant="body1"
+                               onClick={() => handleEditClick(highlight.HL_SEQ, highlight.HL_COMMENT || "No Comment")}
+                             >
+                               {highlight.HL_COMMENT || "No Comment"}
+                             </Typography>
+                           )}
+                           <Typography variant="body2" color="text.secondary" component="div">
+                             {audioStates[highlight.HL_SEQ]?.currentDisplayTime !== undefined
+                               ? formatTime(audioStates[highlight.HL_SEQ].currentDisplayTime)
+                               : highlight.HL_Duration}
+                           </Typography>
+                         </CardContent>
+                         <Box sx={{ display: "flex", alignItems: "center", justifyContent: 'center', pl: 1, pb: 1, mt: -1 }}>
+                           <IconButton aria-label="play/pause" onClick={() => handlePlayPause(highlight.HL_SEQ, highlight.HL_Duration)}>
+                             {audioStates[highlight.HL_SEQ]?.isPlaying ? <PauseIcon sx={{ height: 32, width: 32 }} /> : <PlayArrowIcon sx={{ height: 32, width: 32 }} />}
+                           </IconButton>
+                           <IconButton aria-label="edit" onClick={() => handleEditClick(highlight.HL_SEQ, highlight.HL_COMMENT || "No Comment")}>
+                             <EditIcon sx={{ height: 32, width: 32 }} />
+                           </IconButton>
+                           <IconButton aria-label="delete" onClick={() => handleOpenDialog(highlight.HL_SEQ)}>
+                             <DeleteIcon sx={{ height: 32, width: 32 }} />
+                           </IconButton>
+                         </Box>
+                       </Box>
+                     </Card>
+                   ))}
+                 </Box>
+               </AccordionDetails>
+             </Accordion>
+           </Box>
+         );
+       })}
+     </Box>
+     
       ) : (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 4 }}>
           <Typography variant="body1" color="text.secondary" sx={{ mb: 2 }}>
             아직 남겨 놓은 하이라이트가 없습니다. 하이라이트를 남기러 가보시겠어요?
           </Typography>
-          <Button onClick={handleLibrary} variant="contained" color="primary">
+          <Button onClick={handleLibrary} variant="contained" sx={{
+        mr: 1,
+        mt: 5,
+        bgcolor: '#72A8FF',
+        color: '#000000',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        padding: '6px 12px', // 내부 여백 증가
+        minWidth: '100px', // 최소 너비 설정
+        minHeight: '30px', // 최소 높이 설정
+        "&:hover": {
+          bgcolor: '#FFFFFF',
+          color: '#72A8FF',
+          borderColor: '#72A8FF',
+          border: '1px solid'
+        }
+      }}>
             도서마당으로 이동
           </Button>
         </Box>
@@ -319,8 +334,12 @@ const Highlight = () => {
         <DialogContentText>정말로 이 하이라이트를 삭제하시겠습니까?</DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleDeleteConfirm}>네</Button>
-        <Button onClick={handleCloseDialog}>아니오</Button>
+        <Button onClick={handleDeleteConfirm}
+        sx={{color: '#72A8FF'}}
+        >네</Button>
+        <Button onClick={handleCloseDialog}
+        sx={{color: '#999999'}}
+        >아니오</Button>
       </DialogActions>
     </Dialog>
     </CardContent>

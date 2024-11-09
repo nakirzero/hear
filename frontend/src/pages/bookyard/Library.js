@@ -291,11 +291,12 @@ const Library = () => {
           margin: "auto",
           mt: 4,
           p: 4,
+          bgcolor: '#F8FBF8 ',
           borderRadius: 2,
           boxShadow: 3,
         }}
       >
-        <Typography variant="h6" gutterBottom textAlign="center">
+        <Typography variant="h6" gutterBottom textAlign="center" sx={{fontSize: "36px", mb: 2 }}>
           {category === "400" ? "공유세상" : "도서마당"}
         </Typography>
         {category === "400" && (
@@ -348,16 +349,16 @@ const Library = () => {
           <Table sx={{ tableLayout: "fixed" }}>
             <TableHead>
               <TableRow>
-                <TableCell align="center" sx={{ width: "40%" }}>
+                <TableCell align="center" sx={{ width: "40%", fontSize: 18, fontWeight: 'bold' }}>
                   책 제목
                 </TableCell>
-                <TableCell align="center" sx={{ width: "20%" }}>
+                <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold'}}>
                   작가
                 </TableCell>
-                <TableCell align="center" sx={{ width: "20%" }}>
+                <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold' }}>
                   전체 재생 시간
                 </TableCell>
-                <TableCell align="center" sx={{ width: "20%" }}>
+                <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold' }}>
                   요약 재생 시간
                 </TableCell>
               </TableRow>

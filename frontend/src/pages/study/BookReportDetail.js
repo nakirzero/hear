@@ -161,7 +161,7 @@ const BookReportDetail = () => {
           <DialogContentText>정말로 이 독서노트를 삭제하시겠습니까?</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={closeDeleteDialog} color="primary">취소</Button>
+          <Button onClick={closeDeleteDialog} sx={{color: '#72A8FF'}}>취소</Button>
           <Button onClick={handleDelete} color="error">삭제</Button>
         </DialogActions>
       </Dialog>

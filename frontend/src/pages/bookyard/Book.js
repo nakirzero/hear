@@ -262,6 +262,7 @@ const Book = () => {
           p: 4,
           borderRadius: 2,
           boxShadow: 3,
+          bgcolor: '#F8FBF8 ',
           display: "flex",
           alignItems: "center",
           justifyContent: "flex-start",
@@ -308,7 +309,7 @@ const Book = () => {
 
             <Box
               sx={{
-                width: "50%",
+                width: "60%",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
