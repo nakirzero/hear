@@ -37,40 +37,66 @@ const Library = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [bookList, setBookList] = useState([]);
+  const [filteredBookList, setFilteredBookList] = useState([]);
   const rowsPerPage = 6;
-  const { currentData, totalPages, page, handlePageChange } = usePagination(
-    bookList,
-    rowsPerPage
-  );
   const [category, setCategory] = useState(location.state?.category || null);
   const [book, setBook] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState([]);
+
+  const filterCategories = ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"];
+  const filterValues = ["410", "420", "430", "440", "450", "460"];
+
+  const { currentData, totalPages, page, handlePageChange } = usePagination(
+    filteredBookList.length > 0 ? filteredBookList : bookList,
+    rowsPerPage
+  );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetchLibrary();
-        let filteredBooks = response;
-
-        if (category) {
-          if (category === "400") {
-            filteredBooks = response.filter((book) =>
-              ["410", "420", "430", "440", "450", "460"].includes(book.CATEGORY)
-            );
-          } else {
-            filteredBooks = response.filter(
-              (book) => book.CATEGORY === category
-            );
-          }
-        }
-
-        setBookList(filteredBooks);
+        setBookList(response);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
       }
     };
     fetchData();
-  }, [category]);
+  }, []);
+
+  useEffect(() => {
+    let filteredBooks = bookList;
+
+    if (!category) {
+      setFilteredBookList(bookList);
+      return;
+    }
+
+    if (category) {
+      if (category === "400") {
+        filteredBooks = filteredBooks.filter((book) =>
+          filterValues.includes(book.CATEGORY)
+        );
+
+        if (selectedFilters.length > 0) {
+          filteredBooks = filteredBooks.filter((book) =>
+            selectedFilters.includes(String(book.CATEGORY))
+          );
+        }
+      } else {
+        filteredBooks = filteredBooks.filter(
+          (book) => book.CATEGORY === category
+        );
+      }
+    }
+
+    setFilteredBookList(filteredBooks);
+  }, [category, selectedFilters, bookList]);
+
+  const handleCategoryClick = (newCategory) => {
+    setCategory(newCategory);
+    setSelectedFilters([]);
+  };
 
   const handleBook = (book) => {
     setBook(book.BOOK_SEQ);
@@ -92,6 +118,15 @@ const Library = () => {
     setAnchorEl(null);
   };
 
+  const handleFilterChange = (event) => {
+    const { value, checked } = event.target;
+    setSelectedFilters((prevFilters) =>
+      checked
+        ? [...prevFilters, value]
+        : prevFilters.filter((filter) => filter !== value)
+    );
+  };
+
   const cardStyle = (selectedCategory, currentCategory) => ({
     width: 200,
     height: 100,
@@ -108,6 +143,16 @@ const Library = () => {
       boxShadow: 6,
     },
   });
+
+  const checkboxStyle = {
+    color: "#246624",
+    "&.Mui-checked": {
+      color: "#246624",
+    },
+    "&:hover": {
+      bgcolor: "transparent",
+    },
+  };
 
   return (
     <Box
@@ -129,11 +174,9 @@ const Library = () => {
         justifyContent="center"
         gap={10}
       >
-        {/* 카테고리 카드 */}
-
         <Card
           sx={cardStyle(category, "200")}
-          onClick={() => setCategory("200")}
+          onClick={() => handleCategoryClick("200")}
         >
           <CardContent
             sx={{
@@ -159,7 +202,7 @@ const Library = () => {
 
         <Card
           sx={cardStyle(category, "100")}
-          onClick={() => setCategory("100")}
+          onClick={() => handleCategoryClick("100")}
         >
           <CardContent
             sx={{
@@ -185,7 +228,7 @@ const Library = () => {
 
         <Card
           sx={cardStyle(category, "300")}
-          onClick={() => setCategory("300")}
+          onClick={() => handleCategoryClick("300")}
         >
           <CardContent
             sx={{
@@ -211,7 +254,7 @@ const Library = () => {
 
         <Card
           sx={cardStyle(category, "400")}
-          onClick={() => setCategory("400")}
+          onClick={() => handleCategoryClick("400")}
         >
           <CardContent
             sx={{
@@ -236,7 +279,6 @@ const Library = () => {
         </Card>
       </Box>
 
-      {/* 도서 테이블을 카드 안에 배치 */}
       <Card
         sx={{
           maxWidth: "75%",
@@ -250,7 +292,6 @@ const Library = () => {
         <Typography variant="h6" gutterBottom textAlign="center">
           {category === "400" ? "공유세상" : "도서마당"}
         </Typography>
-        {/* 공유세상인 경우에만 필터 버튼과 메뉴 렌더링 */}
         {category === "400" && (
           <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
             <Button
@@ -276,108 +317,19 @@ const Library = () => {
             >
               <MenuItem>
                 <FormGroup>
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 1"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 2"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 3"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 4"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 5"
-                  />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        value="category1"
-                        sx={{
-                          color: "#246624", // 기본 체크박스 색상
-                          "&.Mui-checked": {
-                            color: "#246624", // 체크된 상태의 색상
-                          },
-                          "&:hover": {
-                            bgcolor: "transparent", // 마우스 오버 시 배경색 제거
-                          },
-                        }}
-                      />
-                    }
-                    label="분류 6"
-                  />
+                  {filterCategories.map((label, index) => (
+                    <FormControlLabel
+                      key={index}
+                      control={
+                        <Checkbox
+                          value={filterValues[index]}
+                          sx={checkboxStyle}
+                          onChange={handleFilterChange}
+                        />
+                      }
+                      label={label}
+                    />
+                  ))}
                 </FormGroup>
               </MenuItem>
             </Menu>

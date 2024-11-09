@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Box, Button, Typography, Rating, Paper, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { Box, Button, Typography, Rating, Paper, Card, CardContent, Container, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import Header from "../../components/Header";
 import Breadcrumb from "../../components/BreadCrumb";
+import ProfileSection from "../../components/ProfileSection";
+
 import { fetchBookReportById, deleteBookReport } from "../../api/studyAPI";
 import useLoading from "../../hooks/useLoading";
 
@@ -48,50 +50,109 @@ const BookReportDetail = () => {
   if (isLoading || !report) return <LoadingIndicator />;
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+    <Box
+    bgcolor="#FFFEFE"
+    sx={{
+      minHeight: "100vh",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
       <Header />
       <Breadcrumb />
+      <ProfileSection />
       
-      <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-        <Paper sx={{ padding: 4, boxShadow: 3, borderRadius: 2, width:'35%' }}>
-          <Typography variant="h4" gutterBottom align="center" sx={{ mb: 4 }}>
-            독서노트 상세
-          </Typography>
-          <Typography variant="subtitle1" align="right" gutterBottom>
-            작성자: { report.nickname }
-          </Typography>
+      <Container maxWidth="xl" sx={{ mt: 3, marginTop: "0px" }}>
+        <Card
+          sx={{
+            width: 1200,
+            margin: "auto",
+            mt: 4,
+            p: 10,
+            borderRadius: 5,
+            boxShadow: 10,
+            bgcolor: "#EAF7FF",
+            mb: 10,
+          }}
+        >
+          <CardContent>
+          <Box
+                sx={{
+                  mb: 4,
+                  marginTop: "-50px",
+                  padding: 2,
+                  bgcolor: "#FFF",
+                  borderRadius: 3,
+                }}
+              >
+        <Typography
+                  variant="h6"
+                  gutterBottom
+                  align="center"
+                  sx={{ fontSize: "24px", mb: -1 }}
+                >
+              {report.REPORT_TITLE}
+        </Typography>
+        </Box>
+
+        
 
           <Box sx={{ mt: 4 }}>
-            <Typography variant="h5" sx={{ mb: 1 }}>
-              제목
-            </Typography>
-            <Typography variant="body1" sx={{ padding: 1, bgcolor: "#f5f5f5", borderRadius: 1 }}>
-              {report.REPORT_TITLE}
-            </Typography>
 
-            <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
-              내용
+          <Box sx={{ mt: 4 }}>
+<Box display= 'flex' align= 'right' justifyContent={'right'} sx={{mb: 1, gap: 1}}>
+
+
+          <Typography variant="h5" sx={{fontSize: '20px'}}>
+              평점 :
             </Typography>
-            <Typography variant="body1" sx={{ padding: 1, bgcolor: "#f5f5f5", borderRadius: 1 }}>
+            <Rating value={report.RATING} readOnly sx={{ fontSize: 24 }} />
+            </Box>
+            <Box display= 'flex' justifyContent={'right'} sx={{mb: 4, gap: 1}}>
+            <Typography variant="h5" sx={{fontSize: '20px'}}>
+              작성자 : {report.nickname}
+            </Typography>
+            </Box>
+            <Typography variant="body1"  sx={{ padding: 1, bgcolor: "#FFFFFF", borderRadius: 1, fontSize: 20 }}>
               {report.REPORT_DETAIL}
             </Typography>
 
-            <Typography variant="h5" sx={{ mt: 4, mb: 1 }}>
-              평점
-            </Typography>
-            <Rating value={report.RATING} readOnly sx={{ fontSize: 28 }} />
+          </Box>
           </Box>
 
-          <Box sx={{ display: "flex", justifyContent: "space-between", mt: 6 }}>
-            <Button variant="contained" color="primary" onClick={handleEdit} sx={{ width: "48%", fontSize: 16 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", mt: 6, mb: -4, gap: 10 }}>
+            <Button variant="outlined" color="primary" onClick={handleEdit}  sx={{
+        maxWidth: 400,
+        fontWeight: 'bold',
+        width: "60%",
+        fontSize: "16px",
+        color: "#72A8FF",
+        bgcolor: "#FFFFFF",
+        borderColor: "#72A8FF",
+        "&:hover": {
+          backgroundColor: "#72A8FF", // hover 시 배경색 변경
+          color: "#ffffff", // hover 시 글자색 변경
+        }, }}>
               수정
             </Button>
-            <Button variant="outlined" color="error" onClick={openDeleteDialog} sx={{ width: "48%", fontSize: 16 }}>
+            <Button variant="outlined" color="error" onClick={openDeleteDialog}  sx={{
+        maxWidth: 400,
+        width: "60%",
+        fontSize: "16px",
+                    color: "#FF440D",
+                    bgcolor: "#FFFFFF",
+                    borderColor: "#FF440D",
+                    "&:hover": {
+                      backgroundColor: "#FF440D", // hover 시 배경색 변경
+                      color: "#ffffff", // hover 시 글자색 변경
+                    }, }}>
               삭제
             </Button>
           </Box>
-        </Paper>
-      </Box>
+        </CardContent>
+        </Card>
+      </Container>
 
       {/* 삭제 확인 다이얼로그 */}
       <Dialog open={isDeleteDialogOpen} onClose={closeDeleteDialog}>
