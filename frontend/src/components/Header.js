@@ -17,10 +17,20 @@ const Header = () => {
     navigate("/");
   };
 
+  const handleLogoClick = () => {
+    navigate("/menu");
+  };
+
   return (
     <AppBar position="static" elevation={0}>
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Box display="flex" alignItems="center" margin={1}>
+        <Box
+          display="flex"
+          alignItems="center"
+          margin={1}
+          onClick={handleLogoClick} // 로고 클릭 시 이동
+          sx={{ cursor: "pointer" }} // 포인터 커서 추가
+        >
           <img src={logo1} alt="Logo 1" style={{ maxHeight: 60, marginLeft: 250 }} />
         </Box>
 

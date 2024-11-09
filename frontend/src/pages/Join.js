@@ -60,19 +60,20 @@ function Join() {
       setMessage("장애등록코드를 입력해주세요.");
       return;
     }
-
+  
     try {
       const result = await verifyDisabilityCode(formData.disabled);
       if (result.success) {
-        setMessage("장애등록 코드가 인증되었습니다.");
+        setMessage(result.message || "장애등록 코드가 인증되었습니다.");
         setIsVerified(true); // 인증 완료 상태로 변경
       } else {
-        setMessage("유효하지 않은 코드입니다.");
+        setMessage(result.message || "유효하지 않은 코드입니다.");
       }
-    } catch {
-      setMessage("인증 중 오류가 발생했습니다.");
+    } catch (error) {
+      setMessage(error.response?.data?.message || "인증 중 오류가 발생했습니다.");
     }
   };
+  
 
   const handleJoin = async (e) => {
     e.preventDefault();

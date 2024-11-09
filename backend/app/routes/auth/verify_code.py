@@ -18,7 +18,7 @@ def verify_disability_code():
     if connection:
         try:
             # Query to check if the code exists and is active
-            query = text("SELECT * FROM disability_code WHERE code = :code AND is_active = TRUE")
+            query = text("SELECT * FROM disability_code WHERE code = :code AND is_active = FALSE")
             result = connection.execute(query, {"code": code})
             code_info = result.fetchone()
 

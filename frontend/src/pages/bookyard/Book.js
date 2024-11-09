@@ -16,6 +16,7 @@ import useOpenAISummary from "../../hooks/useOpenAISummary";
 import useElevenLabsTTS from "../../hooks/useElevenLabsTTS";
 import { ImportContacts, Article, Create, Share } from "@mui/icons-material";
 import { useAuth } from "../../context/AuthContext";
+import useLoading from "../../hooks/useLoading";
 
 const Book = () => {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ const Book = () => {
   const { userObject } = useAuth();
   const [lastPosition, setLastPosition] = useState(0);
   const [hasHistory, setHasHistory] = useState(false);
+  const { isLoading, setIsLoading, LoadingIndicator } = useLoading();
   const selectedBook = location.state.selected;
 
   useEffect(() => {
@@ -33,6 +35,8 @@ const Book = () => {
       if (selectedBook) {
         try {
           const response = await fetchLibrary();
+          console.log("response", response);
+
           const bookData = response.find(
             (b) => b.BOOK_SEQ === Number(selectedBook)
           );
@@ -61,24 +65,28 @@ const Book = () => {
 
   const handleAISummary = async () => {
     if (userObject) {
+      setIsLoading(true); // 로딩 시작
       try {
-        const summary = await getSummary(book.INFORMATION);
+        const summary = await getSummary(book.BOOK_TEXT);
         await saveTTSFile(userObject.EL_ID, summary, book.BOOK_SEQ, true);
         navigate("/library/book/aisummary", {
           state: { selected: book.BOOK_SEQ },
         });
       } catch (error) {
         console.error("AI 요약 파일 생성 중 오류 발생:", error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     }
   };
 
   const handleListenFromStart = async () => {
+    setIsLoading(true); // 로딩 시작
     if (userObject) {
       try {
         await saveTTSFile(
           userObject.EL_ID,
-          book.INFORMATION,
+          book.BOOK_TEXT,
           book.BOOK_SEQ,
           false
         );
@@ -87,16 +95,19 @@ const Book = () => {
         });
       } catch (error) {
         console.error("파일 생성 중 오류 발생:", error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     }
   };
 
   const handleContinueListening = async () => {
+    setIsLoading(true); // 로딩 시작
     if (userObject) {
       try {
         await saveTTSFile(
           userObject.EL_ID,
-          book.INFORMATION,
+          book.BOOK_TEXT,
           book.BOOK_SEQ,
           false
         );
@@ -105,6 +116,8 @@ const Book = () => {
         });
       } catch (error) {
         console.error("파일 생성 중 오류 발생:", error);
+      } finally {
+        setIsLoading(false); // 로딩 종료
       }
     }
   };
@@ -319,83 +332,111 @@ const Book = () => {
                 mt={3}
                 sx={{ width: "100%", alignItems: "center" }}
               >
+                {/* AI 요약듣기 버튼 */}
                 <Button
                   variant="outlined"
-                  onClick={handleAISummary}
-                  disabled={summaryLoading}
+                  onClick={async () => {
+                    setIsLoading(true); // 로딩 시작
+                    await handleAISummary();
+                    setIsLoading(false); // 요약 생성 완료 후에도 로딩 유지
+                  }}
+                  disabled={summaryLoading || isLoading}
                   sx={{
                     width: "400px",
                     fontWeight: "Bold",
-                    color: "#B833BA", // 기본 글자 색상
-                    borderColor: "#B833BA", // 기본 테두리 색상
-                    backgroundColor: "#E9B6EA", // 기본 배경색
+                    color: "#B833BA",
+                    borderColor: "#B833BA",
+                    backgroundColor: "#E9B6EA",
                     "&:hover": {
-                      color: "#FFFFFF", // 호버 시 글자 색상
-                      borderColor: "#FFFFFF", // 호버 시 테두리 색상
-                      backgroundColor: "#B833BA", // 호버 시 배경색
+                      color: "#FFFFFF",
+                      borderColor: "#FFFFFF",
+                      backgroundColor: "#B833BA",
                     },
                   }}
                 >
                   {summaryLoading ? "요약 생성 중..." : "AI요약듣기"}
                 </Button>
-                {hasHistory ? (
-                  <>
-                    <Button
-                      variant="outlined"
-                      onClick={handleListenFromStart}
-                      sx={{
-                        width: "400px",
-                        fontWeight: "Bold",
-                        color: "#246624",
-                        borderColor: "#246624",
-                        backgroundColor: "#DCEEDC",
-                        "&:hover": {
-                          color: "#FFFFFF",
-                          borderColor: "#FFFFFF",
-                          backgroundColor: "#246624",
-                        },
-                      }}
-                    >
-                      처음부터 듣기
-                    </Button>
-                    <Button
-                      variant="outlined"
-                      onClick={handleContinueListening}
-                      sx={{
-                        width: "400px",
-                        fontWeight: "Bold",
-                        color: "#246624",
-                        borderColor: "#246624",
-                        backgroundColor: "#DCEEDC",
-                        "&:hover": {
-                          color: "#FFFFFF",
-                          borderColor: "#FFFFFF",
-                          backgroundColor: "#246624",
-                        },
-                      }}
-                    >
-                      이어 듣기
-                    </Button>
-                  </>
+
+                {/* 나머지 버튼들 */}
+                {isLoading ? (
+                  <LoadingIndicator />
                 ) : (
-                  <Button
-                    variant="outlined"
-                    onClick={handleListenFromStart}
-                    sx={{
-                      width: "400px",
-                      fontWeight: "Bold",
-                      color: "#246624",
-                      borderColor: "#246624",
-                      backgroundColor: "#DCEEDC",
-                      "&:hover": {
-                        color: "#FFFFFF",
-                        borderColor: "#FFFFFF",
-                        backgroundColor: "#246624",
-                      },
-                    }}
-                  >
-                    전체 듣기
-                  </Button>
+                  <>
+                    {hasHistory ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          onClick={async () => {
+                            setIsLoading(true); // 로딩 시작
+                            await handleListenFromStart();
+                            setIsLoading(false); // 로딩 종료
+                          }}
+                          disabled={isLoading}
+                          sx={{
+                            width: "400px",
+                            fontWeight: "Bold",
+                            color: "#246624",
+                            borderColor: "#246624",
+                            backgroundColor: "#DCEEDC",
+                            "&:hover": {
+                              color: "#FFFFFF",
+                              borderColor: "#FFFFFF",
+                              backgroundColor: "#246624",
+                            },
+                          }}
+                        >
+                          처음부터 듣기
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          onClick={async () => {
+                            setIsLoading(true); // 로딩 시작
+                            await handleContinueListening();
+                            setIsLoading(false); // 로딩 종료
+                          }}
+                          disabled={isLoading}
+                          sx={{
+                            width: "400px",
+                            fontWeight: "Bold",
+                            color: "#246624",
+                            borderColor: "#246624",
+                            backgroundColor: "#DCEEDC",
+                            "&:hover": {
+                              color: "#FFFFFF",
+                              borderColor: "#FFFFFF",
+                              backgroundColor: "#246624",
+                            },
+                          }}
+                        >
+                          이어 듣기
+                        </Button>
+                      </>
+                    ) : (
+                      <Button
+                        variant="outlined"
+                        onClick={async () => {
+                          setIsLoading(true); // 로딩 시작
+                          await handleListenFromStart();
+                          setIsLoading(false); // 로딩 종료
+                        }}
+                        disabled={isLoading}
+                        sx={{
+                          width: "400px",
+                          fontWeight: "Bold",
+                          color: "#246624",
+                          borderColor: "#246624",
+                          backgroundColor: "#DCEEDC",
+                          "&:hover": {
+                            color: "#FFFFFF",
+                            borderColor: "#FFFFFF",
+                            backgroundColor: "#246624",
+                          },
+                        }}
+                      >
+                        전체 듣기
+                      </Button>
+                    )}
+                  </>
                 )}
               </Stack>
             </Box>

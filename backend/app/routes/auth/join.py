@@ -41,6 +41,10 @@ def join():
             connection.execute(voice_insert_query, {"user_seq": user_seq, "el_id": "XOjX7HuCs6jtaR1NqWIW", "vl_name": "남성(기본)", "vl_speed": 1, "vl_pitch": 1})
             connection.execute(voice_insert_query, {"user_seq": user_seq, "el_id": "CmvK4l3jURa7bBhVQAgX", "vl_name": "여성(기본)", "vl_speed": 1, "vl_pitch": 1})
 
+            # 인증 코드 비활성화
+            disable_code_query = text("UPDATE disability_code SET is_active = 1 WHERE code = :disabled")
+            connection.execute(disable_code_query, {"disabled": disabled})
+
             connection.commit()
             
             return jsonify({"message": True})
