@@ -18,6 +18,7 @@ import {
   Rule as RuleIcon,
   Upload as PublishIcon,
   EditNotifications as EditNotificationsIcon,
+  LibraryBooks as LibraryBooksIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -54,9 +55,10 @@ export default function DrawerComponent({ open, toggleDrawer }) {
 
   const menuItems = [
     { text: "대시보드", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "공지사항 관리", icon: <EditNotificationsIcon />, path: "/admin/noticelist" },
     { text: "공유마당", icon: <PublishIcon />, path: "/admin/predict" },
+    { text: "도서관리", icon: <LibraryBooksIcon />, path: "/admin/booklist" },
     { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
+    { text: "공지사항 관리", icon: <EditNotificationsIcon />, path: "/admin/noticelist" },
     { text: "Saved reports", isHeader: true },
     { text: "Current month", icon: <AssignmentIcon />, path: "/current-month" },
     { text: "Last quarter", icon: <AssignmentIcon />, path: "/last-quarter" },

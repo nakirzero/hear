@@ -45,6 +45,8 @@ import UploadHistoryPage from "./pages/admin/pages/UploadHistoryPage";
 import BookApprovalPage from "./pages/admin/pages/BookApprovalPage";
 import BookApprovalHistoryPage from "./pages/admin/pages/BookApprovalHistoryPage";
 import NoticeList from "./pages/admin/pages/Notice/NoticeList";
+import BookList from "./pages/admin/pages/BookList";
+import BookAdd from "./pages/admin/pages/BookAdd";
 
 function App() {
   return (
@@ -91,6 +93,8 @@ function App() {
               <Route path="/admin/approval" element={<BookApprovalPage />} />
               <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
               <Route path="/admin/noticelist" element={<NoticeList />} />
+              <Route path="/admin/booklist" element={<BookList />} />
+              <Route path="/admin/bookadd" element={<BookAdd />} />
             </Route>
           </Routes>
         </Router>
