@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAut
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import ProfileSection from '../../components/ProfileSection';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, Container, Chip, Box, Button, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, Container,CardContent, Chip, Box, Card, Button, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fetchWishBooks, cancelWishBook } from '../../api/studyAPI';
 
@@ -57,22 +57,36 @@ const MyWishBook = () => {
   };
 
   return (
-    <div>
+    <Box
+    bgcolor="#FFFEFE"
+    sx={{
+      minHeight: "100vh",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
       <Header />
       <Breadcrumb />
       <ProfileSection />
 
-      <Container maxWidth="md" style={{ marginTop: '20px', paddingBottom: '100px' }}>
-        <Typography variant="h4" component="h1" gutterBottom>
+      <Container maxWidth="xl" sx={{ mt: 3, marginTop: '0px' }} >
+ <Card component="form"  sx={{ width: 1200, margin: 'auto', mt: 5, p: 12, mb: 10, borderRadius: 5, boxShadow: 10, alignItems: "center", bgcolor: '#EAF7FF',
+          justifyContent: "center"}}>
+
+<Box sx={{ mb: 4, marginTop: '-30px', }}>
+       <Typography variant="h6" gutterBottom align="center" sx={{fontSize: "36px", mb: -1 }}>
           희망 도서 신청 목록
         </Typography>
+        </Box>
 
+        <CardContent>
         {wishBooks.map((book, index) => (
           <Accordion key={index}>
             <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`panel${index}-content`} id={`panel${index}-header`}>
               <Box display="flex" alignItems="center" width="100%" justifyContent="space-between">
                 <Box display="flex" alignItems="center">
-                  <Typography variant="body1" style={{ marginRight: '8px' }}>{book.WB_NAME}</Typography>
+                  <Typography variant="h6" style={{ marginRight: '8px', fontSize: 20 }}>{book.WB_NAME}</Typography>
                   <Typography variant="body2" color="textSecondary">{book.WB_AUTHOR}</Typography>
                 </Box>
                 <Chip
@@ -110,12 +124,14 @@ const MyWishBook = () => {
             <DialogContentText>정말로 신청을 취소하시겠습니까?</DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCancelWishBook} color="primary">네</Button>
+            <Button onClick={handleCancelWishBook} sx={{color: '#72A8FF'}}>네</Button>
             <Button onClick={handleCloseDialog} color="secondary">아니오</Button>
           </DialogActions>
         </Dialog>
+        </CardContent>
+        </Card>
       </Container>
-    </div>
+    </Box>
   );
 };
 

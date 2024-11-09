@@ -152,8 +152,6 @@ const Wishbook = () => {
                 multiline
                 rows={8}
                 required
-                name="wb_author"
-                onChange={handleForm}
                 sx={{ mb: 3, bgcolor: "#FFFFFF" }}
               />
 

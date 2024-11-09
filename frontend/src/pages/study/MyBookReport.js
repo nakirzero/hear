@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Pagination, Rating, Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Container, Card, CardContent, Pagination, Rating, Button, Dialog, DialogActions, DialogContent, PaginationItem, DialogTitle } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
@@ -58,41 +58,70 @@ const MyBookReport = () => {
   };
 
   return (
-    <Box>
+    <Box
+    bgcolor="#FFFEFE"
+    sx={{
+      minHeight: "100vh",
+      overflow: "hidden",
+      display: "flex",
+      flexDirection: "column",
+    }}
+  >
       <Header />
       <Breadcrumb />
       <ProfileSection />
 
-      <Box sx={{ maxWidth: '80%', margin: 'auto', marginTop: 4, textAlign: 'center' }}>
-        <Typography variant="h5" gutterBottom>
+      <Container maxWidth="xl" sx={{ mt: 3, marginTop: '0px' }} >
+ <Card component="form"  sx={{ width: 1200, margin: 'auto', mt: 5, p: 12, mb: 10, borderRadius: 5, boxShadow: 10, alignItems: "center", bgcolor: '#EAF7FF',
+          justifyContent: "center"}}>
+      
+<Box sx={{ mb: 4, marginTop: '-30px', }}>
+        <Typography variant="h6" gutterBottom align="center" sx={{fontSize: "36px", mb: -1 }}>
           독서노트
         </Typography>
-      </Box>
-      <Box sx={{ maxWidth: '80%', textAlign: 'right' }}>
-        <Button variant="contained" color="primary" onClick={handleDialogOpen}>
+            </Box>
+      <Box sx={{ maxWidth: '92%', textAlign: 'right' }}>
+        <Button variant="outlined" sx={{
+          mr: 1,
+          bgcolor: '#72A8FF',
+          color: '#000000',
+          borderColor: '#72A8FF',
+          border: '1px solid',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          padding: '6px 12px',
+          minWidth: '100px',
+          minHeight: '30px',
+          "&:hover": {
+            bgcolor: '#FFFFFF',
+            color: '#72A8FF',
+            borderColor: '#72A8FF',
+            border: '1px solid'
+          }
+        }} onClick={handleDialogOpen}>
           글쓰기
         </Button>
       </Box>
-
+      <CardContent>
       <Dialog open={dialogOpen} onClose={handleDialogClose}>
         <DialogTitle>입력 방식 선택</DialogTitle>
         <DialogContent>어떻게 글을 작성하시겠습니까?</DialogContent>
         <DialogActions>
-          <Button onClick={handleTextWrite} color="primary">글쓰기</Button>
-          <Button onClick={handleVoiceWrite} color="primary">말하기</Button>
+          <Button onClick={handleTextWrite} sx={{color: '#72A8FF'}}>글쓰기</Button>
+          <Button onClick={handleVoiceWrite} sx={{color: '#72A8FF'}}>말하기</Button>
           <Button onClick={handleDialogClose} color="secondary">취소</Button>
         </DialogActions>
       </Dialog>
 
-      <TableContainer component={Paper} sx={{ maxWidth: '70%', margin: 'auto', padding: 2, marginTop: 2 }}>
+      <TableContainer component={Paper} sx={{ maxWidth: '90%', margin: 'auto', padding: 2, marginTop: 2 }}>
         <Table sx={{ tableLayout: 'fixed' }}>
           <TableHead>
             <TableRow>
-              <TableCell sx={{ width: '5%' }}>번호</TableCell>
-              <TableCell sx={{ width: '20%' }}>책 제목</TableCell>
-              <TableCell sx={{ width: '40%' }}>요약</TableCell>
-              <TableCell sx={{ width: '20%' }}>평점</TableCell>
-              <TableCell sx={{ width: '15%' }}>작성 날짜</TableCell>
+              <TableCell align="center" sx={{  fontSize: "18px", fontWeight: 'bold', width: '10%' }}>번호</TableCell>
+              <TableCell align="center" sx={{  fontSize: "18px", fontWeight: 'bold',  width: '20%' }}>책 제목</TableCell>
+              <TableCell  align="center" sx={{  fontSize: "18px", fontWeight: 'bold',  width: '40%' }}>요약</TableCell>
+              <TableCell  align="center" sx={{  fontSize: "18px", fontWeight: 'bold',  width: '20%' }}>평점</TableCell>
+              <TableCell  align="center" sx={{  fontSize: "18px", fontWeight: 'bold',  width: '15%' }}>작성 날짜</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -103,25 +132,50 @@ const MyBookReport = () => {
                 tabIndex={0} // 키보드 포커스를 위한 tabIndex 설정
                 sx={{ 
                   backgroundColor: selectedRow === report.REPORT_SEQ ? '#e0f7fa' : 'inherit',
-                  '&:hover': { backgroundColor: '#FFD433', cursor: 'pointer' },
-                  '&:focus': { backgroundColor: '#FFC700' } // 키보드 포커스 시 색상 변경
+                  '&:hover': { backgroundColor: '#72A8FF', cursor: 'pointer' },
+                  '&:focus': { backgroundColor: '#72A8FF' } // 키보드 포커스 시 색상 변경
                 }}
               >
-                <TableCell>{index + 1 + (page - 1) * rowsPerPage}</TableCell>
-                <TableCell>{report.REPORT_TITLE}</TableCell>
-                <TableCell>{truncateText(report.REPORT_DETAIL, 45)}</TableCell>
-                <TableCell>
+                <TableCell sx={{ textAlign: "center" }}>{index + 1 + (page - 1) * rowsPerPage}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>{report.REPORT_TITLE}</TableCell>
+                <TableCell sx={{ textAlign: "left" }}>{truncateText(report.REPORT_DETAIL, 45)}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>
                   <Rating value={report.RATING} readOnly />
                 </TableCell>
-                <TableCell>{new Date(report.REPORT_CrtDt).toLocaleDateString()}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>{new Date(report.REPORT_CrtDt).toLocaleDateString()}</TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: 2 }}>
-        <Pagination count={totalPages} page={page} onChange={handlePageChange} color="primary" />
-      </Box>
+
+     {/* Pagination */}
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, mb: -10 }}>
+          <Pagination
+            count={totalPages}
+            page={page}
+            onChange={handlePageChange}
+            renderItem={(item) => (
+              <PaginationItem
+                {...item}
+                sx={{
+                  "&.Mui-selected": {
+                    bgcolor: "#72A8FF",
+                    color: "#ffffff",
+                  },
+                  "&:hover": {
+                    bgcolor: "#72A8FF",
+                    color: "#ffffff",
+                  },
+                }}
+              />
+            )}
+          />
+        </Box>
+
+      </CardContent>
+      </Card>
+      </Container>
     </Box>
   );
 };
