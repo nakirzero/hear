@@ -26,14 +26,28 @@ import {
   LibraryBooks,
 } from "@mui/icons-material";
 
+import AudioGuideButton from '../components/AudioGuideButton';
+import { PAGE_GUIDE_TEXT } from '../constants/audioGuideText';
+
+import { useSpeak, useSpeakOnFocus } from "../hooks/useSpeak";
+
 function Main() {
   const navigate = useNavigate();
   const [userid, setUserId] = useState("");
   const [userpw, setUserpw] = useState("");
   const [message, setMessage] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(null);
+  const [alertMessage] = useState(null);
   const { setUserObject } = useAuth();
+
+  // 음성 안내를 위한 훅 사용
+  const { speak } = useSpeak();
+  
+  // 각 입력 필드와 버튼에 대한 음성 안내 설정
+  useSpeakOnFocus('userid-input', '아이디를 입력하세요');
+  useSpeakOnFocus('password-input', '비밀번호를 입력하세요');
+  useSpeakOnFocus('login-button', '로그인 버튼입니다');
+  useSpeakOnFocus('join-button', '회원가입 버튼입니다');
 
   useEffect(() => {
     const token =
@@ -46,17 +60,10 @@ function Main() {
   const handleInputChange = (setter) => (e) => setter(e.target.value);
 
   const handleUserLogin = async () => {
-    if (!userid || !userpw) {
-      setMessage("아이디 또는 비밀번호를 입력해주세요.");
-      return;
-    }
     try {
       const response = await UserLogin(userid, userpw);
       if (response && response.token) {
-        // token을 sessionStorage에 기본 저장
         sessionStorage.setItem("token", response.token);
-  
-        // JWT 토큰 디코딩 및 전역 상태 업데이트
         const decodedUser = jwtDecode(response.token);
         setUserObject(decodedUser);
   
@@ -67,9 +74,11 @@ function Main() {
         }
       } else {
         setMessage("아이디 혹은 비밀번호가 잘못되었습니다.");
+        speak("아이디 혹은 비밀번호가 잘못되었습니다.");
       }
     } catch (error) {
       setMessage("로그인 중 오류가 발생했습니다.");
+      speak("로그인 중 오류가 발생했습니다.");
       console.error("Login error:", error);
     }
   };
@@ -83,14 +92,16 @@ function Main() {
       }
     }
   
-    // 다이얼로그 닫기 및 페이지 이동
-    setDialogOpen(false);
-    setAlertMessage("로그인에 성공하였습니다.");
-    setTimeout(() => {
-      setAlertMessage(null);
-      navigate("/menu");
-    }, 1000);
+    // 성공 메시지 음성 안내 후 바로 페이지 이동
+    speak("로그인에 성공하였습니다.");
+    navigate("/menu");
   };
+
+  useEffect(() => {
+    if (dialogOpen) {
+      speak("자동 로그인을 설정하시겠습니까?");
+    }
+  }, [dialogOpen, speak]);
 
   const buttonStyle = {
     width: 300,
@@ -118,6 +129,8 @@ function Main() {
           {alertMessage}
         </Alert>
       )}
+
+    <AudioGuideButton pageGuideText={PAGE_GUIDE_TEXT.main} />
 
       <Grid
         container
@@ -230,22 +243,30 @@ function Main() {
                 width: "auto",
               }}
             />
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              handleUserLogin();
+            }}
+            style={{ width: '100%' }}
+            >
             <CardContent sx={{ width: "100%", mt: 10 }}>
-              {" "}
-              {/* 텍스트 필드와 버튼을 아래로 배치하기 위해 marginTop을 추가 */}
               <TextField
+                id="userid-input"
                 label="아이디"
                 variant="outlined"
                 fullWidth
+                required
                 sx={{ mb: 4, backgroundColor: "#FFFFFF", borderRadius: 1 }}
                 onChange={handleInputChange(setUserId)}
                 value={userid}
               />
               <TextField
+                id="password-input"
                 label="패스워드"
                 type="password"
                 variant="outlined"
                 fullWidth
+                required
                 sx={{ mb: 3, backgroundColor: "#FFFFFF", borderRadius: 1 }}
                 onChange={handleInputChange(setUserpw)}
                 value={userpw}
@@ -267,6 +288,8 @@ function Main() {
               }}
             >
               <Button
+                id="login-button"
+                type="submit"
                 variant="contained"
                 color="primary"
                 sx={buttonStyle}
@@ -275,6 +298,8 @@ function Main() {
                 <Typography variant="h6">로그인</Typography>
               </Button>
               <Button
+                id="join-button"
+                type="button"
                 variant="contained"
                 color="primary"
                 onClick={() => navigate("/join")}
@@ -283,16 +308,17 @@ function Main() {
                 <Typography variant="h6">회원가입</Typography>
               </Button>
             </Box>
+            </form>
           </Card>
         </Grid>
       </Grid>
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+      <Dialog open={dialogOpen} onClose={() => {setDialogOpen(false); speak("자동 로그인 설정을 취소했습니다");}}>
         <DialogContent>
           <DialogContentText>자동 로그인을 설정하시겠습니까?</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handlePersistChoice(true)}>네</Button>
-          <Button onClick={() => handlePersistChoice(false)}>아니오</Button>
+          <Button onFocus={() => speak("네")} onClick={() => handlePersistChoice(true)}>네</Button>
+          <Button onFocus={() => speak("아니오")} onClick={() => handlePersistChoice(false)}>아니오</Button>
         </DialogActions>
       </Dialog>
     </Container>
