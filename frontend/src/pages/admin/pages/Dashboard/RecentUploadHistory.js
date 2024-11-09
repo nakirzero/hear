@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, Typography, Button } from '@mui/material';
 import { fetchRecentUploads } from '../../api/predictAPI'; // API 호출 함수 임포트
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
+import { formatInTimeZone } from 'date-fns-tz';
 
 const RecentUploadHistory = () => {
   const [uploads, setUploads] = useState([]);
@@ -39,7 +40,7 @@ const RecentUploadHistory = () => {
         {uploads.length > 0 ? (
           uploads.map((upload, index) => (
             <Typography key={index} variant="body2">
-              - {upload.PRO_NAME} ({new Date(upload.JSON_CrtDt).toLocaleDateString('ko-KR')}){' '}
+              - {upload.PRO_NAME} ({formatInTimeZone(new Date(upload.JSON_CrtDt), 'UTC', 'yyyy.MM.dd')}){' '}
               <Typography component="span" variant="caption">
                 (건수: {upload.upload_count})
               </Typography>

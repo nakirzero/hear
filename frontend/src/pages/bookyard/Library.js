@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Breadcrumb from "../../components/BreadCrumb";
 import Header from "../../components/Header";
 import {
@@ -45,7 +45,7 @@ const Library = () => {
   const [selectedFilters, setSelectedFilters] = useState([]);
 
   const filterCategories = ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"];
-  const filterValues = ["410", "420", "430", "440", "450", "460"];
+  const filterValues = useMemo(() => ["410", "420", "430", "440", "450", "460"], []);
 
   const { currentData, totalPages, page, handlePageChange } = usePagination(
     filteredBookList.length > 0 ? filteredBookList : bookList,
@@ -66,18 +66,21 @@ const Library = () => {
 
   useEffect(() => {
     let filteredBooks = bookList;
-
+  
     if (!category) {
-      setFilteredBookList(bookList);
+      // 상태가 다를 때만 업데이트
+      if (filteredBookList.length !== bookList.length) {
+        setFilteredBookList(bookList);
+      }
       return;
     }
-
+  
     if (category) {
       if (category === "400") {
         filteredBooks = filteredBooks.filter((book) =>
           filterValues.includes(book.CATEGORY)
         );
-
+  
         if (selectedFilters.length > 0) {
           filteredBooks = filteredBooks.filter((book) =>
             selectedFilters.includes(String(book.CATEGORY))
@@ -89,9 +92,12 @@ const Library = () => {
         );
       }
     }
-
-    setFilteredBookList(filteredBooks);
-  }, [category, selectedFilters, bookList]);
+  
+    // 상태가 다를 때만 업데이트
+    if (JSON.stringify(filteredBooks) !== JSON.stringify(filteredBookList)) {
+      setFilteredBookList(filteredBooks);
+    }
+  }, [category, selectedFilters, bookList, filterValues, filteredBookList]);
 
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);

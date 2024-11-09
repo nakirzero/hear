@@ -11,11 +11,7 @@ import TimelineItem from '@mui/lab/TimelineItem';
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineConnector from '@mui/lab/TimelineConnector';
 import TimelineContent from '@mui/lab/TimelineContent';
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-};
+import { formatInTimeZone } from 'date-fns-tz';
 
 const timeToSeconds = (timeString) => {
   const [hours, minutes, seconds] = timeString.split(':').map(Number);
@@ -176,7 +172,7 @@ const History = () => {
           <Box sx={{ mt: 1 }}></Box>
           <Typography variant="body2" color="textSecondary">{`${row.HIST_EdPt} / ${row.RUN_TIME}`}</Typography>
           <Box sx={{ mt: 1 }}></Box>
-          <Typography variant="body2" color="textSecondary">{formatDate(row.HIST_VwDt)}</Typography>
+          <Typography variant="body2" color="textSecondary">{formatInTimeZone(new Date(row.HIST_VwDt), 'UTC', 'yyyy.MM.dd')}</Typography>
         </Box>
       </CardContent>
     </Card>

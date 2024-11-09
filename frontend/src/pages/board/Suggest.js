@@ -9,11 +9,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import ProfileSection from '../../components/ProfileSection';
 import { fetchSuggests } from '../../api/boardAPI';
 import usePagination from '../../hooks/usePagination';
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-};
+import { formatInTimeZone } from 'date-fns-tz';
 
 const Suggest = () => {
   const navigate = useNavigate();
@@ -126,7 +122,7 @@ const Suggest = () => {
                 onKeyPress={(event) => handleKeyPress(event, row)}>
                   <TableCell align="center">{row.NOTICE_SEQ}</TableCell>
                   <TableCell align="center">{row.NOTICE_TITLE}</TableCell>
-                  <TableCell align="center">{formatDate(row.NOTICE_CrtDt)}</TableCell>
+                  <TableCell align="center">{formatInTimeZone(new Date(row.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
                   <TableCell align="center">{row.NICKNAME}</TableCell>
                 </TableRow>
               ))}

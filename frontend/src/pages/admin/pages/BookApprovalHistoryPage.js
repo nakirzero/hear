@@ -21,6 +21,7 @@ import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
 import theme from "../../../theme.js";
 import { fetchApprovalHistory } from "../api/wishbookAPI.js"; // axios API 호출 함수 import
+import { formatInTimeZone } from 'date-fns-tz';
 
 const BookApprovalHistoryPage = () => {
   const [selectedTab, setSelectedTab] = useState(1); // 기본적으로 두 번째 탭 선택
@@ -106,7 +107,7 @@ const BookApprovalHistoryPage = () => {
                       <TableCell>{history.WB_NAME}</TableCell>
                       <TableCell>{history.NICKNAME}</TableCell>
                       <TableCell>{getStatusLabel(history.WB_APPROVAL)}</TableCell>
-                      <TableCell>{new Date(history.WB_AplDt).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatInTimeZone(new Date(history.WB_AplDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

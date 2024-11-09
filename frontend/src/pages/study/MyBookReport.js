@@ -7,6 +7,7 @@ import ProfileSection from '../../components/ProfileSection';
 import { fetchBookReports } from '../../api/studyAPI';
 import { useAuth } from '../../context/AuthContext';
 import usePagination from '../../hooks/usePagination';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const MyBookReport = () => {
   const { userObject } = useAuth();
@@ -142,7 +143,7 @@ const MyBookReport = () => {
                 <TableCell sx={{ textAlign: "center" }}>
                   <Rating value={report.RATING} readOnly />
                 </TableCell>
-                <TableCell sx={{ textAlign: "center" }}>{new Date(report.REPORT_CrtDt).toLocaleDateString()}</TableCell>
+                <TableCell sx={{ textAlign: "center" }}>{formatInTimeZone(new Date(report.REPORT_CrtDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
               </TableRow>
             ))}
           </TableBody>

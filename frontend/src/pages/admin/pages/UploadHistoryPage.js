@@ -99,7 +99,8 @@ const UploadHistoryPage = () => {
                           hour: "2-digit",
                           minute: "2-digit",
                           second: "2-digit",
-                          hourCycle: "h23" // 24시간 형식 사용
+                          hourCycle: "h23", // 24시간 형식 사용
+                          timeZone: "UTC"   // GMT 시간 기준 출력
                         })}
                       </TableCell>
                       <TableCell>{history.file_name}</TableCell>

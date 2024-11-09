@@ -27,6 +27,7 @@ import Copyright from "../../components/Copyright.js";
 import { fetchRecentNotices, deleteNotice } from "../../api/NoticeAPI.js"; // deleteNotice 함수 임포트
 import NoticeWriteModal from "./NoticeWriteModal.js";
 import NoticeUpdateModal from "./NoticeUpdateModal.js"; // 업데이트 모달 임포트
+import { formatInTimeZone } from 'date-fns-tz';
 
 const NoticeList = () => {
   const [notices, setNotices] = useState([]);
@@ -152,7 +153,7 @@ const NoticeList = () => {
                     <TableRow key={index}>
                       <TableCell>{notice.NOTICE_TITLE}</TableCell>
                       <TableCell>
-                        {new Date(notice.NOTICE_CrtDt).toLocaleDateString("ko-KR")}
+                        {formatInTimeZone(new Date(notice.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}
                       </TableCell>
                       <TableCell>{notice.NICKNAME || "관리자"}</TableCell>
                       <TableCell>
