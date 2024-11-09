@@ -12,6 +12,7 @@ import Breadcrumb from "../../components/BreadCrumb";
 import ProfileSection from "../../components/ProfileSection";
 // import { useAuth } from '../../context/AuthContext';
 import { fetchNoticeDetail } from "../../api/boardAPI";
+import { formatInTimeZone } from 'date-fns-tz';
 
 const NoticeDetail = () => {
   //   const navigate = useNavigate();
@@ -89,16 +90,11 @@ const NoticeDetail = () => {
               >
                 작성일:{" "}
                 {report.NOTICE_MdfDt
-                  ? new Date(report.NOTICE_MdfDt)
-                      .toLocaleDateString()
-                      .replace(/\.$/, "")
-                  : new Date(report.NOTICE_CrtDt)
-                      .toLocaleDateString()
-                      .replace(/\.$/, "")}
+                  ? formatInTimeZone(new Date(report.NOTICE_MdfDt), 'UTC', 'yyyy.MM.dd')
+                  : formatInTimeZone(new Date(report.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}
                 <br></br>
                 작성자: {report.NICKNAME}
               </Typography>
-
               <Box sx={{ mt: 4 }}>
                 {/* <Typography variant="h6" sx={{ mb: 1 , ml: 2}}>
               제목

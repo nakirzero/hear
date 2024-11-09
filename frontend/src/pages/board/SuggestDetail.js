@@ -6,7 +6,7 @@ import Breadcrumb from "../../components/BreadCrumb";
 import ProfileSection from "../../components/ProfileSection";
 import { useAuth } from '../../context/AuthContext';
 import { fetchSuggestDetail,fetchSuggestDelete } from "../../api/boardAPI";
-
+import { formatInTimeZone } from 'date-fns-tz';
 
 
 const SuggestDetail = () => {
@@ -17,12 +17,9 @@ const SuggestDetail = () => {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false); // 삭제 확인 다이얼로그 상태
   const notice_seq = location.state.selected;
 
-
   useEffect(() => {
     console.log("selected", notice_seq);
 
-    
-  
     const getReport = async () => {
       try {
         const data = await fetchSuggestDetail(notice_seq);
@@ -97,7 +94,10 @@ if(report){
           </Typography>
           </Box>
           <Typography variant="subtitle1" fontWeight="bold" align="right" gutterBottom>
-            작성일: { report.NOTICE_MdfDt  ? new Date(report.NOTICE_MdfDt).toLocaleDateString().replace(/\.$/, "") : new Date(report.NOTICE_CrtDt).toLocaleDateString().replace(/\.$/, "") }<br></br>
+          작성일: {report.NOTICE_MdfDt
+                    ? formatInTimeZone(new Date(report.NOTICE_MdfDt), 'UTC', 'yyyy.MM.dd')
+                    : formatInTimeZone(new Date(report.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}
+                    <br></br>
             작성자: { report.NICKNAME }
           </Typography>
 

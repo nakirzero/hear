@@ -28,6 +28,7 @@ import DrawerComponent from "../components/DrawerComponent.js";
 import theme from "../../../theme";
 
 import { fetchBookRequests, updateBookRequestStatus } from "../api/wishbookAPI.js";
+import { formatInTimeZone } from 'date-fns-tz';
 
 const BookApprovalPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -136,7 +137,7 @@ const BookApprovalPage = () => {
                       <TableCell>{request.WB_NAME}</TableCell>
                       <TableCell>{request.WB_AUTHOR}</TableCell>
                       <TableCell>{request.NICKNAME}</TableCell>
-                      <TableCell>{new Date(request.WB_AplDt).toLocaleDateString()}</TableCell>
+                      <TableCell>{formatInTimeZone(new Date(request.WB_AplDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
                       <TableCell>
                         <TextField
                           value={request.comment}

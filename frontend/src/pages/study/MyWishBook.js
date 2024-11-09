@@ -6,6 +6,7 @@ import ProfileSection from '../../components/ProfileSection';
 import { Accordion, AccordionSummary, AccordionDetails, Typography, Container,CardContent, Chip, Box, Card, Button, Dialog, DialogContent, DialogContentText, DialogActions } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fetchWishBooks, cancelWishBook } from '../../api/studyAPI';
+import { formatInTimeZone } from 'date-fns-tz';
 
 const approvalStatus = {
   1: { label: '대기', color: 'default' },
@@ -97,11 +98,11 @@ const MyWishBook = () => {
               </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Typography>신청 날짜: {new Date(book.WB_AplDt).toLocaleDateString()}</Typography>
+              <Typography>신청 날짜: {formatInTimeZone(new Date(book.WB_AplDt), 'UTC', 'yyyy.MM.dd')}</Typography>
               {book.WB_APPROVAL >= 2 && (
                 <>
                   {book.WB_DelDt && (
-                    <Typography>처리 일자: {new Date(book.WB_DelDt).toLocaleDateString()}</Typography>
+                    <Typography>처리 일자: {formatInTimeZone(new Date(book.WB_DelDt), 'UTC', 'yyyy.MM.dd')}</Typography>
                   )}
                   {book.WB_COMENT && (
                     <Typography>처리 내용: {book.WB_COMENT}</Typography>

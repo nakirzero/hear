@@ -10,6 +10,8 @@ const DailySignUpChart = () => {
     const getSignUpData = async () => {
       try {
         const result = await fetchDailySignUpCounts();
+        console.log('entry.date', result);
+        
         setData(result.map(entry => ({
           name: new Date(entry.date).toLocaleDateString('ko-KR'), // 날짜 형식 변환
           value: entry.value // 회원가입 건수

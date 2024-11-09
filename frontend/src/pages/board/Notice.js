@@ -8,12 +8,7 @@ import Breadcrumb from '../../components/BreadCrumb';
 import ProfileSection from '../../components/ProfileSection';
 import { fetchNotices } from '../../api/boardAPI';
 import usePagination from '../../hooks/usePagination';
-
-// 날짜 포맷팅 함수
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
-};
+import { formatInTimeZone } from 'date-fns-tz';
 
 const Notice = () => {
   const navigate = useNavigate();
@@ -125,7 +120,7 @@ const Notice = () => {
                 onKeyPress={(event) => handleKeyPress(event, row)}>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_SEQ}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{row.NOTICE_TITLE}</TableCell>
-                  <TableCell sx={{ textAlign: "center" }}>{formatDate(row.NOTICE_CrtDt)}</TableCell>
+                  <TableCell sx={{ textAlign: "center" }}>{formatInTimeZone(new Date(row.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
                   <TableCell sx={{ textAlign: "center" }}>{row.NICKNAME}</TableCell>
                 </TableRow>
               ))}
