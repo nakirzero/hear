@@ -89,7 +89,7 @@ def bookData():
     if connection:
         try:
             # SQL 삽입문
-            query = text(" SELECT *, DATE_FORMAT(BOOK_CrtDt, '%Y-%m-%d') AS formatted_date FROM book ORDER BY BOOK_CrtDt DESC  ")
+            query = text(" SELECT *, DATE_FORMAT(BOOK_CrtDt, '%Y.%m.%d') AS formatted_date FROM book ORDER BY BOOK_CrtDt DESC  ")
             print(query,"query")
             result = connection.execute(query)
             keys = result.keys()
