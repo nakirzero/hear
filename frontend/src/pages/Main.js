@@ -97,6 +97,12 @@ function Main() {
     navigate("/menu");
   };
 
+  useEffect(() => {
+    if (dialogOpen) {
+      speak("자동 로그인을 설정하시겠습니까?");
+    }
+  }, [dialogOpen, speak]);
+
   const buttonStyle = {
     width: 300,
     height: 50,
@@ -311,8 +317,8 @@ function Main() {
           <DialogContentText>자동 로그인을 설정하시겠습니까?</DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => handlePersistChoice(true)}>네</Button>
-          <Button onClick={() => handlePersistChoice(false)}>아니오</Button>
+          <Button onFocus={() => speak("네")} onClick={() => handlePersistChoice(true)}>네</Button>
+          <Button onFocus={() => speak("아니오")} onClick={() => handlePersistChoice(false)}>아니오</Button>
         </DialogActions>
       </Dialog>
     </Container>
