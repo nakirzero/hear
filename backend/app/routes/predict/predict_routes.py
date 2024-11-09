@@ -73,6 +73,7 @@ def upload_csv():
             subtitles.append({
                 'PRO_NAME': row.get('program_name', 'unknown'),
                 'JSON_PUBLISHER': row.get('publisher', 'unknown'),
+                'INFORMATION' : row.get('information', ''),
                 'JSON_DETAIL': row.get('subtitle', ''),
                 'JSON_DIVISION': row.get('category', '')
             })
@@ -89,8 +90,8 @@ def upload_csv():
         try:
             for item in subtitles:
                 insert_query = text("""
-                    INSERT INTO json (PRO_NAME, JSON_PUBLISHER, JSON_DETAIL, JSON_DIVISION, JSON_CrtDt) 
-                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :JSON_DETAIL, :JSON_DIVISION, NOW())
+                    INSERT INTO json (PRO_NAME, JSON_PUBLISHER, INFORMATION, JSON_DETAIL, JSON_DIVISION, JSON_CrtDt) 
+                    VALUES (:PRO_NAME, :JSON_PUBLISHER, :INFORMATION, :JSON_DETAIL, :JSON_DIVISION, NOW())
                 """)
                 connection.execute(insert_query, item)
             connection.commit()
@@ -205,7 +206,7 @@ def add_book_from_json():
     if connection:
         try:
             query = text("""
-                INSERT INTO book (CATEGORY, BOOK_NAME, PUBLISHER, INFORMATION, BOOK_CrtDt)
+                INSERT INTO book (CATEGORY, BOOK_NAME, AUTHOR, INFORMATION, BOOK_TEXT, BOOK_CrtDt)
                 SELECT 
                     CASE 
                         WHEN JSON_DIVISION = '건강' THEN 410
@@ -217,8 +218,9 @@ def add_book_from_json():
                         ELSE NULL
                     END AS CATEGORY,
                     PRO_NAME AS BOOK_NAME,
-                    JSON_PUBLISHER AS PUBLISHER,
-                    JSON_DETAIL AS INFORMATION,
+                    JSON_PUBLISHER AS AUTHOR,
+                    INFORMATION AS INFORMATION,
+                    JSON_DETAIL AS BOOK_TEXT,
                     JSON_MdfDt AS BOOK_CrtDt
                 FROM json
                 WHERE JSON_DIVISION IS NOT NULL                

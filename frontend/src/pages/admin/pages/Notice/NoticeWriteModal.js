@@ -16,7 +16,7 @@ const NoticeWriteModal = ({ open, onClose, onSuccess }) => {
     event.preventDefault();
 
     const postData = {
-      userseq: 50, // 관리자 사용자 ID로 가정
+      userseq: 2, // 관리자 사용자 ID로 가정
       nickname: '관리자',
       title,
       detail,

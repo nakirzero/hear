@@ -141,48 +141,61 @@ function Main() {
               justifyContent: "center",
             }}
           >
-            <Box display="flex" alignItems="center" gap={1}>
+             <Box display="flex" alignItems="center" justifyContent={'left'}
+              gap={1}>
+             <House fontSize="large" sx={{ color: "#000000" }} />
+              <Typography variant="h6"  sx={{ mb: 2, mt: 2 }}>
+                가족의 목소리로 도서 재생
+              </Typography>
+              </Box>
+              {/* <Typography variant="body2" textAlign='left' sx={{ color: "#333" }}>
+            [ 가족의 목소리로 책을 읽어주는 AI ]
+            </Typography> */}
+            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+가족의 목소리를 학습한 AI로 책을 읽으며 따뜻한 심리적 안정감을 느껴보세요.
+            </Typography>
+
+
+            <Box display="flex" alignItems="center" justifyContent={'left'}
+              gap={1}>
               <AutoStories fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
-                오디오북 목소리 설정
+              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+                 자연스러운 목소리로 몰입감 향상
               </Typography>
             </Box>
-            <Typography variant="body2" sx={{ color: "#333", mb: 3 }}>
-              Our product effortlessly adjusts to your needs, boosting
-              efficiency and simplifying your tasks.
+            {/* <Typography variant="body2" fontWeight='bold' fontSize=' 16px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
+            [ 몰입을 더하는 자연스러운 음성 ]
+            </Typography> */}
+            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+            기계적인 음성을 넘어선, 듣기 편하고 자연스러운 음성으로 몰입감을 높입니다
             </Typography>
 
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box display="flex" alignItems="center" justifyContent={'left'}
+              gap={1}>
               <InterpreterMode fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
-                가족 목소리 녹음재생
+              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+                사용자를 위한 편의성과 접근성 제공
               </Typography>
             </Box>
-            <Typography variant="body2" sx={{ color: "#333", mb: 3 }}>
-              Our product effortlessly adjusts to your needs, boosting
-              efficiency and simplifying your tasks.
+            {/* <Typography variant="body2" fontWeight='bold' fontSize=' 18px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
+            [ 편리하고 접근성 높은 서비스 ]
+            </Typography> */}
+            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+음성 명령과 사용자 친화적인 UX/UI로 누구나 쉽게 사용할 수 있습니다.
             </Typography>
 
-            <Box display="flex" alignItems="center" gap={1}>
-              <House fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
-                가족 목소리 녹음재생
-              </Typography>
-            </Box>
-            <Typography variant="body2" sx={{ color: "#333", mb: 3 }}>
-              Our product effortlessly adjusts to your needs, boosting
-              efficiency and simplifying your tasks.
-            </Typography>
-
-            <Box display="flex" alignItems="center" gap={1}>
+            <Box display="flex" alignItems="center" justifyContent={'left'}
+              gap={1}>
               <LibraryBooks fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 1, mt: 2 }}>
-                가족 목소리 녹음재생
+              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+                ChatGPT를 활용한 요약 낭독 기능
               </Typography>
             </Box>
-            <Typography variant="body2" sx={{ color: "#333", mb: 3 }}>
-              Our product effortlessly adjusts to your needs, boosting
-              efficiency and simplifying your tasks.
+            {/* <Typography variant="body2" fontWeight='bold' fontSize=' 18px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
+            [ 책의 핵심만 쏙쏙! ]
+            </Typography> */}
+            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+            ChatGPT를 활용해 책 내용을 요약하고 하이라이트를 간단히 들려드립니다.
             </Typography>
           </Card>
         </Grid>
