@@ -6,8 +6,8 @@ app = Flask(__name__)
 
 # 전역 CORS 설정 적용
 CORS(app, resources={
-    r"/api/*": {  # /api prefix를 포함
-        "origins": ["http://localhost:3000"],
+    r"/api/*": {
+        "origins": ["https://h-ear.site", "http://localhost:3000"],  # 운영 도메인 추가
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type"],
         "supports_credentials": True,
