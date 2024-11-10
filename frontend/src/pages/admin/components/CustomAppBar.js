@@ -1,11 +1,15 @@
-import React from 'react';
-import { AppBar as MuiAppBar, Toolbar, IconButton, Badge, styled, Box } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { AppBar as MuiAppBar, Toolbar, IconButton, Badge, styled, Box, Menu, MenuItem, Typography } from '@mui/material';
 import { Menu as MenuIcon, Notifications as NotificationsIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 
 // 로고 이미지 가져오기
-import logo from '../assets/logo1.png'
+import logo from '../assets/logo1.png';
+
+import { initializeSSE } from '../api/sseApi'; // SSE 구독 로직 가져오기
+import { fetchNotifications } from '../api/notificationApi'; // DB에서 알림 가져오기
+import { formatNotificationMessage } from '../utils/notificationUtils'; // 메시지 조합 함수
 
 const drawerWidth = 240;
 
@@ -30,12 +34,38 @@ const AppBar = styled(MuiAppBar, {
 export default function CustomAppBar({ open, toggleDrawer }) {
   const navigate = useNavigate();
   const { setUserObject } = useAuth();
+  const [notifications, setNotifications] = useState([]);
+  const [anchorEl, setAnchorEl] = useState(null); // 메뉴 열기 상태 관리
+
+  // 페이지 로드 시 DB에서 알림 가져오기 및 SSE 구독 설정
+  useEffect(() => {
+    const fetchInitialNotifications = async () => {
+      const initialNotifications = await fetchNotifications(); // userSeq 제거
+      setNotifications(initialNotifications);
+    };
+  
+    fetchInitialNotifications();
+  
+    const eventSource = initializeSSE(setNotifications);
+  
+    return () => {
+      eventSource.close(); // 컴포넌트 언마운트 시 연결 해제
+    };
+  }, []);
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
     setUserObject(null); // 전역 상태 초기화
     navigate("/"); // 메인 페이지로 이동
+  };
+
+  const handleNotificationClick = (event) => {
+    setAnchorEl(event.currentTarget); // 메뉴를 여는 요소 설정
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null); // 메뉴 닫기
   };
 
   return (
@@ -54,11 +84,41 @@ export default function CustomAppBar({ open, toggleDrawer }) {
         {/* 로고 이미지 삽입 */}
         <Box component="img" src={logo} alt="Logo" sx={{ height: 40, marginRight: 'auto' }} />
 
-        <IconButton color="inherit">
-          <Badge badgeContent={4} color="secondary">
+        <IconButton color="inherit" onClick={handleNotificationClick}>
+          <Badge badgeContent={notifications.length} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
+        
+        {/* 알림 메뉴 */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          {notifications.length > 0 ? (
+            notifications.map((notification, index) => (
+              <MenuItem key={index} onClick={handleClose}>
+                <Typography variant="body2">
+                  {formatNotificationMessage(notification)}
+                </Typography>
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem onClick={handleClose}>
+              <Typography variant="body2">No new notifications</Typography>
+            </MenuItem>
+          )}
+        </Menu>
+
         <IconButton color="inherit" onClick={handleLogout} sx={{ marginLeft: '16px' }}>
           <LogoutIcon />
         </IconButton>
