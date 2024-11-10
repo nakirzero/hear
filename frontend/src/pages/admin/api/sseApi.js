@@ -1,9 +1,5 @@
 export const initializeSSE = (setNotifications) => {
-  const baseURL = process.env.NODE_ENV === 'development' 
-    ? 'http://localhost:5000/api/notification/stream'
-    : '/api/notification/stream';
-    
-  const eventSource = new EventSource(baseURL);
+  const eventSource = new EventSource('http://localhost:5000/api/notification/stream');
   eventSource.onmessage = (event) => {
     console.log('New SSE event:', event.data);
     setNotifications((prevNotifications) => [
@@ -12,5 +8,5 @@ export const initializeSSE = (setNotifications) => {
     ]);
   };
 
-  return eventSource;
+  return eventSource; // 반환하여 필요 시 외부에서 연결 해제 가능
 };
