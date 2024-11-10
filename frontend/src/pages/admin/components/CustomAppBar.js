@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { AppBar as MuiAppBar, Toolbar, IconButton, Badge, styled, Box, Menu, MenuItem, Typography } from '@mui/material';
 import { Menu as MenuIcon, Notifications as NotificationsIcon, Logout as LogoutIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -7,9 +7,9 @@ import { useAuth } from '../../../context/AuthContext';
 // 로고 이미지 가져오기
 import logo from '../assets/logo1.png';
 
-import { initializeSSE } from '../api/sseApi'; // SSE 구독 로직 가져오기
-import { fetchNotifications } from '../api/notificationApi'; // DB에서 알림 가져오기
 import { formatNotificationMessage } from '../utils/notificationUtils'; // 메시지 조합 함수
+
+import { usePolling } from '../hooks/usePolling'; // 새로운 훅
 
 const drawerWidth = 240;
 
@@ -37,21 +37,8 @@ export default function CustomAppBar({ open, toggleDrawer }) {
   const [notifications, setNotifications] = useState([]);
   const [anchorEl, setAnchorEl] = useState(null); // 메뉴 열기 상태 관리
 
-  // 페이지 로드 시 DB에서 알림 가져오기 및 SSE 구독 설정
-  useEffect(() => {
-    const fetchInitialNotifications = async () => {
-      const initialNotifications = await fetchNotifications(); // userSeq 제거
-      setNotifications(initialNotifications);
-    };
-  
-    fetchInitialNotifications();
-  
-    const eventSource = initializeSSE(setNotifications);
-  
-    return () => {
-      eventSource.close(); // 컴포넌트 언마운트 시 연결 해제
-    };
-  }, []);
+  // SSE 대신 폴링 훅 사용
+  usePolling(setNotifications);
 
   const handleLogout = () => {
     localStorage.clear();
