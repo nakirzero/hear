@@ -41,3 +41,59 @@ def get_notifications():
             close_db_connection(connection)
 
     return jsonify({"error": "Database connection failed"}), 500
+
+# 알림 확인 엔드포인트
+@notification_bp.route('/notification/read/<int:noti_seq>', methods=['PUT'])
+def mark_notification_as_read(noti_seq):
+    connection = get_db_connection()
+    if connection:
+        try:
+            # 알림 읽음 처리
+            update_query = text("""
+                UPDATE notifications 
+                SET NOTI_READ_YN = 'Y',
+                    NOTI_READ_DT = CURRENT_TIMESTAMP 
+                WHERE NOTI_SEQ = :noti_seq
+            """)
+            
+            connection.execute(update_query, {'noti_seq': noti_seq})
+            connection.commit()
+
+            return jsonify({"message": "Notification marked as read successfully"}), 200
+            
+        except Exception as db_error:
+            connection.rollback()
+            print(f"Failed to mark notification as read: {db_error}")
+            return jsonify({"error": "Failed to mark notification as read"}), 500
+            
+        finally:
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500
+
+# 알림 모두 읽음 처리 엔드 포인트
+@notification_bp.route('/notification/read-all', methods=['PUT'])
+def mark_all_notifications_as_read():
+    connection = get_db_connection()
+    if connection:
+        try:
+            update_query = text("""
+                UPDATE notifications 
+                SET NOTI_READ_YN = 'Y',
+                    NOTI_READ_DT = CURRENT_TIMESTAMP 
+                WHERE NOTI_READ_YN = 'N'
+            """)
+            
+            connection.execute(update_query)
+            connection.commit()
+            return jsonify({"message": "All notifications marked as read"}), 200
+            
+        except Exception as db_error:
+            connection.rollback()
+            print(f"Failed to mark all notifications as read: {db_error}")
+            return jsonify({"error": "Failed to mark all notifications as read"}), 500
+            
+        finally:
+            close_db_connection(connection)
+
+    return jsonify({"error": "Database connection failed"}), 500

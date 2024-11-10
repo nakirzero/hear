@@ -44,7 +44,7 @@ const Library = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  const filterCategories = ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"];
+  const filterCategories = useMemo(() => ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"], []);
   const filterValues = useMemo(() => ["410", "420", "430", "440", "450", "460"], []);
 
   const { currentData, totalPages, page, handlePageChange } = usePagination(
@@ -56,13 +56,20 @@ const Library = () => {
     const fetchData = async () => {
       try {
         const response = await fetchLibrary();
-        setBookList(response);
+        // response의 CATEGORY 값을 filterValues와 매핑하여 CATEGORY_LABEL 생성
+        const mappedResponse = response.map((book) => {
+          const categoryIndex = filterValues.indexOf(book.CATEGORY);
+          const categoryLabel = categoryIndex !== -1 ? filterCategories[categoryIndex] : "기타";
+          return { ...book, CATEGORY_LABEL: categoryLabel };
+        });
+
+        setBookList(mappedResponse);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
       }
     };
     fetchData();
-  }, []);
+  }, [filterCategories, filterValues]);
 
   useEffect(() => {
     let filteredBooks = bookList;
@@ -350,8 +357,13 @@ const Library = () => {
             <TableHead>
               <TableRow>
                 <TableCell align="center" sx={{ width: "40%", fontSize: 18, fontWeight: 'bold' }}>
-                  책 제목
+                  {category === "400" ? "방송 제목" : "책 제목"}
                 </TableCell>
+                {category === "400" && (
+                  <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold' }}>
+                    분류
+                  </TableCell>
+                )}
                 <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold'}}>
                   작가
                 </TableCell>
@@ -383,6 +395,9 @@ const Library = () => {
                   <TableCell component="th" scope="row" align="center">
                     {book.BOOK_NAME}
                   </TableCell>
+                  {category === "400" && (
+                    <TableCell align="center">{book.CATEGORY_LABEL}</TableCell>
+                  )}
                   <TableCell align="center">{book.AUTHOR}</TableCell>
                   <TableCell align="center">{book.RUN_TIME}</TableCell>
                   <TableCell align="center">{book.SUM_TIME}</TableCell>
