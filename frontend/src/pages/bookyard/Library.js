@@ -44,7 +44,7 @@ const Library = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedFilters, setSelectedFilters] = useState([]);
 
-  const filterCategories = ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"];
+  const filterCategories = useMemo(() => ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"], []);
   const filterValues = useMemo(() => ["410", "420", "430", "440", "450", "460"], []);
 
   const { currentData, totalPages, page, handlePageChange } = usePagination(
@@ -69,7 +69,7 @@ const Library = () => {
       }
     };
     fetchData();
-  }, []);
+  }, [filterCategories, filterValues]);
 
   useEffect(() => {
     let filteredBooks = bookList;

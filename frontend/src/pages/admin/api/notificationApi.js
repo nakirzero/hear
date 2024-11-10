@@ -10,3 +10,25 @@ export const fetchNotifications = async () => {
     return [];
   }
 };
+
+// 알림 데이터 읽음 처리
+export const markNotificationAsRead = async (notiSeq) => {
+  try {
+    const response = await axios.put(`/api/notification/read/${notiSeq}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to mark notification as read:', error);
+    throw error;
+  }
+};
+
+// 모든 알림 읽음 처리
+export const markAllNotificationsAsRead = async () => {
+  try {
+    const response = await axios.put('/api/notification/read-all');
+    return response.data;
+  } catch (error) {
+    console.error('Failed to mark all notifications as read:', error);
+    throw error;
+  }
+};

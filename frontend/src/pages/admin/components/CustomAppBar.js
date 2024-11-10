@@ -1,15 +1,12 @@
 import React, { useState } from 'react';
 import { AppBar as MuiAppBar, Toolbar, IconButton, Badge, styled, Box, Menu, MenuItem, Typography } from '@mui/material';
-import { Menu as MenuIcon, Notifications as NotificationsIcon, Logout as LogoutIcon } from '@mui/icons-material';
+import { Menu as MenuIcon, Notifications as NotificationsIcon, Logout as LogoutIcon, DoneAll as DoneAllIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
-
-// 로고 이미지 가져오기
 import logo from '../assets/logo1.png';
-
-import { formatNotificationMessage } from '../utils/notificationUtils'; // 메시지 조합 함수
-
-import { usePolling } from '../hooks/usePolling'; // 새로운 훅
+import { formatNotificationMessage, getNotificationPath } from '../utils/notificationUtils';
+import { usePolling } from '../hooks/usePolling';
+import { markNotificationAsRead, markAllNotificationsAsRead } from '../api/notificationApi';
 
 const drawerWidth = 240;
 
@@ -35,24 +32,45 @@ export default function CustomAppBar({ open, toggleDrawer }) {
   const navigate = useNavigate();
   const { setUserObject } = useAuth();
   const [notifications, setNotifications] = useState([]);
-  const [anchorEl, setAnchorEl] = useState(null); // 메뉴 열기 상태 관리
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  // SSE 대신 폴링 훅 사용
   usePolling(setNotifications);
 
   const handleLogout = () => {
     localStorage.clear();
     sessionStorage.clear();
-    setUserObject(null); // 전역 상태 초기화
-    navigate("/"); // 메인 페이지로 이동
+    setUserObject(null);
+    navigate("/");
   };
 
   const handleNotificationClick = (event) => {
-    setAnchorEl(event.currentTarget); // 메뉴를 여는 요소 설정
+    setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    setAnchorEl(null); // 메뉴 닫기
+    setAnchorEl(null);
+  };
+
+  const handleNotificationRead = async (notification) => {
+    try {
+      await markNotificationAsRead(notification.NOTI_SEQ);
+      setNotifications(prev => prev.filter(notif => notif.NOTI_SEQ !== notification.NOTI_SEQ));
+      handleClose();
+      const path = getNotificationPath(notification);
+      navigate(path);
+    } catch (error) {
+      console.error('Failed to process notification:', error);
+    }
+  };
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllNotificationsAsRead();
+      setNotifications([]);
+      handleClose();
+    } catch (error) {
+      console.error('Failed to mark all notifications as read:', error);
+    }
   };
 
   return (
@@ -68,7 +86,6 @@ export default function CustomAppBar({ open, toggleDrawer }) {
           <MenuIcon />
         </IconButton>
         
-        {/* 로고 이미지 삽입 */}
         <Box component="img" src={logo} alt="Logo" sx={{ height: 40, marginRight: 'auto' }} />
 
         <IconButton color="inherit" onClick={handleNotificationClick}>
@@ -77,34 +94,55 @@ export default function CustomAppBar({ open, toggleDrawer }) {
           </Badge>
         </IconButton>
         
-        {/* 알림 메뉴 */}
         <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right',
-          }}
-        >
-          {notifications.length > 0 ? (
-            notifications.map((notification, index) => (
-              <MenuItem key={index} onClick={handleClose}>
-                <Typography variant="body2">
-                  {formatNotificationMessage(notification)}
-                </Typography>
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl)}
+            onClose={handleClose}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            {notifications.length > 0 ? [
+              // 모든 알림 읽음 처리 버튼
+              <MenuItem 
+                key="mark-all-read"
+                onClick={handleMarkAllAsRead}
+                sx={{ 
+                  borderBottom: '1px solid #eee',
+                  color: '#246624',
+                  '&:hover': {
+                    backgroundColor: '#DCEEDC',
+                  }
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <DoneAllIcon fontSize="small" />
+                  <Typography variant="body2">모든 알림 읽음 처리</Typography>
+                </Box>
+              </MenuItem>,
+              
+              // 알림 목록
+              ...notifications.map((notification) => (
+                <MenuItem 
+                  key={notification.NOTI_SEQ}
+                  onClick={() => handleNotificationRead(notification)}
+                >
+                  <Typography variant="body2">
+                    {formatNotificationMessage(notification)}
+                  </Typography>
+                </MenuItem>
+              ))
+            ] : [
+              <MenuItem key="no-notifications" onClick={handleClose}>
+                <Typography variant="body2">새로운 알림이 없습니다</Typography>
               </MenuItem>
-            ))
-          ) : (
-            <MenuItem onClick={handleClose}>
-              <Typography variant="body2">No new notifications</Typography>
-            </MenuItem>
-          )}
-        </Menu>
+            ]}
+          </Menu>
 
         <IconButton color="inherit" onClick={handleLogout} sx={{ marginLeft: '16px' }}>
           <LogoutIcon />
