@@ -24,7 +24,7 @@ def send_notification(user_seq, noti_type, ref_seq, additional_info=None):
             query = text("SELECT NICKNAME FROM user WHERE USER_SEQ = :user_seq")
             result = connection.execute(query, {"user_seq": user_seq}).fetchone()
             if result:
-                nickname = result['NICKNAME']
+                nickname = result[0]
         except Exception as db_error:
             print(f"Failed to fetch nickname: {db_error}")
         finally:

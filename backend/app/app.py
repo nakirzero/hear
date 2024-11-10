@@ -5,7 +5,15 @@ from app.routes import register_blueprints
 app = Flask(__name__)
 
 # 전역 CORS 설정 적용
-CORS(app)
+CORS(app, resources={
+    r"/api/*": {  # /api prefix를 포함
+        "origins": ["http://localhost:3000"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type"],
+        "supports_credentials": True,
+        "expose_headers": ["Content-Type"]
+    }
+})
 
 # Blueprint 등록
 register_blueprints(app)
