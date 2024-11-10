@@ -42,6 +42,7 @@ def send_notification(user_seq, noti_type, ref_seq, additional_info=None):
         notification_data.update(additional_info)
 
     for client in clients:
+        print(f"Sending notification to client: {notification_data}")  # 디버깅 로그 추가
         client.put(notification_data)
 
 def get_sse_response():
