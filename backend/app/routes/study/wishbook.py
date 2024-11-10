@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from app.model import get_db_connection, close_db_connection
 from sqlalchemy import text
+from ...utils.sse_utils import send_notification, save_notification
+
 
 wishbook_bp = Blueprint('study', __name__)
 
@@ -87,7 +89,7 @@ def application_wishbook():
                 INSERT INTO wishbook (USER_SEQ, WB_NAME, WB_AUTHOR, WB_AplDt, WB_APPROVAL, WB_REASON)
                 VALUES (:user_seq, :wb_name, :wb_author, NOW(), :wb_appoval, :wb_reason)
             """)
-            connection.execute(query, {
+            result = connection.execute(query, {
                 "user_seq": user_seq,
                 "wb_name": wb_name,
                 "wb_author": wb_author,
@@ -95,6 +97,16 @@ def application_wishbook():
                 "wb_reason": wb_reason
             })
             connection.commit()  # 변경 사항 적용
+
+            # 알림 DB 적재 및 SSE 전송
+            save_notification(user_seq, 'wishbook', result.lastrowid)  # REF_SEQ는 마지막 삽입 ID로 설정
+
+            # 원시 데이터를 전달 (추가 정보 없이)
+            send_notification(
+                user_seq,
+                'wishbook',
+                result.lastrowid
+            )
 
             return jsonify({"success": True, "message": "Registration of the wish book was successful"}), 200
         except Exception as db_error:
