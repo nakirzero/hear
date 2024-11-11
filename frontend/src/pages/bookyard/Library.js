@@ -42,7 +42,7 @@ const Library = () => {
   const [category, setCategory] = useState(location.state?.category || null);
   const [book, setBook] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState([]); // 초기에는 빈 배열로 설정
 
   const filterCategories = useMemo(() => ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"], []);
   const filterValues = useMemo(() => ["410", "420", "430", "440", "450", "460"], []);
@@ -51,6 +51,11 @@ const Library = () => {
     filteredBookList.length > 0 ? filteredBookList : bookList,
     rowsPerPage
   );
+
+  useEffect(() => {
+    // filterValues가 초기화된 후 selectedFilters를 설정
+    setSelectedFilters(filterValues);
+  }, [filterValues]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +78,7 @@ const Library = () => {
 
   useEffect(() => {
     let filteredBooks = bookList;
+    console.log('selectedFilters 초기 상태:', selectedFilters);
   
     if (!category) {
       // 상태가 다를 때만 업데이트
@@ -108,12 +114,18 @@ const Library = () => {
 
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
-    setSelectedFilters([]);
+
+    // 필요에 따라 초기화할지 결정
+    if (newCategory !== "400") {
+      setSelectedFilters([]); // 이 줄을 필요에 따라 삭제 또는 수정
+    } else {
+      setSelectedFilters(filterValues); // 공유세상일 때 기본값 유지
+    }
   };
 
   const handleBook = (book) => {
     setBook(book.BOOK_SEQ);
-    navigate(`/library/book/`, { state: { selected: book.BOOK_SEQ } });
+    navigate(`/library/book/`, { state: { selected: book.BOOK_SEQ, category } });
   };
 
   const handleKeyPress = (event, book) => {
@@ -336,7 +348,10 @@ const Library = () => {
                       key={index}
                       control={
                         <Checkbox
+                          id={`checkbox-${filterValues[index]}`} // id 추가
+                          name={`checkbox-${filterValues[index]}`} // name 추가
                           value={filterValues[index]}
+                          checked={selectedFilters.includes(filterValues[index])} // 현재 상태 반영
                           sx={checkboxStyle}
                           onChange={handleFilterChange}
                         />

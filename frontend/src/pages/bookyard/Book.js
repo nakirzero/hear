@@ -30,6 +30,8 @@ const Book = () => {
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading();
   const selectedBook = location.state.selected;
 
+  const category = location.state?.category || null; // category 추출
+
   useEffect(() => {
     const fetchBookData = async () => {
       if (selectedBook) {
@@ -276,22 +278,21 @@ const Book = () => {
         >
           <Paper
             sx={{
-              width: "450px",
-              height: "450px",
+              width: "350px", // 컨테이너 너비 조정
+              height: "400px", // 컨테이너 높이 조정
               backgroundColor: "#d3d3d3",
               borderRadius: "10px",
+              overflow: "hidden", // 모서리의 radius에 맞게 잘리도록 설정
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Box>
-              <img
-                src={`/static/image/bookcover/${book.IMG_PATH}`}
-                alt={"책 커버 사진 없음"}
-                style={{ width: 250, height: 250, objectFit: "cover" }}
-              />
-            </Box>
+            <img
+              src={`/static/image/bookcover/${book.IMG_PATH}`}
+              alt={"책 커버 사진 없음"}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           </Paper>
 
           {/* 도서 정보와 버튼들 */}
@@ -340,8 +341,9 @@ const Book = () => {
                     setIsLoading(true); // 로딩 시작
                     await handleAISummary();
                     setIsLoading(false); // 요약 생성 완료 후에도 로딩 유지
+                    
                   }}
-                  disabled={summaryLoading || isLoading}
+                  disabled={category === "200" || summaryLoading || isLoading} // 카테고리가 200이면 비활성화
                   sx={{
                     width: "400px",
                     fontWeight: "Bold",
