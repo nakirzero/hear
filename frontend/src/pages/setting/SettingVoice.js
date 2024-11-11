@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { useAuth } from "../../context/AuthContext"; // AuthContext에서 useAuth 가져오기
-import { Typography, Box, Button, Container, Card, TextField } from '@mui/material';
+import { Typography, Box, Button, Container, Card, TextField, Modal } from '@mui/material';
 import Header from '../../components/Header';
 import Breadcrumb from '../../components/BreadCrumb';
 import ProfileSection from "../../components/ProfileSection";
@@ -11,35 +11,65 @@ import useSnackbar from '../../hooks/useSnackbar'; // useSnackbar 훅 가져오�
 const SettingVoice = () => {
   const { userObject } = useAuth(); // 전역 사용자 정보 가져오기
   const [isRecording, setIsRecording] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
   const [audioURL, setAudioURL] = useState('');
   const [audioBlob, setAudioBlob] = useState(null);
   const [voiceName, setVoiceName] = useState('');
   const { isLoading, setIsLoading, LoadingIndicator } = useLoading("목소리를 저장 중입니다..."); // 로딩 훅 사용
   const { openSnackbar, SnackbarComponent } = useSnackbar(); // useSnackbar 훅 사용
   const mediaRecorderRef = useRef(null);
+  const intervalRef = useRef(null);
 
   const handleRecording = async () => {
     if (isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      setIsModalOpen(false); // 녹음 중지 시 모달 닫기
+      clearInterval(intervalRef.current);
+      setRecordingTime(0);
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
-
+  
         const audioChunks = [];
+        let startTime = null;
+  
+        mediaRecorder.onstart = () => {
+          startTime = Date.now(); // 녹음 시작 시간 기록
+          setIsModalOpen(true); // 녹음 시작 시 모달 열기
+          setRecordingTime(0); // 시간 초기화
+          intervalRef.current = setInterval(() => {
+            setRecordingTime((prev) => prev + 1);
+          }, 1000); // 1초마다 증가
+        };
+  
         mediaRecorder.ondataavailable = (event) => {
           audioChunks.push(event.data);
         };
-
+  
         mediaRecorder.onstop = () => {
+          const endTime = Date.now(); // 녹음 종료 시간 기록
+          const duration = (endTime - startTime) / 1000; // 초 단위로 변환
+          console.log("녹음 시간(초):", duration);
+
+          clearInterval(intervalRef.current);
+          
+          // 녹음 시간이 10초 미만이면 사용자에게 알림
+          if (duration < 10) {
+            openSnackbar("녹음 시간이 너무 짧습니다. 최소 10초 이상 녹음해주세요.", "warning");
+            return;
+          }
+  
           const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
           const audioURL = URL.createObjectURL(audioBlob);
           setAudioBlob(audioBlob);
           setAudioURL(audioURL);
+          setIsModalOpen(false); // 녹음 중지 시 모달 닫기
         };
-
+  
         mediaRecorder.start();
         setIsRecording(true);
       } catch (err) {
@@ -84,7 +114,18 @@ const SettingVoice = () => {
     }
   };
 
+  const handleModalClose = () => {
+    if (isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      setIsModalOpen(false);
+      clearInterval(intervalRef.current);
+      setRecordingTime(0);
+    }
+  };
+
   return (
+    
 <Box
       bgcolor="#FFFEFE"
       sx={{
@@ -105,6 +146,29 @@ const SettingVoice = () => {
       <Box flexGrow={1} display="flex" justifyContent="center" py={8} bgcolor="#FFF2ED"
       
       >
+        {/* 모달 코드 */}
+        <Modal open={isModalOpen} onClose={handleModalClose}>
+          <Box sx={{ width: 400, margin: 'auto', marginTop: '15%', p: 4, bgcolor: 'white', borderRadius: 2 }}>
+            <Typography variant="h6" align="center" gutterBottom>
+              예문을 읽어주세요
+            </Typography>
+            <Typography variant="body1" align="center" gutterBottom>
+              "이 문장을 읽어보세요. 녹음을 완료했다면 아래의 정지 버튼을 눌러주세요."
+            </Typography>
+            <Typography variant="h6" align="center" color="textSecondary">
+            녹음 시간: {recordingTime}초
+            </Typography>
+            <Button
+              variant="contained"
+              color="error"
+              fullWidth
+              onClick={handleModalClose}
+              sx={{ mt: 2 }}
+            >
+              녹음 중지
+            </Button>
+          </Box>
+        </Modal>
         <Container maxWidth="sm" >
           <Typography variant="h6" gutterBottom align="center" sx={{fontSize: "36px", marginTop: '-100px'}}>
             목소리 녹음하기
