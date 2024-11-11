@@ -483,7 +483,7 @@ const AISummary = () => {
             <img
               src={`/static/image/bookcover/${book.IMG_PATH}`}
               alt={"책 커버 사진 없음"}
-              style={{ width: 100, height: 100, objectFit: "cover" }}
+              style={{ width: 175, height: 250, objectFit: "cover" }}
             />
             {/* Placeholder for the image */}
           </Box>
@@ -801,7 +801,7 @@ const AISummary = () => {
           </Grid>
         </Grid>
       </Card>
-      <Box sx={{ margin: "0 auto", width: "30%", padding: 2 }}>
+      <Box sx={{ position: "fixed", bottom: 20, left: "50%", transform: "translateX(-50%)", width: "90%", maxWidth: "600px", zIndex: 999 }}>
         {alertMessage && (
           <Alert variant="filled" severity="success" sx={{ mb: 4 }}>
             {alertMessage}
