@@ -11,18 +11,25 @@ const CategoryChart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const getCategoryCounts = async () => {
-      try {
-        const result = await fetchCategoryCounts();
-        console.log('result', result);
-        
-        setData(result);
-      } catch (error) {
-        console.error("Error fetching category data:", error);
-      }
-    };
+    // 컴포넌트 마운트 후 약간의 지연을 주어 데이터 로딩
+    const timer = setTimeout(() => {
+      const getCategoryCounts = async () => {
+        try {
+          const result = await fetchCategoryCounts();
+          console.log('result', result);
+          
+          // 데이터 구조 확인 및 변환이 필요한 경우
+          const formattedData = Array.isArray(result) ? result : [];
+          setData(formattedData);
+        } catch (error) {
+          console.error("Error fetching category data:", error);
+        }
+      };
 
-    getCategoryCounts();
+      getCategoryCounts();
+    }, 300); // 300ms 지연
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleClick = () => {
@@ -63,6 +70,10 @@ const CategoryChart = () => {
             nameKey="name"
             label={renderCustomizedLabel}
             labelLine={false}
+            isAnimationActive={true}
+            animationBegin={0}
+            animationDuration={1500}
+            animationEasing="ease-out"
           >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

@@ -19,18 +19,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme";
 import { fetchUploadHistory } from "../api/predictAPI.js";
 
 const UploadHistoryPage = () => {
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const [selectedTab, setSelectedTab] = useState(1); // 기본적으로 두 번째 탭 선택
-  const [open, setOpen] = useState(true);
   const navigate = useNavigate();
   const [uploadHistory, setUploadHistory] = useState([]);
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   useEffect(() => {
     const loadUploadHistory = async () => {
@@ -72,7 +69,7 @@ const UploadHistoryPage = () => {
           }}
         >
             <Toolbar />
-            <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600, display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
+            <Container sx={{ height: "calc(100vh - 64px)", minWidth: "xl", display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
               <Box sx={{ width: '100%' }}> {/* borderBottom 제거 */}
                 <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
                   <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>공유 마당 데이터 업로드</Typography>} />

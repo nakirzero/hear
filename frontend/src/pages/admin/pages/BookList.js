@@ -25,24 +25,18 @@ import {
 } from "@mui/material";
 
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme";
 import CustomAppBar from "../components/CustomAppBar.js";
 import { useNavigate } from "react-router-dom";
 
 const BookList = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const [bookData, setBookData] = useState([]);
   const [openDialog, setOpenDialog] = useState(false);
   const [selectedTab, setSelectedTab] = useState(1);
   const [selectedBookText, setSelectedBookText] = useState("");
-
-
-  const toggleDrawer = () => setOpen(!open);
-
-
-
-
 
   const handleBookData = async () => {
     try {
@@ -100,32 +94,22 @@ const handleTabChange = (newValue) => {
           }}
         >
           <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 4, // 두 요소 사이의 간격
-              mb: -3, // 아래쪽 여백
-            }}
-          >
-            
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered >
-                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
-                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
+          <Container sx={{ height: "calc(100vh - 64px)", width: "100%", maxWidth: "none", display: "flex", flexDirection: "column", alignItems: "center", py: 4, px: 4}}>
+          
+          <Box sx={{ width: '100%', borderColor: 'divider' }}>  {/* border 추가 */}
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered >
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
             </Tabs>
           </Box>
-
-
-
           <TableContainer  component={Paper}
-  sx={{
-    marginTop: 8,
-    borderRadius: 5,
-    overflow: 'auto' // 스크롤 가능하게 설정
-  }}
->
+            sx={{
+              marginTop: 2,
+              borderRadius: 5,
+              maxHeight: "calc(100vh - 250px)", // 세로 스크롤을 위한 최대 높이 설정
+              width: '100%',
+            }}
+          >
             <Table  stickyHeader>
               <TableHead>
                 <TableRow>

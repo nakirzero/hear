@@ -21,6 +21,7 @@ import {
 } from "@mui/material";
 import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme";
 import useLoading from "../../../hooks/useLoading.js";
 
@@ -28,18 +29,14 @@ import useLoading from "../../../hooks/useLoading.js";
 import { fetchResults, uploadFile, addBookFromJson, pollingProgress } from "../api/predictAPI.js";
 
 const PredictPage = () => {
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const [selectedTab, setSelectedTab] = useState(0);
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
   const [results, setResults] = useState(null);
   const [error, setError] = useState(null);
   const [isPolling, setIsPolling] = useState(false);
-  const [open, setOpen] = useState(true);
   const navigate = useNavigate();
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   const handleTabChange = (newValue) => {
     setSelectedTab(newValue);
@@ -151,7 +148,7 @@ const PredictPage = () => {
             </Tabs>
 
             {/* 파일 선택과 관련된 UI를 감싸는 Box */}
-            <Box mt={4} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, minHeight: 100,  background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, mb: 10
+            <Box mt={2} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, minHeight: 100,  background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, mb: 10
              }}>
               <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, mt: 5, mb: 5 }}>
   <input

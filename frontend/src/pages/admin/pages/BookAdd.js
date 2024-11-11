@@ -20,13 +20,14 @@ import {
 } from "@mui/material";
 
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme";
 import CustomAppBar from "../components/CustomAppBar.js";
 import { useNavigate } from "react-router-dom";
 
 const BookAdd = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState(true);
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const [selectedTab, setSelectedTab] = useState(0);
 
   const [filename, setFilename] = useState("");
@@ -39,8 +40,6 @@ const BookAdd = () => {
     information: "",
     text: "",
   });
-
-  const toggleDrawer = () => setOpen(!open);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -129,19 +128,22 @@ const handleTabChange = (newValue) => {
             flexGrow: 1,
             background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
-            height: "100vh",            
+            theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       
+            overflowY: "scroll",  // 세로 스크롤만 필요할 때 표시
+            height: "100vh",
+            paddingBottom: "2rem"  // 하단 패딩 추가
           }}
         >
           <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
-          
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-           <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
-                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
+          <Container sx={{ minHeight: "calc(100vh - 64px)", maxWidth: "xl", display: "flex", flexDirection: "column", alignItems: "center", py: 4, pb: 8}}>
+          <Box sx={{ width: '100%', borderColor: 'divider' }}>  {/* Tabs 컨테이너에 border 추가 */}
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
             </Tabs>
+          </Box>
 
-            <Box mt={4} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, minHeight: 700, background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, mb: 10, boxShadow: 10 }}>
+            <Box mt={2} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, height: 'auto', background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, boxShadow: 10, py: 4, mb: 8 }}>
   <Grid mt={3} container spacing={4} justifyContent="center">
     {/* 카테고리 선택 */}
     <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>

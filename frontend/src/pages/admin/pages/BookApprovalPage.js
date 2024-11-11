@@ -25,6 +25,7 @@ import {
 } from "@mui/material";
 import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme";
 
 import { fetchBookRequests, updateBookRequestStatus } from "../api/wishbookAPI.js";
@@ -34,15 +35,11 @@ const BookApprovalPage = () => {
   const [selectedTab, setSelectedTab] = useState(0);
   const [bookRequests, setBookRequests] = useState([]);
   const [error, setError] = useState(null);
-  const [open, setOpen] = useState(true);
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
   const [actionType, setActionType] = useState("");
   const navigate = useNavigate();
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   const handleTabChange = (newValue) => {
     setSelectedTab(newValue);
@@ -114,24 +111,21 @@ const BookApprovalPage = () => {
         >
 
           <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
-             TabIndicatorProps={{
-              sx: {
-                bottom: '26px', // 밑줄 위치를 아래로 이동하여 간격 추가
-              },
-            }}
-            >
-            <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 신청 승인</Typography>} />
-            <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 승인 이력</Typography>} />
-          </Tabs>
+          <Container sx={{ height: "calc(100vh - 64px)", width : "100%", maxWidth: "none", display: "flex", flexDirection: "column", alignItems: "center", py: 4, px:4 }}>
+          <Box sx={{ width: '100%', borderColor: 'divider' }}>
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered >
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 신청 승인</Typography>} />
+              <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 승인 이력</Typography>} />
+            </Tabs>
+          </Box>
           <TableContainer  component={Paper}
-  sx={{
-    marginTop: 5,
-    borderRadius: 5,
-    overflow: 'auto' // 스크롤 가능하게 설정
-  }}
->
+            sx={{
+              marginTop: 2,
+              borderRadius: 5,
+              width: '100%',
+              maxHeight: "calc(100vh - 250px)", // 세로 스크롤을 위한 최대 높이
+            }}
+          >
 <Table  stickyHeader>
                 <TableHead>
                   <TableRow>
