@@ -44,7 +44,6 @@ const PredictPage = () => {
   const handleTabChange = (newValue) => {
     setSelectedTab(newValue);
     if (newValue === 1) {
-      // 두 번째 탭 클릭 시 업로드 이력 페이지로 이동
       navigate("/admin/uploadhistory");
     }
   };
@@ -99,19 +98,18 @@ const PredictPage = () => {
   };
 
   useEffect(() => {
-    if (!isPolling || progress >= 100) return; // 조건을 추가하여 중복 실행 방지
-  
+    if (!isPolling || progress >= 100) return;
+
     const interval = setInterval(async () => {
       try {
         const currentProgress = await pollingProgress();
         setProgress(currentProgress);
-  
+
         if (currentProgress >= 100) {
           clearInterval(interval);
           setIsPolling(false);
           setIsLoading(false);
-  
-          // fetchPredictionResults를 호출하기 전에 확인 조건 추가
+
           if (progress < 100) {
             fetchPredictionResults();
           }
@@ -123,10 +121,9 @@ const PredictPage = () => {
         setIsLoading(false);
       }
     }, 100);
-  
+
     return () => clearInterval(interval);
-  }, [isPolling, progress, setIsLoading]); // progress를 의존성 배열에 추가하여 최신 상태 유지
-  
+  }, [isPolling, progress, setIsLoading]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -135,66 +132,85 @@ const PredictPage = () => {
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
 
-        <Box
+        <Box 
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
-              height: "100vh",            
+              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
+            overflowY: "auto",
+            height: "100vh",
           }}
         >
           <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
-
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-            <Tab label={<Typography variant="h4" noWrap>공유 마당 데이터 업로드</Typography>} />
-            <Tab label={<Typography variant="h4" noWrap>공유 마당 업로드 이력</Typography>} />
-          </Tabs>
-          <input
-              type="file"
-              accept=".csv"
-              onChange={handleFileChange}
-              style={{ display: "none" }}
-              id="file-upload"
-            />
-            <label htmlFor="file-upload">
-              <Button variant="contained" color="primary" component="span" sx={{ marginTop: 2 }}>
-                파일 선택
-              </Button>
-            </label>
-
-            {file && (
-              <Typography variant="body1" mt={2}>
-                선택된 파일: {file.name}
-              </Typography>
-            )}
-
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={handleUploadAndPredict}
-              disabled={!file}
-              sx={{ marginTop: 2 }}
+          <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
+              TabIndicatorProps={{
+                sx: {
+                  bottom: '26px',
+                },
+              }}
             >
-              예측 실행
-            </Button>
+              <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>공유 마당 데이터 업로드</Typography>} />
+              <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>공유 마당 업로드 이력</Typography>} />
+            </Tabs>
 
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ marginTop: 2 }}
-              onClick={handleAddBookFromJson}
-            >
-              예측된 데이터 업로드
-            </Button>
+            {/* 파일 선택과 관련된 UI를 감싸는 Box */}
+            <Box mt={4} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, minHeight: 100,  background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, mb: 10
+             }}>
+              <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, mt: 5, mb: 5 }}>
+  <input
+    type="file"
+    accept=".csv"
+    onChange={handleFileChange}
+    style={{ display: "none" }}
+    id="file-upload"
+  />
+  <label htmlFor="file-upload">
+    <Button
+      variant="contained"
+      color="primary"
+      component="span"
+      sx={{ minWidth: 160, height: 50, fontSize: '18px', fontWeight: 'bold' }}
+    >
+      파일 선택
+    </Button>
+  </label>
+
+  <Button
+    variant="contained"
+    color="secondary"
+    onClick={handleUploadAndPredict}
+    disabled={!file}
+    sx={{ minWidth: 160, height: 50, fontSize: '18px', fontWeight: 'bold' }}
+  >
+    예측 실행
+  </Button>
+
+  <Button
+    variant="contained"
+    color="primary"
+    onClick={handleAddBookFromJson}
+    sx={{ minWidth: 160, height: 50, fontSize: '18px', fontWeight: 'bold' }}
+  >
+    예측된 데이터 업로드
+  </Button>
+</Box>
+
+
+              {file && (
+                <Typography variant="h6" mt={5} mb={5}>
+                  선택된 파일: {file.name}
+                </Typography>
+              )}
 
             {isLoading && <LoadingIndicator />}
 
             {progress > 0 && (
-              <Box mt={2} sx={{ width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 } }}>
-              <Typography variant="body1" align="center">진행률: {progress.toFixed(2)}%</Typography>
-              <LinearProgress variant="determinate" value={progress} />
+              <Box mt={2} mb={4} sx={{ width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 } }}>
+                <Typography variant="body1" align="center" ml={-6}>진행률: {progress.toFixed(2)}%</Typography>
+                <LinearProgress variant="determinate" value={progress} />
               </Box>
             )}
 
@@ -205,7 +221,7 @@ const PredictPage = () => {
             )}
 
             {results && (
-              <TableContainer component={Paper} sx={{ marginTop: 4, width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 }, maxHeight: 400, overflow: "auto" }} elevation={3}>
+              <TableContainer component={Paper} sx={{ marginTop: 4, mb: 10, width: "100%", maxWidth: { xs: "100%", sm: 600, md: 800 }, maxHeight: 400, overflow: "auto" }} elevation={3}>
                 <Table stickyHeader>
                   <TableHead>
                     <TableRow>
@@ -237,6 +253,7 @@ const PredictPage = () => {
                 </Table>
               </TableContainer>
             )}
+            </Box>
           </Container>
         </Box>
       </Box>

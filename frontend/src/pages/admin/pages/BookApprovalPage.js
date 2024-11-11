@@ -97,36 +97,50 @@ const BookApprovalPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Box sx={{ display: "flex", minHeight: "100vh", overflowX: "hidden" }}>
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
+
         
         <Box
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-              theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],
-            overflow: "auto",
+                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+            height: "100vh",            
           }}
         >
 
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-            <Tab label={<Typography variant="h4" noWrap>희망 도서 신청 승인</Typography>} />
-            <Tab label={<Typography variant="h4" noWrap>희망 도서 승인 이력</Typography>} />
+          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
+             TabIndicatorProps={{
+              sx: {
+                bottom: '26px', // 밑줄 위치를 아래로 이동하여 간격 추가
+              },
+            }}
+            >
+            <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 신청 승인</Typography>} />
+            <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>희망 도서 승인 이력</Typography>} />
           </Tabs>
-            <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-              <Table>
+          <TableContainer  component={Paper}
+  sx={{
+    marginTop: 5,
+    borderRadius: 5,
+    overflow: 'auto' // 스크롤 가능하게 설정
+  }}
+>
+<Table  stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell sx={{ width: "20%", whiteSpace: "nowrap" }}>도서 제목</TableCell>
-                    <TableCell sx={{ width: "15%", whiteSpace: "nowrap" }}>저자</TableCell>
-                    <TableCell sx={{ width: "15%", whiteSpace: "nowrap" }}>신청자 닉네임</TableCell>
-                    <TableCell sx={{ width: "15%", whiteSpace: "nowrap" }}>신청 날짜</TableCell>
-                    <TableCell sx={{ width: "20%" }}>코멘트</TableCell>
-                    <TableCell sx={{ width: "15%", whiteSpace: "nowrap" }} align="center">
+                    <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
+                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>저자</TableCell>
+                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청자 닉네임</TableCell>
+                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청 날짜</TableCell>
+                    <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>코멘트</TableCell>
+                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>
                       상태 업데이트
                     </TableCell>
                   </TableRow>
@@ -134,11 +148,11 @@ const BookApprovalPage = () => {
                 <TableBody>
                   {bookRequests.map((request) => (
                     <TableRow key={request.WB_SEQ}>
-                      <TableCell>{request.WB_NAME}</TableCell>
-                      <TableCell>{request.WB_AUTHOR}</TableCell>
-                      <TableCell>{request.NICKNAME}</TableCell>
-                      <TableCell>{formatInTimeZone(new Date(request.WB_AplDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{request.WB_NAME}</TableCell>
+                      <TableCell align="center">{request.WB_AUTHOR}</TableCell>
+                      <TableCell align="center">{request.NICKNAME}</TableCell>
+                      <TableCell align="center">{formatInTimeZone(new Date(request.WB_AplDt), 'UTC', 'yyyy.MM.dd')}</TableCell>
+                      <TableCell align="center">
                         <TextField
                           value={request.comment}
                           onChange={(e) => handleCommentChange(request.WB_SEQ, e.target.value)}

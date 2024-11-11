@@ -23,7 +23,6 @@ import {
 import CustomAppBar from "../../components/CustomAppBar.js";
 import DrawerComponent from "../../components/DrawerComponent.js";
 import theme from "../../../../theme.js";
-import Copyright from "../../components/Copyright.js";
 import { fetchRecentNotices, deleteNotice } from "../../api/NoticeAPI.js"; // deleteNotice 함수 임포트
 import NoticeWriteModal from "./NoticeWriteModal.js";
 import NoticeUpdateModal from "./NoticeUpdateModal.js"; // 업데이트 모달 임포트
@@ -112,69 +111,76 @@ const NoticeList = () => {
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            overflowY: "auto",
-            height: "100vh",
+                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+            height: "100vh",            
           }}
         >
           <Toolbar />
-          <Container
-            sx={{
-              height: "calc(100vh - 64px)",
-              display: "flex",
-              flexDirection: "column",
-              py: 4,
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant="h4" gutterBottom>
-                공지사항 목록
-              </Typography>
-              <Button variant="contained" color="primary" onClick={handleOpenWriteModal}>
-                글쓰기
-              </Button>
-            </Box>
+          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600, display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
+  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%', maxWidth: 1300, position: 'relative' }}>
+    {/* 가운데에 고정된 공지사항 목록 */}
+    <Typography variant="h6" fontSize={'30px'} gutterBottom sx={{ textAlign: "center" }}>
+      공지사항 목록
+    </Typography>
+    
+    {/* 오른쪽에 배치된 글쓰기 버튼 */}
+    <Box sx={{ position: 'absolute', right: -10, mt: 10 }}>
+      <Button variant="contained" color="primary" onClick={handleOpenWriteModal}
+      sx={{fontSize: '16px', fontWeight: 'bold'}}
+      >
+        글쓰기
+      </Button>
+    </Box>
+  </Box>
 
-            <TableContainer component={Paper}>
-              <Table>
+
+<Box mt={2}></Box>
+            <TableContainer  component={Paper}
+  sx={{
+    marginTop: 5,
+    borderRadius: 5,
+    overflow: 'auto' // 스크롤 가능하게 설정
+  }}
+>
+              <Table stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell>제목</TableCell>
-                    <TableCell>작성일</TableCell>
-                    <TableCell>작성자</TableCell>
-                    <TableCell>액션</TableCell>
+                    <TableCell align="center" sx={{ width: "40%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>제목</TableCell>
+                    <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>작성일</TableCell>
+                    <TableCell align="center" sx={{ width: "15%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>작성자</TableCell>
+                    <TableCell align="center" sx={{ width: "25%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>액션</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {notices.map((notice, index) => (
                     <TableRow key={index}>
-                      <TableCell>{notice.NOTICE_TITLE}</TableCell>
-                      <TableCell>
+                      <TableCell align="center">{notice.NOTICE_TITLE}</TableCell>
+                      <TableCell align="center">
                         {formatInTimeZone(new Date(notice.NOTICE_CrtDt), 'UTC', 'yyyy.MM.dd')}
                       </TableCell>
-                      <TableCell>{notice.NICKNAME || "관리자"}</TableCell>
-                      <TableCell>
-                        <Box sx={{ display: 'flex', gap: 1 }}> {/* gap을 통해 버튼 사이에 간격 추가 */}
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            onClick={() => handleOpenUpdateModal(notice)}
-                          >
-                            수정
-                          </Button>
-                          <Button
-                            variant="outlined"
-                            size="small"
-                            color="error"
-                            onClick={() => handleOpenDeleteDialog(notice)}
-                          >
-                            삭제
-                          </Button>
-                        </Box>
-                      </TableCell>
+                      <TableCell align="center">{notice.NICKNAME || "관리자"}</TableCell>
+                      <TableCell align="center">
+  <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}> {/* justifyContent: "center" 추가 */}
+    <Button
+      variant="outlined"
+      size="small"
+      onClick={() => handleOpenUpdateModal(notice)}
+    >
+      수정
+    </Button>
+    <Button
+      variant="outlined"
+      size="small"
+      color="error"
+      onClick={() => handleOpenDeleteDialog(notice)}
+    >
+      삭제
+    </Button>
+  </Box>
+</TableCell>
+
                     </TableRow>
                   ))}
                 </TableBody>
@@ -213,7 +219,6 @@ const NoticeList = () => {
         </DialogActions>
       </Dialog>
 
-      <Copyright />
     </ThemeProvider>
   );
 };

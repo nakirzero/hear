@@ -30,7 +30,11 @@ const RecentNotices = () => {
       <CardHeader
         title={<Typography variant="h6">최근 공지사항</Typography>}
         action={
-          <Button variant="outlined" size="small" onClick={handleButtonClick}>
+          <Button variant="outlined" size="small" onClick={handleButtonClick} sx={{  bgcolor: '#FFFFFF', fontWeight: 'bold', fontSize: '12px',
+            '&:hover': {
+          bgcolor: '#FFB74D',
+          color: '#FFFFFF', // 흰색 텍스트
+        },}}>
             더보기
           </Button>
         }

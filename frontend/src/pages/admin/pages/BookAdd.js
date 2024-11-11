@@ -6,12 +6,12 @@ import {
   Box,
   Button,
   TextField,
-  Paper,
   Toolbar,
   CssBaseline,
   ThemeProvider,
   Typography,
   Grid,
+  Container,
   InputLabel,
   MenuItem,
   FormControl,
@@ -21,7 +21,6 @@ import {
 
 import DrawerComponent from "../components/DrawerComponent.js";
 import theme from "../../../theme";
-import Copyright from "../components/Copyright.js";
 import CustomAppBar from "../components/CustomAppBar.js";
 import { useNavigate } from "react-router-dom";
 
@@ -120,7 +119,7 @@ const handleTabChange = (newValue) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Box sx={{ display: "flex", minHeight: "100vh", overflowX: "hidden" }}>
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
 
@@ -128,134 +127,124 @@ const handleTabChange = (newValue) => {
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            overflow: "auto",
-            p: 3,
+                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+            height: "100vh",            
           }}
         >
           <Toolbar />
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: 4, // 두 요소 사이의 간격
-              mb: 4, // 아래쪽 여백
-            }}
-          >
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-            <Tab label={<Typography variant="h4" noWrap>도서 추가</Typography>} />
-            <Tab label={<Typography variant="h4" noWrap>도서 목록</Typography>} />
-          </Tabs>
-          </Box>
-
-          <Paper sx={{ p: 4, mb: 4 }}>
-            <Grid container spacing={3}>
-              {/* 카테고리 선택 */}
-              <Grid item xs={12} sm={3}>
-                <FormControl fullWidth>
-                  <InputLabel id="category-label">카테고리</InputLabel>
-                  <Select
-                    labelId="category-label"
-                    name="category"
-                    value={bookAdd.category}
-                    onChange={handleInputChange}
-                    label="카테고리"
-                  >
-                    <MenuItem value="100">100</MenuItem>
-                    <MenuItem value="200">200</MenuItem>
-                    <MenuItem value="300">300</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-
-              {/* 도서 정보 입력 */}
-              {["title", "author", "publisher", "information"].map((field) => (
-                <Grid item xs={12} sm={3} key={field}>
-                  <TextField
-                    fullWidth
-                    name={field}
-                    value={bookAdd[field]}
-                    onChange={handleInputChange}
-                    label={field === "title" ? "도서 제목" : field === "author" ? "작가" : field === "publisher" ? "출판사" : field === "information" ? "정보" : "" }
-                  />
-                </Grid>
-              ))}
-
-              {/* 이미지 파일 입력 */}
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}
-              >
-                <Typography
-                  gutterBottom
-                  align="right"
-                  sx={{ textAlign: "right", mr: 2 }}
-                >
-                  {bookAdd.img ? bookAdd.img.name : ""}
-                </Typography>
-                <Button variant="contained" component="label" color="primary">
-                  이미지파일
-                  <input
-                    type="file"
-                    hidden
-                    name="img"
-                    onChange={handleFileInputChange}
-                  />
-                </Button>
-              </Grid>
-
-              {/* 본문 파일 입력 */}
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{ display: "flex", alignItems: "center", justifyContent: "flex-end" }}
-              >
-                <Typography
-                  gutterBottom
-                  align="right"
-                  sx={{ textAlign: "right", mr: 2 }}
-                >
-                  {filename}
-                </Typography>
-                <Button variant="contained" component="label" color="primary">
-                  본문파일
-                  <input
-                    type="file"
-                    accept=".txt"
-                    hidden
-                    name="text"
-                    onChange={handleFileInputChange}
-                  />
-                </Button>
-              </Grid>
-
-              <Grid
-                item
-                xs={12}
-                sm={3}
-                sx={{ display: "flex", alignItems: "center", justifyContent: "flex-Start" }}
-              >
-                <Button onClick={handleBookAdd} variant="contained" color="primary">
-                  추가
-                </Button>
-              </Grid>
-            </Grid>
-          </Paper>
-
+          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
           
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
+             TabIndicatorProps={{
+              sx: {
+                bottom: '1px', // 밑줄 위치를 아래로 이동하여 간격 추가
+              },
+            }}
+            >
+           <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
+                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
+            </Tabs>
+
+            <Box mt={4} display="flex" flexDirection="column" alignItems="center" sx={{ width: '100%', maxWidth: 1200, minHeight: 700, background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)", borderRadius: 5, mb: 10, boxShadow: 10 }}>
+  <Grid mt={3} container spacing={4} justifyContent="center">
+    {/* 카테고리 선택 */}
+    <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
+      <FormControl sx={{ width: 600 }}> {/* 너비 고정 및 중앙 정렬 */}
+        <InputLabel id="category-label">카테고리</InputLabel>
+        <Select
+          labelId="category-label"
+          name="category"
+          value={bookAdd.category}
+          onChange={handleInputChange}
+          label="카테고리"
+        >
+          <MenuItem value="100">100</MenuItem>
+          <MenuItem value="200">200</MenuItem>
+          <MenuItem value="300">300</MenuItem>
+        </Select>
+      </FormControl>
+    </Grid>
+
+    {/* 도서 정보 입력 */}
+    {["title", "author", "publisher", "information"].map((field) => (
+      <Grid item xs={12} key={field} sx={{ display: "flex", justifyContent: "center" }}>
+        <TextField
+          fullWidth
+          name={field}
+          value={bookAdd[field]}
+          onChange={handleInputChange}
+          label={field === "title" ? "도서 제목" : field === "author" ? "작가" : field === "publisher" ? "출판사" : "정보"}
+          sx={{ width: 600 }} 
+        />
+      </Grid>
+    ))}
+  </Grid>
+
+  {/* 파일명 표시와 파일 선택 버튼들 */}
+<Box mt={4} sx={{ display: "flex", justifyContent: "center", gap: 20, alignItems: "center" }}>
+  <Box sx={{ textAlign: "center" }}>
+    <Typography sx={{ maxWidth: 200, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      {bookAdd.img ? `이미지 파일: ${bookAdd.img.name}` : "이미지 파일 없음"}
+    </Typography>
+    <Button variant="contained" component="label" color="primary" sx={{ minWidth: 150, height: 50, fontSize: '16px', fontWeight: 'bold' }}>
+      이미지파일
+      <input
+        type="file"
+        hidden
+        name="img"
+        onChange={handleFileInputChange}
+      />
+    </Button>
+  </Box>
+
+  <Box sx={{ textAlign: "center" }}>
+    <Typography sx={{ maxWidth: 150, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+      {filename ? `본문 파일: ${filename}` : "본문 파일 없음"}
+    </Typography>
+    <Button variant="contained" component="label" color="primary" sx={{ minWidth: 150, height: 50, fontSize: '16px', fontWeight: 'bold' }}>
+      본문파일
+      <input
+        type="file"
+        accept=".txt"
+        hidden
+        name="text"
+        onChange={handleFileInputChange}
+      />
+    </Button>
+  </Box>
+</Box>
+
+{/* 추가 및 초기화 버튼들 가로 정렬 */}
+<Box mt={4} sx={{ display: "flex", justifyContent: "center", gap: 20 }}>
+  <Button variant="contained" color="primary" onClick={handleBookAdd} sx={{ minWidth: 150, height: 50, fontSize: '16px', fontWeight: 'bold' }}>
+    추가
+  </Button>
+  <Button variant="outlined" color="secondary" onClick={() => setBookAdd({
+    category: "",
+    img: null,
+    title: "",
+    author: "",
+    publisher: "",
+    information: "",
+    text: null,
+  })} sx={{ minWidth: 150, height: 50, fontSize: '16px', fontWeight: 'bold' }}>
+    초기화
+  </Button>
+</Box>
+</Box>
+
+
+
+
+
+          </Container>
         </Box>
       </Box>
 
       
 
-      <Copyright />
     </ThemeProvider>
   );
 };

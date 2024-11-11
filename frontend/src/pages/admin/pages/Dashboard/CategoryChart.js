@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
-import { fetchCategoryCounts } from '../../api/predictAPI'; // API 호출 함수 임포트
-import { useNavigate } from 'react-router-dom'; // useNavigate 훅 임포트
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+import { Card, CardContent, CardHeader, Typography, Box } from '@mui/material';
+import { fetchCategoryCounts } from '../../api/predictAPI';
+import { useNavigate } from 'react-router-dom';
 
 const COLORS = ['#FF6384', '#36A2EB', '#FFCE56', '#4CAF50', '#9C27B0', '#FF9800'];
 
 const CategoryChart = () => {
   const [data, setData] = useState([]);
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCategoryCounts = async () => {
       try {
         const result = await fetchCategoryCounts();
+        console.log('result', result);
+        
         setData(result);
       } catch (error) {
         console.error("Error fetching category data:", error);
@@ -23,22 +25,34 @@ const CategoryChart = () => {
     getCategoryCounts();
   }, []);
 
-  // Pie 클릭 핸들러
   const handleClick = () => {
-    navigate('/admin/predict'); // 클릭 시 /admin/predict 경로로 이동
+    navigate('/admin/predict');
+  };
+
+  // 커스텀 레이블 함수 (퍼센트만 표시 및 위치 조정)
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.7;
+    const x = cx + radius * Math.cos(-midAngle * (Math.PI / 180));
+    const y = cy + radius * Math.sin(-midAngle * (Math.PI / 180));
+
+    return (
+      <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central" fontSize={12}>
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
   };
 
   return (
     <Card
-      sx={{ boxShadow: 3, borderRadius: 2, width: '100%', height: '100%', padding: 2, cursor: 'pointer' }} // cursor 스타일 추가
+      sx={{ boxShadow: 3, borderRadius: 2, width: '100%', height: '100%', padding: 2, cursor: 'pointer' }}
       onClick={handleClick}
     >
       <CardHeader
         title={<Typography variant="h6" sx={{ marginBottom: 1 }}>공유마당 분류 현황</Typography>}
         subheader={<Typography variant="body2" sx={{ marginBottom: 1 }}>공유마당 데이터 주제 분류를 시각적으로 보여줍니다.</Typography>}
       />
-      <CardContent sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', paddingTop: 0 }}>
-        <PieChart width={320} height={320} >
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 0, mt: -3 }}>
+        <PieChart width={320} height={320}>
           <Pie
             data={data}
             cx="50%"
@@ -46,15 +60,33 @@ const CategoryChart = () => {
             outerRadius={110}
             fill="#8884d8"
             dataKey="value"
-            labelLine
+            nameKey="name"
+            label={renderCustomizedLabel}
+            labelLine={false}
           >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />
-          <Legend />
         </PieChart>
+
+        {/* Custom Legend (3개씩 2줄로 나누어 표시) */}
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', mt: -2, ml: 6, mb: -2 }}>
+          {data.map((entry, index) => (
+            <Box key={`legend-${index}`} sx={{ width: '30%', display: 'flex', alignItems: 'center' }}>
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  backgroundColor: COLORS[index % COLORS.length],
+                  marginRight: 1,
+                }}
+              />
+              <Typography variant="body2">{entry.name}</Typography>
+            </Box>
+          ))}
+        </Box>
       </CardContent>
     </Card>
   );

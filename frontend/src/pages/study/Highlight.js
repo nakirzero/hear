@@ -33,7 +33,7 @@ const Highlight = () => {
           const bookName = highlight.BOOK_NAME || "Unknown Title";
           console.log('highlight', highlight);
           
-          if (!acc[bookName]) acc[bookName] = { cover: highlight.HL_IMGPATH, author: highlight.AUTHOR, highlights: [] };
+          if (!acc[bookName]) acc[bookName] = { cover: highlight.IMG_PATH, author: highlight.AUTHOR, highlights: [] };
           acc[bookName].highlights.push(highlight);
           return acc;
         }, {});

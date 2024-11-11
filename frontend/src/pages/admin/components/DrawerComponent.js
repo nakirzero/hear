@@ -1,4 +1,3 @@
-// DrawerComponent.js
 import React from "react";
 import { styled } from "@mui/material/styles";
 import {
@@ -8,13 +7,12 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  ListSubheader,
+  Divider,
   Toolbar,
 } from "@mui/material";
 import {
   ChevronLeft as ChevronLeftIcon,
   Dashboard as DashboardIcon,
-  Assignment as AssignmentIcon,
   Rule as RuleIcon,
   Upload as PublishIcon,
   EditNotifications as EditNotificationsIcon,
@@ -36,6 +34,7 @@ const Drawer = styled(MuiDrawer, {
       duration: theme.transitions.duration.enteringScreen,
     }),
     boxSizing: "border-box",
+    background: "rgb(237, 237, 237)",
     ...(!open && {
       overflowX: "hidden",
       transition: theme.transitions.create("width", {
@@ -54,15 +53,11 @@ export default function DrawerComponent({ open, toggleDrawer }) {
   const navigate = useNavigate();
 
   const menuItems = [
-    { text: "대시보드", icon: <DashboardIcon />, path: "/dashboard" },
-    { text: "공유마당", icon: <PublishIcon />, path: "/admin/predict" },
-    { text: "도서관리", icon: <LibraryBooksIcon />, path: "/admin/booklist" },
-    { text: "희망도서신청승인", icon: <RuleIcon />, path: "/admin/approval" },
-    { text: "공지사항 관리", icon: <EditNotificationsIcon />, path: "/admin/noticelist" },
-    { text: "Saved reports", isHeader: true },
-    { text: "Current month", icon: <AssignmentIcon />, path: "/current-month" },
-    { text: "Last quarter", icon: <AssignmentIcon />, path: "/last-quarter" },
-    { text: "Year-end sale", icon: <AssignmentIcon />, path: "/year-end-sale" },
+    { text: "대시보드", icon: <DashboardIcon sx={{ml:1}} />, path: "/dashboard" },
+    { text: "공유마당", icon: <PublishIcon sx={{ml:1}}/>, path: "/admin/predict" },
+    { text: "도서관리", icon: <LibraryBooksIcon sx={{ml:1}}/>, path: "/admin/booklist" },
+    { text: "희망도서신청승인", icon: <RuleIcon sx={{ml:1}}/>, path: "/admin/approval" },
+    { text: "공지사항 관리", icon: <EditNotificationsIcon sx={{ml:1}}/>, path: "/admin/noticelist" },
   ];
 
   return (
@@ -73,6 +68,7 @@ export default function DrawerComponent({ open, toggleDrawer }) {
           alignItems: "center",
           justifyContent: "flex-end",
           px: [1],
+          mb: -1,
         }}
       >
         <IconButton onClick={toggleDrawer}>
@@ -80,18 +76,15 @@ export default function DrawerComponent({ open, toggleDrawer }) {
         </IconButton>
       </Toolbar>
       <List component="nav">
-        {menuItems.map((item, index) =>
-          item.isHeader ? (
-            <ListSubheader key={index} component="div" inset>
-              {item.text}
-            </ListSubheader>
-          ) : (
-            <ListItemButton key={index} onClick={() => navigate(item.path)}>
+        {menuItems.map((item, index) => (
+          <React.Fragment key={index}>
+            <ListItemButton onClick={() => navigate(item.path)} sx={{ mt: 2, mb: 2 }}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>
-          )
-        )}
+            {index < menuItems.length - 1 && <Divider />} {/* 마지막 항목 아래에는 Divider를 추가하지 않음 */}
+          </React.Fragment>
+        ))}
       </List>
     </Drawer>
   );

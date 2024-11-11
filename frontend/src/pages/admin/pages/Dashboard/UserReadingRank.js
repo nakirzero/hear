@@ -25,7 +25,11 @@ const UserReadingRank = () => {
       <CardHeader
         title={<Typography variant="h6">유저 독서량 순위</Typography>}
         action={
-          <Button variant="outlined" size="small">
+          <Button variant="outlined" size="small" sx={{  bgcolor: '#FFFFFF', fontWeight: 'bold', fontSize: '12px',
+            '&:hover': {
+          bgcolor: '#FFB74D',
+          color: '#FFFFFF', // 흰색 텍스트
+        },}}>
             더보기
           </Button>
         }
