@@ -35,7 +35,7 @@ def get_all_highlights():
                     h.HL_SEQ, h.USER_SEQ, h.BOOK_SEQ, h.HL_IMGPATH, h.HL_COMMENT, 
                     h.HL_StPt, h.HL_EdPt, h.HL_CrtDt, h.HL_MdfDt, h.HL_PATH,
                     TIMEDIFF(h.HL_EdPt, h.HL_StPt) AS HL_Duration,
-                    b.BOOK_NAME, b.AUTHOR, b.PUBLISHER, b.FULL_PATH, b.SUM_PATH,
+                    b.BOOK_NAME, b.AUTHOR, b.PUBLISHER, b.FULL_PATH, b.SUM_PATH, b.IMG_PATH,
                     b.CATEGORY, b.INFORMATION, b.RUN_TIME, b.SUM_TIME
                 FROM highlight h
                 LEFT JOIN book b ON h.BOOK_SEQ = b.BOOK_SEQ

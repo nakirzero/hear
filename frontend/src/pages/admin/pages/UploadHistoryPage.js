@@ -65,33 +65,47 @@ const UploadHistoryPage = () => {
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
                 theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
             height: "100vh",            
           }}
         >
             <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4 }}>
-            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-                <Tab label={<Typography variant="h4" noWrap>공유 마당 데이터 업로드</Typography>} />
-                <Tab label={<Typography variant="h4" noWrap>공유 마당 업로드 이력</Typography>} />
-            </Tabs>
+            <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
+              
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
+    TabIndicatorProps={{
+      sx: {
+        bottom: '1px', // 밑줄 위치를 아래로 이동하여 간격 추가
+      },
+    }}>
+            <Tab label={<Typography variant="h6" fontSize={'30px'}noWrap>공유 마당 데이터 업로드</Typography>} />
+            <Tab label={<Typography variant="h6" fontSize={'30px'}noWrap>공유 마당 업로드 이력</Typography>} />
+          </Tabs>
 
             {/* 업로드 이력 페이지 컨텐츠 */}
-            <TableContainer component={Paper} sx={{ marginTop: 4 }}>
-              <Table>
+            <TableContainer 
+  component={Paper}
+  sx={{
+    marginTop: 8,
+    borderRadius: 5,
+    overflow: 'auto' // 스크롤 가능하게 설정
+  }}
+>
+              <Table stickyHeader  >
                 <TableHead>
                   <TableRow>
-                    <TableCell>업로드 날짜</TableCell>
-                    <TableCell>파일명</TableCell>
-                    <TableCell>상태</TableCell>
-                    <TableCell>레코드 수</TableCell>
+                    <TableCell align="center" sx={{ width: "40%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>업로드 날짜</TableCell>
+                    <TableCell align="center" sx={{ bgcolor: '#FFBA59 ', width: "20%", fontSize: 18, fontWeight: 'bold' }}>파일명</TableCell>
+                    <TableCell align="center" sx={{ bgcolor: '#FFBA59 ', width: "20%", fontSize: 18, fontWeight: 'bold' }}>상태</TableCell>
+                    <TableCell align="center" sx={{ bgcolor: '#FFBA59 ', width: "20%", fontSize: 18, fontWeight: 'bold' }}>레코드 수</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {uploadHistory.map((history, index) => (
                     <TableRow key={index}>
-                      <TableCell>
+                      <TableCell  align="center">
                         {new Date(history.upload_date).toLocaleString("ko-KR", {
                           year: "numeric",
                           month: "2-digit",
@@ -103,9 +117,9 @@ const UploadHistoryPage = () => {
                           timeZone: "UTC"   // GMT 시간 기준 출력
                         })}
                       </TableCell>
-                      <TableCell>{history.file_name}</TableCell>
-                      <TableCell>{"성공"}</TableCell>
-                      <TableCell>{history.record_count}</TableCell>
+                      <TableCell  align="center">{history.file_name}</TableCell>
+                      <TableCell  align="center">{"성공"}</TableCell>
+                      <TableCell  align="center">{history.record_count}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

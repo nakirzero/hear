@@ -17,7 +17,7 @@ import {
   TableHead,
   TableRow,
   Typography,
-
+  Container,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -26,7 +26,6 @@ import {
 
 import DrawerComponent from "../components/DrawerComponent.js";
 import theme from "../../../theme";
-import Copyright from "../components/Copyright.js";
 import CustomAppBar from "../components/CustomAppBar.js";
 import { useNavigate } from "react-router-dom";
 
@@ -86,7 +85,7 @@ const handleTabChange = (newValue) => {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ display: "flex", minHeight: "100vh" }}>
+      <Box sx={{ display: "flex", minHeight: "100vh", overflowX: "hidden" }}>
         <CustomAppBar open={open} toggleDrawer={toggleDrawer} />
         <DrawerComponent open={open} toggleDrawer={toggleDrawer} />
 
@@ -94,58 +93,70 @@ const handleTabChange = (newValue) => {
           component="main"
           sx={{
             flexGrow: 1,
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-              theme.palette.mode === "light"
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-            overflow: "auto",
-            p: 3,
+                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+            height: "100vh",            
           }}
         >
           <Toolbar />
+          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
           <Box
             sx={{
               display: 'flex',
               justifyContent: 'center',
               alignItems: 'center',
               gap: 4, // 두 요소 사이의 간격
-              mb: 4, // 아래쪽 여백
+              mb: -3, // 아래쪽 여백
             }}
           >
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
-                <Tab label={<Typography variant="h4" noWrap>도서 추가</Typography>} />
-                <Tab label={<Typography variant="h4" noWrap>도서 목록</Typography>} />
+            
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
+             TabIndicatorProps={{
+              sx: {
+                bottom: '26px', // 밑줄 위치를 아래로 이동하여 간격 추가
+              },
+            }}
+            >
+                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
+                <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
             </Tabs>
           </Box>
 
 
 
-          <TableContainer component={Paper}>
-            <Table>
+          <TableContainer  component={Paper}
+  sx={{
+    marginTop: 8,
+    borderRadius: 5,
+    overflow: 'auto' // 스크롤 가능하게 설정
+  }}
+>
+            <Table  stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell>카테고리</TableCell>
-                  <TableCell>도서 이미지</TableCell>
-                  <TableCell>도서 제목</TableCell>
-                  <TableCell>저자</TableCell>
-                  <TableCell>출판사</TableCell>
-                  <TableCell>도서 정보</TableCell>
-                  <TableCell>도서 본문</TableCell>
-                  <TableCell>등록일</TableCell>
-                  <TableCell>삭제</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>카테고리</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 이미지</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>저자</TableCell>
+                <TableCell align="center" sx={{ width: "8%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>출판사</TableCell>
+                <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 정보</TableCell>
+                <TableCell align="center" sx={{ width: "7%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 본문</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>등록일</TableCell>
+                <TableCell align="center" sx={{ width: "5%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>삭제</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {bookData.map((row, index) => (
                   <TableRow key={index}>
-                    <TableCell>
+                    <TableCell align="center">
                       {row.CATEGORY === "100"
                         ? "소설"
                         : row.CATEGORY === "200"
                         ? "시"
                         : "수필"}
                     </TableCell>            
-                    <TableCell>
+                    <TableCell align="center">
                       <img
                         src={`/static/image/bookcover/${row.IMG_PATH}`}
                         alt={row.BOOK_NAME}
@@ -153,11 +164,11 @@ const handleTabChange = (newValue) => {
                       />
                   
                     </TableCell>
-                    <TableCell>{row.BOOK_NAME}</TableCell>
-                    <TableCell>{row.AUTHOR}</TableCell>
-                    <TableCell>{row.PUBLISHER}</TableCell>
-                    <TableCell>{row.INFORMATION}</TableCell>
-                    <TableCell sx={{ verticalAlign: "middle", padding: "8px" }}>
+                    <TableCell align="center">{row.BOOK_NAME}</TableCell>
+                    <TableCell align="center">{row.AUTHOR}</TableCell>
+                    <TableCell align="center">{row.PUBLISHER}</TableCell>
+                    <TableCell align="center">{row.INFORMATION}</TableCell>
+                    <TableCell align="center" sx={{ verticalAlign: "middle", padding: "8px" }}>
                       <Typography
                         variant="body2"
                         onClick={() => handleOpenDialog(row.BOOK_TEXT)}
@@ -187,6 +198,7 @@ const handleTabChange = (newValue) => {
               </TableBody>
             </Table>
           </TableContainer>
+          </Container>
         </Box>
       </Box>
 
@@ -203,7 +215,6 @@ const handleTabChange = (newValue) => {
         </DialogActions>
       </Dialog>
 
-      <Copyright />
     </ThemeProvider>
   );
 };

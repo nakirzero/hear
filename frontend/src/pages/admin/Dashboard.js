@@ -27,6 +27,7 @@ export default function Dashboard() {
         <Box
           component="main"
           sx={{
+            background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
               theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
             flexGrow: 1,
@@ -35,8 +36,8 @@ export default function Dashboard() {
           }}
         >
           <Toolbar />
-          <Container maxWidth="xl" sx={{ mt: 2, mb: 4 }}>
-            <Paper sx={{ p: 3 }}>
+          <Container maxWidth="xl" sx={{ mt: 3, mb: 3, }}>
+            <Paper sx={{ p: 4 , py: 5, boxShadow: 10, background: "linear-gradient(180deg, #FFFFFF, #FAF0E6)" }}>
               {/* 상단 차트 */}
               <Grid container spacing={3}>
                 <Grid item xs={12} md={6}>
@@ -61,7 +62,7 @@ export default function Dashboard() {
               </Grid>
             </Paper>
 
-            <Copyright sx={{ pt: 2 }} />
+            <Copyright sx={{ pt: 2, mt: 5 }} />
           </Container>
         </Box>
       </Box>
