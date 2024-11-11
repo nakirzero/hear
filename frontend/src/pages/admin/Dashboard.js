@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ThemeProvider, CssBaseline, Box, Container, Grid, Paper, Toolbar } from '@mui/material';
 import CustomAppBar from './components/CustomAppBar';
 import DrawerComponent from './components/DrawerComponent';
+import { useDrawer } from './context/DrawerContext';
 import Copyright from './components/Copyright';
 import theme from '../../theme';
 
@@ -13,10 +14,7 @@ import RecentUploadHistory from './pages/Dashboard/RecentUploadHistory';
 import UserReadingRank from './pages/Dashboard/UserReadingRank';
 
 export default function Dashboard() {
-  const [open, setOpen] = useState(true);
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+  const { open, toggleDrawer } = useDrawer();
 
   return (
     <ThemeProvider theme={theme}>

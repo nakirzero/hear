@@ -8,30 +8,36 @@ const DailySignUpChart = () => {
   const [yAxisMax, setYAxisMax] = useState(10);
 
   useEffect(() => {
-    const getSignUpData = async () => {
-      try {
-        const result = await fetchDailySignUpCounts();
-        
-        const processedData = result.map(entry => ({
-          name: new Date(entry.date).toLocaleDateString('ko-KR'),
-          value: entry.value
-        }));
-        setData(processedData);
+    // 지연 로딩 추가
+    const timer = setTimeout(() => {
+      const getSignUpData = async () => {
+        try {
+          const result = await fetchDailySignUpCounts();
+          
+          const processedData = result.map(entry => ({
+            name: new Date(entry.date).toLocaleDateString('ko-KR'),
+            value: entry.value
+          }));
+          
+          setData(processedData);
 
-        const maxValue = Math.max(...processedData.map(entry => entry.value));
-        if (maxValue <= 10) {
-          setYAxisMax(10);
-        } else if (maxValue <= 50) {
-          setYAxisMax(50);
-        } else {
-          setYAxisMax(100);
+          const maxValue = Math.max(...processedData.map(entry => entry.value));
+          if (maxValue <= 10) {
+            setYAxisMax(10);
+          } else if (maxValue <= 50) {
+            setYAxisMax(50);
+          } else {
+            setYAxisMax(100);
+          }
+        } catch (error) {
+          console.error("Error fetching daily sign-up data:", error);
         }
-      } catch (error) {
-        console.error("Error fetching daily sign-up data:", error);
-      }
-    };
+      };
 
-    getSignUpData();
+      getSignUpData();
+    }, 300); // 300ms 지연
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -58,7 +64,7 @@ const DailySignUpChart = () => {
               domain={[0, yAxisMax]}
             />
             <Tooltip />
-            <Bar dataKey="value" fill="#8884d8" name="가입자수" barSize={20} /> {/* 각 막대의 너비 고정 */}
+            <Bar dataKey="value" fill="#8884d8" name="가입자수" barSize={20} isAnimationActive={true} animationBegin={0} animationDuration={1500} animationEasing="ease-out"/>
           </BarChart>
         </Box>
       </CardContent>

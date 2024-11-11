@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
 
 import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -48,6 +48,8 @@ import NoticeList from "./pages/admin/pages/Notice/NoticeList";
 import BookList from "./pages/admin/pages/BookList";
 import BookAdd from "./pages/admin/pages/BookAdd";
 
+import { DrawerProvider } from "./pages/admin/context/DrawerContext";
+
 function App() {
   return (
     <ThemeProvider theme={theme}>
@@ -85,15 +87,18 @@ function App() {
             <Route path="/board/suggest/suggestWrite" element={<Write />} />
             <Route path="/board/wishbook" element={<Wishbook />} />
 
+            {/* Admin Routes */}
             <Route element={<RequireAdmin />}>
-              <Route path="/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/predict" element={<PredictPage />} />
-              <Route path="/admin/uploadhistory" element={<UploadHistoryPage />} />
-              <Route path="/admin/approval" element={<BookApprovalPage />} />
-              <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
-              <Route path="/admin/noticelist" element={<NoticeList />} />
-              <Route path="/admin/booklist" element={<BookList />} />
-              <Route path="/admin/bookadd" element={<BookAdd />} />
+              <Route element={<DrawerProvider><Outlet /></DrawerProvider>}>  {/* DrawerProvider를 여기에 */}
+                <Route path="/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/predict" element={<PredictPage />} />
+                <Route path="/admin/uploadhistory" element={<UploadHistoryPage />} />
+                <Route path="/admin/approval" element={<BookApprovalPage />} />
+                <Route path="/admin/bookapprovalhistory" element={<BookApprovalHistoryPage />} />
+                <Route path="/admin/noticelist" element={<NoticeList />} />
+                <Route path="/admin/booklist" element={<BookList />} />
+                <Route path="/admin/bookadd" element={<BookAdd />} />
+              </Route>
             </Route>
           </Routes>
         </Router>

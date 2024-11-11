@@ -19,6 +19,7 @@ import {
 } from "@mui/material";
 import CustomAppBar from "../components/CustomAppBar.js";
 import DrawerComponent from "../components/DrawerComponent.js";
+import { useDrawer } from '../context/DrawerContext';  // 추가
 import theme from "../../../theme.js";
 import { fetchApprovalHistory } from "../api/wishbookAPI.js"; // axios API 호출 함수 import
 import { formatInTimeZone } from 'date-fns-tz';
@@ -26,12 +27,8 @@ import { formatInTimeZone } from 'date-fns-tz';
 const BookApprovalHistoryPage = () => {
   const [selectedTab, setSelectedTab] = useState(1); // 기본적으로 두 번째 탭 선택
   const [historyData, setHistoryData] = useState([]);
-  const [open, setOpen] = useState(true);
+  const { open, toggleDrawer } = useDrawer();  // Context 사용
   const navigate = useNavigate();
-
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
 
   const handleTabChange = (newValue) => {
     setSelectedTab(newValue);
@@ -81,30 +78,27 @@ const BookApprovalHistoryPage = () => {
             flexGrow: 1,
             background: "linear-gradient(180deg, #FFE0B2, #FFFFFF)",
             backgroundColor: (theme) =>
-                theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
+            theme.palette.mode === "light" ? theme.palette.grey[100] : theme.palette.grey[900],       
+            overflowY: "auto",  // 세로 스크롤만 필요할 때 표시
             height: "100vh",            
           }}
         >
           <Toolbar />
-          <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
-             TabIndicatorProps={{
-              sx: {
-                bottom: '26px', // 밑줄 위치를 아래로 이동하여 간격 추가
-              },
-            }}
-            >
+          <Container sx={{ height: "calc(100vh - 64px)", width: "100%", maxWidth: "none", display: "flex", flexDirection: "column", alignItems: "center", py: 4, px:4 }}>
+          <Box sx={{ width: '100%', borderColor: 'divider' }}>
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
               <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>희망 도서 신청 승인</Typography>} />
               <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>희망 도서 승인 이력</Typography>} />
             </Tabs>
-
+          </Box>
             <TableContainer  component={Paper}
-  sx={{
-    marginTop: 5,
-    borderRadius: 5,
-    overflow: 'auto' // 스크롤 가능하게 설정
-  }}
->
+              sx={{
+                marginTop: 2,
+                borderRadius: 5,
+                width: '100%',
+                maxHeight: "calc(100vh - 250px)", // 세로 스크롤을 위한 최대 높이
+              }}
+            >
               <Table stickyHeader>
                 <TableHead>
                   <TableRow>
