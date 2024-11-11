@@ -13,6 +13,7 @@ import {
   DialogContent,
   DialogContentText,
   Alert,
+  useMediaQuery, // 추가
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UserLogin } from "../api/userAPI";
@@ -39,6 +40,8 @@ function Main() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [alertMessage] = useState(null);
   const { setUserObject } = useAuth();
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
 
   // 음성 안내를 위한 훅 사용
   const { speak } = useSpeak();
@@ -104,7 +107,7 @@ function Main() {
   }, [dialogOpen, speak]);
 
   const buttonStyle = {
-    width: 300,
+    width: isMobile ? '100%' : 300,
     height: 50,
     borderRadius: 10,
     fontSize: "1.3rem",
@@ -122,6 +125,7 @@ function Main() {
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundColor: "#F7FAFF",
+        padding: isMobile ? '10px' : '20px',
       }}
     >
       {alertMessage && (
@@ -134,7 +138,7 @@ function Main() {
 
       <Grid
         container
-        spacing={4}
+        spacing={isMobile ? 2 : 4}
         sx={{ flex: 1, alignItems: "center", zIndex: 2 }}
       >
         {/* 좌측 카드형태 설명 섹션 */}
@@ -144,11 +148,11 @@ function Main() {
               backgroundColor: "#FFB74D",
               width: "100%",
               maxWidth: 500,
-              minHeight: 550, // 좌측 카드의 높이와 동일하게 설정
-              padding: 3,
+              minHeight: isMobile ? 400 : 550,
+              padding: isMobile ? 2 : 3,
               boxShadow: 10,
               borderRadius: 2,
-              marginLeft: "50px",
+              marginLeft: isMobile ? '0' : '50px',
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
@@ -157,7 +161,7 @@ function Main() {
              <Box display="flex" alignItems="center" justifyContent={'left'}
               gap={1}>
              <House fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6"  sx={{ mb: 2, mt: 2 }}>
+              <Typography variant="h6" sx={{mb: isMobile ? 1 : 2, mt: isMobile ? 1.5 : 3, fontSize: isMobile ? '18px' : undefined,}}>
                 가족의 목소리로 도서 재생
               </Typography>
               </Box>
@@ -172,42 +176,42 @@ function Main() {
             <Box display="flex" alignItems="center" justifyContent={'left'}
               gap={1}>
               <AutoStories fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+              <Typography variant="h6" sx={{mb: isMobile ? 1 : 2, mt: isMobile ? 1.5 : 3, fontSize: isMobile ? '18px' : undefined,}}>
                  자연스러운 목소리로 몰입감 향상
               </Typography>
             </Box>
             {/* <Typography variant="body2" fontWeight='bold' fontSize=' 16px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
             [ 몰입을 더하는 자연스러운 음성 ]
             </Typography> */}
-            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+            <Typography variant="body2" textAlign='left' sx={{color: "#333", mb: isMobile ? 2 : 3, fontSize: isMobile ? '14px' : undefined, }}>
             기계적인 음성을 넘어선, 듣기 편하고 자연스러운 음성으로 몰입감을 높입니다
             </Typography>
 
             <Box display="flex" alignItems="center" justifyContent={'left'}
               gap={1}>
               <InterpreterMode fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+              <Typography variant="h6" sx={{mb: isMobile ? 1 : 2, mt: isMobile ? 1.5 : 3, fontSize: isMobile ? '18px' : undefined,}}>
                 사용자를 위한 편의성과 접근성 제공
               </Typography>
             </Box>
             {/* <Typography variant="body2" fontWeight='bold' fontSize=' 18px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
             [ 편리하고 접근성 높은 서비스 ]
             </Typography> */}
-            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
-음성 명령과 사용자 친화적인 UX/UI로 누구나 쉽게 사용할 수 있습니다.
+            <Typography variant="body2" textAlign='left' sx={{color: "#333", mb: isMobile ? 2 : 3, fontSize: isMobile ? '14px' : undefined, }}>
+                음성 명령과 사용자 친화적인 UX/UI로 누구나 쉽게 사용할 수 있습니다.
             </Typography>
 
             <Box display="flex" alignItems="center" justifyContent={'left'}
               gap={1}>
               <LibraryBooks fontSize="large" sx={{ color: "#000000" }} />
-              <Typography variant="h6" sx={{ mb: 2, mt: 3 }}>
+              <Typography variant="h6" sx={{mb: isMobile ? 1 : 2, mt: isMobile ? 1.5 : 3, fontSize: isMobile ? '18px' : undefined,}}>
                 ChatGPT를 활용한 요약 낭독 기능
               </Typography>
             </Box>
             {/* <Typography variant="body2" fontWeight='bold' fontSize=' 18px' textAlign='center' sx={{ color: "#333", mb: 1 }}>
             [ 책의 핵심만 쏙쏙! ]
             </Typography> */}
-            <Typography variant="body2" textAlign='left' sx={{ color: "#333", mb: 3 }}>
+            <Typography variant="body2" textAlign='left' sx={{color: "#333", mb: isMobile ? 2 : 3, fontSize: isMobile ? '14px' : undefined, }}>
             ChatGPT를 활용해 책 내용을 요약하고 하이라이트를 간단히 들려드립니다.
             </Typography>
           </Card>
@@ -220,8 +224,8 @@ function Main() {
               backgroundColor: "#ffe0b2",
               width: "100%",
               maxWidth: 500,
-              minHeight: 550, // 좌측 카드의 높이와 동일하게 설정
-              padding: 3,
+              minHeight: isMobile ? 400 : 550,
+              padding: isMobile ? 2 : 3,
               textAlign: "center",
               boxShadow: 10,
               borderRadius: 2,
@@ -237,9 +241,10 @@ function Main() {
               alt="Logo"
               sx={{
                 position: "absolute",
-                marginTop: "-380px",
+                marginTop: isMobile ? "-320px" : "-380px",
                 marginLeft: "-15px",
-                height: 80,
+                marginBottom: isMobile ? '20px' : '0px', // 모바일에서만 여백 추가
+                height: isMobile ? 60 : 80,
                 width: "auto",
               }}
             />
@@ -249,7 +254,7 @@ function Main() {
             }}
             style={{ width: '100%' }}
             >
-            <CardContent sx={{ width: "100%", mt: 10 }}>
+            <CardContent sx={{ width: "100%", mt: isMobile ? 5 : 10 }}>
               <TextField
                 id="userid-input"
                 label="아이디"
@@ -280,7 +285,7 @@ function Main() {
               sx={{
                 width: "100%",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: isMobile ? "row" : "column",
                 gap: 3,
                 alignItems: "center",
                 justifyContent: "center",
