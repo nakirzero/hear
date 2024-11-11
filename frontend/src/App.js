@@ -85,7 +85,6 @@ function App() {
             <Route path="/board/suggest/suggestWrite" element={<Write />} />
             <Route path="/board/wishbook" element={<Wishbook />} />
 
-            {/* 관리자 전용 라우트 설정 */}
             <Route element={<RequireAdmin />}>
               <Route path="/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/predict" element={<PredictPage />} />
