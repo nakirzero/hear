@@ -47,8 +47,8 @@ def generate_tts():
             response = openai.ChatCompletion.create(
                 model="gpt-3.5-turbo",
                 messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": f"Summarize the following text:\n\n{text}"}
+                    {"role": "system", "content": "당신은 도움이 되는 어시스턴트입니다."},
+                    {"role": "user", "content": f"다음 텍스트를 한국어로 요약해 주세요:\n\n{text}"}
                 ],
                 max_tokens=100,
                 temperature=0.5,
@@ -57,7 +57,7 @@ def generate_tts():
         except Exception as error:
             print(f"요약 생성 실패: {error}")
             return jsonify({"error": "Failed to generate summary"}), 500
-        
+
         save_folder = SUMMARY_FOLDER
         filename = f"summary_{book_seq}_voice_{voice_id}.mp3"
 
@@ -86,8 +86,8 @@ def generate_tts():
         "text": text,
         "model_id": "eleven_multilingual_v2",
         "voice_settings": {
-            "stability": 0.5,
-            "similarity_boost": 0.5
+            "stability": 0.8,
+            "similarity_boost": 0.8
         }
     }
 
