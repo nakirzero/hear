@@ -1,12 +1,13 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { VolumeUp, Pause } from '@mui/icons-material';
-import { IconButton, Snackbar, Button, Tooltip } from '@mui/material';
+import { IconButton, Snackbar, Button, Tooltip, useMediaQuery } from '@mui/material';
 import { useSpeak, useSpeakOnFocus } from "../hooks/useSpeak";
 
 const AudioGuideButton = ({ pageGuideText }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [showPermissionRequest, setShowPermissionRequest] = useState(true);
   const { speak } = useSpeak();
+  const isMobile = useMediaQuery('(max-width: 600px)'); // 모바일 감지
 
   // 버튼 포커스 시 음성 안내
   useSpeakOnFocus('start-guide-button', '페이지 안내를 시작합니다');
@@ -61,12 +62,14 @@ const AudioGuideButton = ({ pageGuideText }) => {
           tabIndex={-1}
           sx={{
             position: 'fixed',
-            left: '20px',
-            top: '50%',
-            transform: 'translateY(-50%)',
+            left: isMobile ? 'auto' : '20px', // 모바일에서 위치 변경
+            right: isMobile ? '20px' : 'auto', // 모바일에서 오른쪽에 배치
+            bottom: isMobile ? '20px' : 'auto', // 모바일에서 하단에 배치
+            top: isMobile ? 'auto' : '50%', // 데스크톱에서는 중앙에 배치
+            transform: isMobile ? 'none' : 'translateY(-50%)',
             backgroundColor: '#FFB74D',
             color: 'white',
-            padding: '12px',
+            padding: isMobile ? '16px' : '12px', // 모바일에서 버튼 크기 확대
             '&:hover': {
               backgroundColor: '#ff9800',
             },
