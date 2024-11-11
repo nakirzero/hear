@@ -136,13 +136,7 @@ const handleTabChange = (newValue) => {
           <Toolbar />
           <Container sx={{ height: "calc(100vh - 64px)", minWidth: 1600,display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
           
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
-             TabIndicatorProps={{
-              sx: {
-                bottom: '1px', // 밑줄 위치를 아래로 이동하여 간격 추가
-              },
-            }}
-            >
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
            <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
                 <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
             </Tabs>

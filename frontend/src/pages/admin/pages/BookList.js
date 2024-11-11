@@ -111,13 +111,7 @@ const handleTabChange = (newValue) => {
             }}
           >
             
-          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
-             TabIndicatorProps={{
-              sx: {
-                bottom: '26px', // 밑줄 위치를 아래로 이동하여 간격 추가
-              },
-            }}
-            >
+          <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered >
                 <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 추가</Typography>} />
                 <Tab label={<Typography variant="h6" fontSize={'30px'}  noWrap>도서 목록</Typography>} />
             </Tabs>

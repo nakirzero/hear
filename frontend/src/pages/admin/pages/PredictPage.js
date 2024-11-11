@@ -145,13 +145,7 @@ const PredictPage = () => {
         >
           <Toolbar />
           <Container sx={{ height: "calc(100vh - 64px)", display: "flex", flexDirection: "column", alignItems: "center", py: 4}}>
-            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered
-              TabIndicatorProps={{
-                sx: {
-                  bottom: '26px',
-                },
-              }}
-            >
+            <Tabs value={selectedTab} onChange={(_, newValue) => handleTabChange(newValue)} centered>
               <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>공유 마당 데이터 업로드</Typography>} />
               <Tab label={<Typography variant="h6" fontSize={'30px'} noWrap>공유 마당 업로드 이력</Typography>} />
             </Tabs>
