@@ -16,6 +16,7 @@ const usePagination = (data, rowsPerPage) => {
     totalPages,
     page,
     handlePageChange,
+    setPage, // 페이지 초기화를 위해 setPage를 추가 반환
   };
 };
 
