@@ -153,7 +153,7 @@ const SettingVoice = () => {
               예문을 읽어주세요
             </Typography>
             <Typography variant="body1" align="center" gutterBottom>
-              "이 문장을 읽어보세요. 녹음을 완료했다면 아래의 정지 버튼을 눌러주세요."
+              "가령 네가  오후 네 시에 온다면 나는 세 시부터 행복해질 거야. 시간이 가면 갈수록 그만큼 나는 더 행복해질 거야. 네 시가 되면 이미 나는 불안해지고 안절부절못하게 될 거야. 난 행복의 대가가 무엇인지 알게 되는 거야..."
             </Typography>
             <Typography variant="h6" align="center" color="textSecondary">
             녹음 시간: {recordingTime}초
