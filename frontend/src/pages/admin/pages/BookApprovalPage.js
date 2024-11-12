@@ -129,9 +129,9 @@ const BookApprovalPage = () => {
 <Table  stickyHeader>
                 <TableHead>
                   <TableRow>
-                    <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
+                    <TableCell align="center" sx={{ width: "25%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
                     <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>저자</TableCell>
-                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청자 닉네임</TableCell>
+                    <TableCell align="center" sx={{ width: "15%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청자 닉네임</TableCell>
                     <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청 날짜</TableCell>
                     <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>코멘트</TableCell>
                     <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>

@@ -103,8 +103,8 @@ const BookApprovalHistoryPage = () => {
                 <TableHead>
                   <TableRow>
                     <TableCell align="center" sx={{ width: "40%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
-                    <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청자 닉네임</TableCell>
-                    <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>상태</TableCell>
+                    <TableCell align="center" sx={{ width: "15%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>신청자 닉네임</TableCell>
+                    <TableCell align="center" sx={{ width: "25%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>상태</TableCell>
                     <TableCell align="center" sx={{ width: "20%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>승인 날짜</TableCell>
                   </TableRow>
                 </TableHead>

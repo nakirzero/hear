@@ -117,9 +117,9 @@ const handleTabChange = (newValue) => {
                 <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 이미지</TableCell>
                 <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 제목</TableCell>
                 <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>저자</TableCell>
-                <TableCell align="center" sx={{ width: "8%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>출판사</TableCell>
-                <TableCell align="center" sx={{ width: "30%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 정보</TableCell>
-                <TableCell align="center" sx={{ width: "7%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 본문</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>출판사</TableCell>
+                <TableCell align="center" sx={{ width: "25%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 정보</TableCell>
+                <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>도서 본문</TableCell>
                 <TableCell align="center" sx={{ width: "10%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>등록일</TableCell>
                 <TableCell align="center" sx={{ width: "5%", fontSize: 18, fontWeight: 'bold', bgcolor: '#FFBA59 ' }}>삭제</TableCell>
                 </TableRow>
