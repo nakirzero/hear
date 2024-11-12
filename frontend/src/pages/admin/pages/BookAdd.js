@@ -147,7 +147,7 @@ const handleTabChange = (newValue) => {
   <Grid mt={3} container spacing={4} justifyContent="center">
     {/* 카테고리 선택 */}
     <Grid item xs={12} sx={{ display: "flex", justifyContent: "center" }}>
-      <FormControl sx={{ width: 600 }}> {/* 너비 고정 및 중앙 정렬 */}
+      <FormControl sx={{ width: 600, bgcolor: '#FFFFFF' }}> {/* 너비 고정 및 중앙 정렬 */}
         <InputLabel id="category-label">카테고리</InputLabel>
         <Select
           labelId="category-label"
@@ -165,14 +165,14 @@ const handleTabChange = (newValue) => {
 
     {/* 도서 정보 입력 */}
     {["title", "author", "publisher", "information"].map((field) => (
-      <Grid item xs={12} key={field} sx={{ display: "flex", justifyContent: "center" }}>
+      <Grid item xs={12} key={field} sx={{ display: "flex", justifyContent: "center"}}>
         <TextField
           fullWidth
           name={field}
           value={bookAdd[field]}
           onChange={handleInputChange}
           label={field === "title" ? "도서 제목" : field === "author" ? "작가" : field === "publisher" ? "출판사" : "정보"}
-          sx={{ width: 600 }} 
+          sx={{ width: 600, bgcolor: '#FFFFFF' }} 
         />
       </Grid>
     ))}
