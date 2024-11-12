@@ -47,7 +47,7 @@ const Library = () => {
   const filterCategories = useMemo(() => ["건강", "기타", "먹거리", "여행", "인터뷰", "해설"], []);
   const filterValues = useMemo(() => ["410", "420", "430", "440", "450", "460"], []);
 
-  const { currentData, totalPages, page, handlePageChange } = usePagination(
+  const { currentData, totalPages, page, handlePageChange, setPage } = usePagination(
     filteredBookList.length > 0 ? filteredBookList : bookList,
     rowsPerPage
   );
@@ -114,6 +114,7 @@ const Library = () => {
 
   const handleCategoryClick = (newCategory) => {
     setCategory(newCategory);
+    setPage(1); // 카테고리 변경 시 페이지를 1로 초기화
 
     // 필요에 따라 초기화할지 결정
     if (newCategory !== "400") {
@@ -169,6 +170,13 @@ const Library = () => {
     },
   });
 
+  // 전체보기 버튼 클릭 핸들러 추가
+  const handleShowAllClick = () => {
+    setCategory(null); // 카테고리를 초기화
+    setSelectedFilters(filterValues); // 모든 필터 선택 해제
+    setPage(1); // 페이지를 첫 페이지로 초기화
+  };
+
   const checkboxStyle = {
     color: "#246624",
     "&.Mui-checked": {
@@ -199,6 +207,22 @@ const Library = () => {
         justifyContent="center"
         gap={10}
       >
+        <Card
+          sx={cardStyle(category, null)} // 선택되지 않은 상태를 위해 null 사용
+          onClick={handleShowAllClick}
+        >
+          <CardContent
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Typography variant="h6" sx={{ marginTop: "10px" }}>
+              전체보기
+            </Typography>
+          </CardContent>
+        </Card>
         <Card
           sx={cardStyle(category, "200")}
           onClick={() => handleCategoryClick("200")}
