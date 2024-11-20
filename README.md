@@ -164,11 +164,11 @@
     <td align="center"><b>Publisher,Database</b></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://github.com/nakirzero" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/kykimsjs" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/jtothemoon" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/HANHEEKYUNG" target='_blank'>github</a></td>
-    <td align="center"><a href="https://github.com/wuk-acca" target='_blank'>github</a></td>
+    <td align="center"><a href="https://github.com/nakirzero" target='_blank'>nakirzero</a></td>
+    <td align="center"><a href="https://github.com/kykimsjs" target='_blank'>kykimsjs</a></td>
+    <td align="center"><a href="https://github.com/jtothemoon" target='_blank'>jtothemoon</a></td>
+    <td align="center"><a href="https://github.com/HANHEEKYUNG" target='_blank'>HANHEEKYUNG</a></td>
+    <td align="center"><a href="https://github.com/wuk-acca" target='_blank'>wuk-acca</a></td>
   </tr>
   <tr>
     <td align="center">딥러닝 / 머신러닝 담당<br>
